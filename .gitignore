@@ -1,0 +1,5 @@
+node_modules
+dist
+*.local
+commit-msg.txt
+tsconfig.tsbuildinfo
