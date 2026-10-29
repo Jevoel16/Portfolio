@@ -161,7 +161,7 @@ Portfolio/
 ├── docs/logo.svg              # README logo
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
-├── .claude/launch.json        # Dev-server entry used by Claude's preview
+├── .claude/launch.json        # Local dev-server entry for Claude's preview (git-ignored)
 └── src/
     ├── main.tsx
     ├── App.tsx                # Full-screen sky, HUD, panels, fallback switching
@@ -243,7 +243,7 @@ There are no automated tests. `npm run build` type-checks the project. Before sh
 
 1. Create a branch with a matching prefix: `feat/short-description`, `fix/short-description`, `docs/…`, `refactor/…`.
 2. Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `style:`, `perf:`, `test:` — an imperative subject of 72 characters or less, a blank line, then one bullet per change.
-3. Write the commit message in `commit-msg.txt` at the project root. It is git-ignored, so it stays a local draft.
+3. Write the commit message in `commit-msg.txt` at the project root. It is git-ignored, so it stays a local draft. `.claude/` (local Claude settings and worktrees) and `CLAUDE.md` (personal instructions for Claude) are git-ignored too.
 4. Run `npm run build` and the manual checks in [Testing](#testing), on desktop and a phone-sized viewport.
 5. **Update this README with every change**, including the version badges when dependencies change.
 
