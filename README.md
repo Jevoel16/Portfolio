@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.0.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.0.1-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -449,6 +449,7 @@ Before shipping, also check by hand:
 | Port 5173 already in use | Stop the other process, or run `npx vite --port 5174`. |
 | Can't open the site on a phone | Use the *Network* URL Vite prints, on the same Wi-Fi; allow Node through the firewall. |
 | The URL changes while scrolling | Expected: the address bar follows the section in view (with `replace`, so Back isn't flooded). |
+| The wheel or touch won't scroll the page | Don't put `overflow: hidden` on `html` or `body`: the page scrolls the window, and the sky is a fixed backdrop. |
 | Sky looks cut off under the notch | Make sure `viewport-fit=cover` is still in the viewport meta tag in `index.html`. |
 | Build fails with a frontmatter error | The message names the file and field: fix the date format, add the missing field, or add alt text to the image. |
 | A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |
