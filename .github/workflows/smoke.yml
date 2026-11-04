@@ -1,0 +1,33 @@
+name: Production smoke test
+
+# Vercel deploys on push through its Git integration; this checks the live site once it reports success.
+on:
+  deployment_status:
+  schedule:
+    - cron: '0 6 * * 1' # every Monday, to catch domain or DNS changes made outside the repo
+  workflow_dispatch:
+    inputs:
+      url:
+        description: Base URL to check
+        default: https://www.jevoelorbilla.dev
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: Smoke test the live site
+    if: >-
+      github.event_name != 'deployment_status' ||
+      (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Run smoke checks
+        run: node scripts/smoke.mjs "${{ inputs.url || 'https://www.jevoelorbilla.dev' }}"

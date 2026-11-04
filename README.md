@@ -20,9 +20,10 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.4.4-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.4.5-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
+[![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
 
 </div>
 
@@ -63,6 +64,7 @@
 - **Prerendered for search engines** — every page (sky panels, projects, blog posts, 404) is rendered to static HTML at build time with its own title, description, canonical URL, Open Graph/Twitter card and JSON-LD, then hydrated in the browser. Crawlers and no-JS visitors get real content and real links.
 - **SEO files** — `sitemap.xml` and `llms.txt` are generated from the data; `robots.txt`, favicon, touch icon, web manifest and a 1200×630 share image live in `public/`.
 - **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
+- **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, security headers, SEO files). Dependabot opens weekly update PRs.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets takes over automatically.
 - **Accessible** — keyboard-reachable list of every star and planet, focus-trapped dialogs, Escape to close.
 - **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while you drag, fly or hover, ~30 fps for ambient motion, and nothing at all with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
@@ -84,7 +86,8 @@
 | Styling | Plain CSS with custom properties, split by area in `src/styles/` |
 | Fonts | Space Grotesk and JetBrains Mono variable fonts, self-hosted via Fontsource |
 | Prerender / SEO | `vite build --ssr` + `scripts/prerender.mjs` (`renderToString` per route), `src/seo/meta.ts` |
-| Hosting | Vercel (`vercel.json`: clean URLs, headers, caching) |
+| Hosting | Vercel (`vercel.json`: clean URLs, headers, caching), deployed by the Vercel Git integration |
+| CI/CD | GitHub Actions (`ci.yml`: audit, test, build; `smoke.yml`: post-deploy smoke test), Dependabot |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -289,10 +292,16 @@ Portfolio/
 ├── docs/logo.svg              # README logo
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
+├── .nvmrc                     # Node version used locally and in CI
+├── .github/
+│   ├── workflows/ci.yml       # Audit, test and build on push / PR to main
+│   ├── workflows/smoke.yml    # Smoke test the live site after each production deploy
+│   └── dependabot.yml         # Weekly npm and monthly Actions updates
 ├── vercel.json                # Clean URLs, security and cache headers (apex → www is set in Vercel Domains)
 ├── public/                    # robots.txt, icons, manifest, share image (copied as-is)
 ├── scripts/
-│   └── prerender.mjs          # Writes one HTML file per route, sitemap.xml and llms.txt
+│   ├── prerender.mjs          # Writes one HTML file per route, sitemap.xml and llms.txt
+│   └── smoke.mjs              # Post-deploy checks against the live site
 ├── tsconfig.json              # References the app and node configs
 ├── tsconfig.app.json          # Browser code (src/)
 ├── tsconfig.node.json         # vite.config.ts, plugins/, scripts/
@@ -369,6 +378,7 @@ Portfolio/
 | `npm run preview` | Serve the production build locally |
 | `npm test` | Run the Vitest suite once |
 | `npm run test:watch` | Run Vitest in watch mode |
+| `npm run smoke` | Smoke-test the live site (`npm run smoke -- https://other-url` for another deploy) |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -383,6 +393,22 @@ npm test
 ```
 
 `plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+
+### Continuous integration
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on every push and pull request to `main`: `npm ci`, `npm audit --audit-level=high`, `npm test`, `npm run build`, then checks that `dist/` has the HTML, sitemap, robots and llms files and no links to the apex domain. The built `dist/` is kept as a run artifact for 7 days. Run the same checks locally before pushing:
+
+```bash
+npm ci && npm audit --audit-level=high && npm test && npm run build
+```
+
+### Deployment and smoke test
+
+Vercel builds and deploys through its Git integration: pushes to `main` go to production, other branches get preview URLs. When Vercel reports a successful **Production** deployment, [`.github/workflows/smoke.yml`](.github/workflows/smoke.yml) runs `scripts/smoke.mjs` against https://www.jevoelorbilla.dev. It also runs every Monday and can be started by hand from the Actions tab. No secrets are needed.
+
+```bash
+npm run smoke
+```
 
 Before shipping, also check by hand:
 
