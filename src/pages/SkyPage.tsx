@@ -30,6 +30,23 @@ class SceneBoundary extends Component<{ onError: () => void; children: ReactNode
 }
 
 
+/**
+ * True once the browser is idle after first paint. The prerendered SVG sky is the fast first paint
+ * (and LCP); the ~250 KB three.js chunk downloads only after that.
+ */
+function useIdle() {
+  const [idle, setIdle] = useState(false)
+  useEffect(() => {
+    if ('requestIdleCallback' in window) {
+      const id = window.requestIdleCallback(() => setIdle(true), { timeout: 1200 })
+      return () => window.cancelIdleCallback(id)
+    }
+    const id = setTimeout(() => setIdle(true), 300)
+    return () => clearTimeout(id)
+  }, [])
+  return idle
+}
+
 /** The full-screen sky. The URL is the selection, so every panel is linkable and Back closes it. */
 export function SkyPage() {
   const { webgl, lite } = useSceneSupport()
@@ -45,7 +62,8 @@ export function SkyPage() {
   const stageRef = useRef<HTMLDivElement>(null)
   const portrait = useMediaQuery(PORTRAIT_QUERY)
 
-  const show3d = webgl && !sceneFailed
+  const idle = useIdle()
+  const show3d = webgl && !sceneFailed && idle
   const project = selectedId ? projectById.get(selectedId) : undefined
   const body = selectedId ? bodyById.get(selectedId as BodyId) : undefined
   const post = selectedId?.startsWith('post:') ? postBySlug.get(selectedId.slice(5)) : undefined

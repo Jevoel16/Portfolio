@@ -59,5 +59,3 @@ export const bodies: Body[] = [
 ]
 
 export const bodyById = new Map(bodies.map((b) => [b.id, b]))
-
-export const isBodyId = (id: string | null | undefined): id is BodyId => !!id && bodyById.has(id as BodyId)

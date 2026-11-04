@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.3.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.3.1-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -62,7 +62,7 @@
 - **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets takes over automatically.
 - **Accessible** — keyboard-reachable list of every star and planet, focus-trapped dialogs, Escape to close.
-- **Light on data** — three.js loads lazily in its own chunk; all textures are drawn in code (no image downloads); fewer background stars on data saver or slow connections.
+- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while you drag, fly or hover, ~30 fps for ambient motion, and nothing at all with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -76,7 +76,7 @@
 | Routing | React Router 6 (`BrowserRouter`, one layout route for the sky) |
 | Blog | Markdown + frontmatter, compiled by a Vite plugin (`plugins/posts.ts`) with marked and Shiki |
 | Testing | Vitest |
-| 3D | three.js, React Three Fiber, drei (`OrbitControls`, `Html`, `Line`, `Billboard`) |
+| 3D | three.js, React Three Fiber (on-demand frameloop), drei (`OrbitControls`, `Line`, `Billboard`), custom GLSL point shader |
 | Build | Vite 6, `@vitejs/plugin-react` |
 | Styling | Plain CSS with custom properties (`src/index.css`) |
 | Fonts | Space Grotesk and JetBrains Mono variable fonts, self-hosted via Fontsource |
@@ -286,12 +286,15 @@ Portfolio/
     │   ├── meta.ts            # Per-route title, description, canonical, Open Graph, JSON-LD
     │   └── RouteHead.tsx      # Keeps <head> in sync during client-side navigation
     ├── hooks/
-    │   ├── device.ts          # Touch detection for the 3D scene
     │   ├── useMediaQuery.ts   # Hydration-safe media queries; PORTRAIT_QUERY rotates the sky
     │   └── useSceneSupport.ts # WebGL / data-saver detection, reduced motion, coarse pointer
     ├── scene/                 # Lazy-loaded three.js chunk
-    │   ├── SpaceScene.tsx     # Canvas, camera rig, gestures
-    │   ├── Constellation.tsx  # Star sprites, lines, labels
+    │   ├── SpaceScene.tsx     # Canvas, on-demand frameloop, camera rig, gestures
+    │   ├── skyLayout.ts       # Star, edge and label positions for one orientation
+    │   ├── SkyStars.tsx       # All constellation stars as one shader point buffer + picking
+    │   ├── SkyLines.tsx       # All edges in two line-segment draws
+    │   ├── LabelLayer.tsx     # One DOM label layer, projected each frame
+    │   ├── cursor.ts          # Pointer cursor while hovering clickable things
     │   ├── Bodies.tsx         # Planets, ringed planet, beacon
     │   ├── ShootingStars.tsx
     │   ├── Starfield.tsx      # Background stars and nebulae
@@ -359,7 +362,8 @@ Before shipping, also check by hand:
 | A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |
 | `Minified React error #418` in the console | The page's HTML doesn't match what the client renders. Make sure values read from `window` go through `useMediaQuery` / `useSceneSupport` (they return a fixed server value during hydration). |
 | A deep link 404s on Vercel | The route must be listed by `indexablePaths()` or `extraPaths()` in `src/seo/meta.ts` so the prerender step writes its HTML file. |
-| Large chunk warning on build | Expected: three.js lives in the lazily loaded `SpaceScene` chunk on purpose. |
+| Large chunk warning on build | three.js is ~690 KB in its own lazily loaded `three` chunk on purpose; the limit is set just above it in `vite.config.ts`. |
+| The 3D sky stays blank in a background tab | Expected: the canvas only renders when the browser grants animation frames, which it throttles for hidden tabs and windows. |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 

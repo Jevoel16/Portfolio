@@ -164,6 +164,19 @@ button {
 .three-ready .space-canvas {
   opacity: 1;
 }
+/* One DOM layer for every 3D label; LabelProjector writes each label's transform per frame. */
+.label-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sky-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
 
 /* Everything over the canvas lets gestures through, except the controls themselves. */
 .header,

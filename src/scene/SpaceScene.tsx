@@ -4,10 +4,14 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import * as THREE from 'three'
-import { constellations, skyBounds, targetFor } from '../data/constellations'
+import { skyBounds, targetFor } from '../data/constellations'
+import { useCoarsePointer } from '../hooks/useSceneSupport'
 import { Bodies } from './Bodies'
-import { Constellation } from './Constellation'
+import { LabelLayer, LabelProjector } from './LabelLayer'
 import { ShootingStars } from './ShootingStars'
+import { SkyLines } from './SkyLines'
+import { skyLayout } from './skyLayout'
+import { SkyStars } from './SkyStars'
 import { Nebula, Starfield } from './Starfield'
 
 interface Props {
@@ -28,37 +32,58 @@ interface Props {
   stageRef: RefObject<HTMLElement>
 }
 
-export default function SpaceScene({ onDismiss, reducedMotion, lite, ...rest }: Props) {
-  const [hidden, setHidden] = useState(document.hidden)
-  const starCount = useMemo(() => (lite ? 1200 : window.innerWidth < 760 ? 2200 : 4500), [lite])
+/** Ambient motion is slow, so it renders at ~30 fps; drags, flights and hovers render at full rate. */
+const AMBIENT_FPS = 30
 
-  // Nothing to draw while the tab is in the background.
-  useEffect(() => {
-    const onChange = () => setHidden(document.hidden)
-    document.addEventListener('visibilitychange', onChange)
-    return () => document.removeEventListener('visibilitychange', onChange)
-  }, [])
+export default function SpaceScene({ onDismiss, reducedMotion, lite, portrait, selectedId, ...rest }: Props) {
+  const touch = useCoarsePointer()
+  const [hoveredId, setHoveredId] = useState<string | null>(null)
+  const starCount = useMemo(() => (lite ? 1200 : window.innerWidth < 760 ? 2200 : 4500), [lite])
+  const layout = useMemo(() => skyLayout(portrait), [portrait])
+  const labelLayer = useRef<HTMLDivElement>(null)
 
   return (
     <div className="space-canvas">
       <Canvas
         dpr={[1, 1.5]}
-        frameloop={hidden ? 'never' : 'always'}
+        // Renders only when something changes; see AmbientTicker for the idle animation budget.
+        frameloop="demand"
         gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
         camera={{ fov: 50, near: 0.1, far: 400, position: [0, 0, 16] }}
+        raycaster={{ params: { Points: { threshold: touch ? 0.75 : 0.5 } } as THREE.Raycaster['params'] }}
         onPointerMissed={onDismiss}
         // The sky owns every gesture: drag to look, pinch to zoom. The page itself never scrolls.
         style={{ touchAction: 'none' }}
       >
-        <SceneContent {...rest} animate={!reducedMotion} starCount={starCount} />
+        <SceneContent
+          {...rest}
+          layout={layout}
+          portrait={portrait}
+          selectedId={selectedId}
+          hoveredId={hoveredId}
+          onHover={setHoveredId}
+          touch={touch}
+          animate={!reducedMotion}
+          starCount={starCount}
+          labelLayer={labelLayer}
+        />
       </Canvas>
+      <LabelLayer labels={layout.labels} hoveredId={hoveredId} selectedId={selectedId} layerRef={labelLayer} />
     </div>
   )
 }
 
-type ContentProps = Omit<Props, 'onDismiss' | 'reducedMotion' | 'lite'> & { animate: boolean; starCount: number }
+type ContentProps = Omit<Props, 'onDismiss' | 'reducedMotion' | 'lite'> & {
+  layout: ReturnType<typeof skyLayout>
+  hoveredId: string | null
+  onHover: (id: string | null) => void
+  touch: boolean
+  animate: boolean
+  starCount: number
+  labelLayer: RefObject<HTMLDivElement>
+}
 
-function SceneContent({ portrait, selectedId, onSelect, onReady, animate, starCount, ...rig }: ContentProps) {
+function SceneContent({ layout, portrait, selectedId, hoveredId, onHover, onSelect, onReady, animate, touch, starCount, labelLayer, ...rig }: ContentProps) {
   const group = useRef<THREE.Group>(null)
   const readySent = useRef(false)
 
@@ -77,18 +102,41 @@ function SceneContent({ portrait, selectedId, onSelect, onReady, animate, starCo
 
   return (
     <>
+      <AmbientTicker animate={animate} />
       <Starfield count={starCount} animate={animate} />
       {animate && <ShootingStars />}
       <group ref={group}>
         <Nebula />
-        {constellations.map((c) => (
-          <Constellation key={c.id} data={c} portrait={portrait} selectedId={selectedId} onSelect={onSelect} animate={animate} />
-        ))}
-        <Bodies portrait={portrait} selectedId={selectedId} onSelect={onSelect} animate={animate} />
+        <SkyLines edges={layout.edges} />
+        <SkyStars stars={layout.stars} selectedId={selectedId} hoveredId={hoveredId} onHover={onHover} onSelect={onSelect} animate={animate} />
+        <Bodies portrait={portrait} selectedId={selectedId} hoveredId={hoveredId} onHover={onHover} onSelect={onSelect} animate={animate} touch={touch} />
       </group>
       <CameraRig portrait={portrait} selectedId={selectedId} animate={animate} {...rig} />
+      {/* Last, so it projects with this frame's camera and sway. */}
+      <LabelProjector labels={layout.labels} layerRef={labelLayer} groupRef={group} />
     </>
   )
+}
+
+/** Requests frames for ambient motion at a capped rate; nothing at all under reduced motion. */
+function AmbientTicker({ animate }: { animate: boolean }) {
+  const invalidate = useThree((s) => s.invalidate)
+  useEffect(() => {
+    if (!animate) return
+    let id = 0
+    let last = 0
+    const tick = (t: number) => {
+      if (t - last >= 1000 / AMBIENT_FPS - 2) {
+        last = t
+        invalidate()
+      }
+      id = requestAnimationFrame(tick)
+    }
+    // requestAnimationFrame also pauses by itself while the tab is hidden.
+    id = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(id)
+  }, [animate, invalidate])
+  return null
 }
 
 function CameraRig({
@@ -99,7 +147,7 @@ function CameraRig({
   recenter,
   onAwayChange,
 }: Pick<Props, 'portrait' | 'selectedId' | 'stageRef' | 'recenter' | 'onAwayChange'> & { animate: boolean }) {
-  const { camera, size, gl } = useThree()
+  const { camera, size, gl, invalidate } = useThree()
   const controls = useRef<OrbitControlsImpl>(null)
   const home = useRef({ center: new THREE.Vector3(), distance: 16 })
   const goal = useRef<{ pos: THREE.Vector3; target: THREE.Vector3 } | null>(null)
@@ -156,6 +204,7 @@ function CameraRig({
         controls.current?.target.copy(g.target)
         controls.current?.update()
       }
+      invalidate()
     }
     fit()
     const ro = new ResizeObserver(fit)
@@ -173,6 +222,7 @@ function CameraRig({
       controls.current.update()
       goal.current = null
     }
+    invalidate()
   }
 
   // Fly to the selected star or body, or back home when the panel closes.
@@ -190,11 +240,13 @@ function CameraRig({
     const c = controls.current
     if (!c) return
     if (goal.current) {
-      const k = 1 - Math.exp(-dt * 3.2)
+      // Frames can be far apart in on-demand mode; cap dt so a flight never jumps.
+      const k = 1 - Math.exp(-Math.min(dt, 0.05) * 3.2)
       camera.position.lerp(goal.current.pos, k)
       c.target.lerp(goal.current.target, k)
       c.update()
       if (camera.position.distanceTo(goal.current.pos) < 0.01) goal.current = null
+      invalidate()
     }
     const h = homeGoal()
     const isAway = camera.position.distanceTo(h.pos) > 0.6 || c.target.distanceTo(h.target) > 0.3

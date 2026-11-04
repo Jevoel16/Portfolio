@@ -1,17 +1,21 @@
-import { useMemo, useRef, useState, type ReactNode } from 'react'
+import { useMemo, useRef, type ReactNode } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
-import { Billboard, Html } from '@react-three/drei'
+import { Billboard } from '@react-three/drei'
 import * as THREE from 'three'
 import { bodies, type Body } from '../data/bodies'
 import { orient } from '../data/constellations'
-import { coarsePointer } from '../hooks/device'
+import { setPointerCursor } from './cursor'
 import { glowTexture, planetTexture, ringTexture } from './textures'
 
 interface Props {
   portrait: boolean
   selectedId: string | null
+  hoveredId: string | null
+  onHover: (id: string | null) => void
   onSelect: (id: string) => void
   animate: boolean
+  /** Larger hit targets on touch screens. */
+  touch: boolean
 }
 
 export function Bodies(props: Props) {
@@ -27,20 +31,23 @@ export function Bodies(props: Props) {
   )
 }
 
-function BodyObject({ body, portrait, selectedId, onSelect, animate }: Props & { body: Body }) {
+function BodyObject({ body, portrait, selectedId, hoveredId, onHover, onSelect, animate, touch }: Props & { body: Body }) {
   const group = useRef<THREE.Group>(null)
-  const [hovered, setHovered] = useState(false)
-  const [touch] = useState(coarsePointer)
+  const hovered = hoveredId === body.id
   const selected = selectedId === body.id
   const pos = useMemo(() => {
     const [x, y] = orient(body.x, body.y, portrait)
     return new THREE.Vector3(x, y, body.z)
   }, [body, portrait])
 
-  useFrame(() => {
+  useFrame(({ invalidate }) => {
     if (!group.current) return
-    const s = THREE.MathUtils.lerp(group.current.scale.x, hovered || selected ? 1.15 : 1, 0.12)
-    group.current.scale.setScalar(s)
+    const goal = hovered || selected ? 1.15 : 1
+    const cur = group.current.scale.x
+    if (Math.abs(goal - cur) < 0.001) return
+    group.current.scale.setScalar(THREE.MathUtils.lerp(cur, goal, 0.12))
+    // On-demand rendering: keep drawing until the hover scale settles.
+    invalidate()
   })
 
   const onClick = (e: ThreeEvent<MouseEvent>) => {
@@ -61,23 +68,17 @@ function BodyObject({ body, portrait, selectedId, onSelect, animate }: Props & {
         onClick={onClick}
         onPointerOver={(e) => {
           e.stopPropagation()
-          setHovered(true)
-          document.body.style.cursor = 'pointer'
+          onHover(body.id)
+          setPointerCursor(true)
         }}
         onPointerOut={() => {
-          setHovered(false)
-          document.body.style.cursor = ''
+          onHover(null)
+          setPointerCursor(false)
         }}
       >
         <sphereGeometry args={[Math.max(body.radius * 1.6, touch ? 1 : 0.7), 12, 12]} />
         <meshBasicMaterial transparent opacity={0} depthWrite={false} />
       </mesh>
-      <Html center position={[0, -body.radius - 0.55, 0]} zIndexRange={[10, 0]} style={{ pointerEvents: 'none' }}>
-        <div className={`body-label-3d${hovered || selected ? ' active' : ''}`} style={{ color: body.color }} aria-hidden="true">
-          {body.name}
-          <span>{body.caption}</span>
-        </div>
-      </Html>
     </group>
   )
 }
