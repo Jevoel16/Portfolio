@@ -1,5 +1,4 @@
 import { Scramble } from '../hud/Scramble'
-import { usePrefersReducedMotion } from '../hooks/useSceneSupport'
 import { useReveal } from '../scroll/useReveal'
 
 interface Props {
@@ -9,9 +8,8 @@ interface Props {
   id?: string
 }
 
-/** Section h2 that "decrypts" the first time it scrolls into view. */
+/** Section h2 that "decrypts" the first time it scrolls into view (part of the scroll reveal, so always on). */
 export function SectionHeading({ kicker, title, id }: Props) {
-  const reduced = usePrefersReducedMotion()
   const [ref, state] = useReveal<HTMLDivElement>()
   return (
     <div ref={ref} className="section-heading" data-reveal={state}>
@@ -19,7 +17,7 @@ export function SectionHeading({ kicker, title, id }: Props) {
         <span className="dot" aria-hidden="true" /> {kicker}
       </p>
       <h2 id={id}>
-        <Scramble text={title} active={state === 'in'} enabled={!reduced} />
+        <Scramble text={title} active={state === 'in'} />
       </h2>
     </div>
   )

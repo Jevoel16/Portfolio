@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { SECTIONS, locationForSection, sectionForLocation, type SectionId } from './sections'
+import { SECTIONS, locationForSection, sectionForLocation, sectionProgress, type SectionId } from './sections'
 
 /** The section under this line (fraction of the viewport height from the top) is the active one. */
 const FOCUS = 0.42
@@ -20,11 +20,20 @@ function sectionInFocus(): SectionId {
   return current
 }
 
+/** Scroll offset at which each section reaches the focus line, i.e. becomes active. */
+function sectionAnchors(): number[] {
+  const line = window.innerHeight * FOCUS
+  return SECTIONS.map((id) => {
+    const el = document.getElementById(id)
+    return el ? el.getBoundingClientRect().top + window.scrollY - line : Number.NaN
+  })
+}
+
 /**
  * Keeps the URL and the scroll position in step, both ways:
  * - navigating to `/about`, `/#projects`, … scrolls to that section (instantly on first load);
  * - scrolling replaces the URL with the section in view, so the title, canonical and Back stay right.
- * Also writes `--scroll` (0–1 page progress) on <html> for the HUD rail.
+ * Also writes `--scroll` (0–1 progress, paced by section so it meets the rail ticks) on <html>.
  */
 export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: () => void }) {
   const location = useLocation()
@@ -49,8 +58,9 @@ export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: 
     if (!el) return
 
     const distance = Math.abs(el.getBoundingClientRect().top)
-    const smooth = !isFirst && !reduced
-    if (smooth && distance > window.innerHeight * WARP_VIEWPORTS) warp.current()
+    // Smooth scrolling is a direct answer to a click, so it runs everywhere; the warp flash is decoration.
+    const smooth = !isFirst
+    if (smooth && !reduced && distance > window.innerHeight * WARP_VIEWPORTS) warp.current()
     setActive(id)
     autoScrolling.current = smooth
     el.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'start' })
@@ -78,7 +88,7 @@ export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: 
       frame = 0
       const doc = document.documentElement
       const max = doc.scrollHeight - window.innerHeight
-      doc.style.setProperty('--scroll', max > 0 ? (window.scrollY / max).toFixed(4) : '0')
+      doc.style.setProperty('--scroll', sectionProgress(sectionAnchors(), window.scrollY, max).toFixed(4))
       if (autoScrolling.current) return
       const id = sectionInFocus()
       setActive(id)

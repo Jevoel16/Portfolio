@@ -41,3 +41,23 @@ export const hrefForSection = (id: SectionId) => {
   const { pathname, hash } = locationForSection(id)
   return pathname + hash
 }
+
+/**
+ * Page progress (0–1) paced by section, so section `k` of `n` sits at exactly `k / (n - 1)` and the
+ * rail's evenly spaced ticks light up as the fill reaches them. `anchors[i]` is the scroll offset at
+ * which section `i` becomes active; `max` is the largest scroll offset.
+ */
+export function sectionProgress(anchors: number[], scrollY: number, max: number): number {
+  const last = anchors.length - 1
+  if (last <= 0 || !(max > 0)) return 0
+  const y = Number.isFinite(scrollY) ? Math.min(max, Math.max(0, scrollY)) : 0
+  // The first section starts at the top and the bottom of the page always counts as the last one.
+  const a = anchors.map((v, i) => (i === 0 ? 0 : Math.min(max, Math.max(0, Number.isFinite(v) ? v : max))))
+  a[last] = Math.min(a[last], max)
+  if (y >= a[last]) return 1
+  let i = 0
+  while (i < last - 1 && y >= a[i + 1]) i++
+  const span = a[i + 1] - a[i]
+  const frac = span > 0 ? Math.min(1, Math.max(0, (y - a[i]) / span)) : 1
+  return Math.min(1, (i + frac) / last)
+}

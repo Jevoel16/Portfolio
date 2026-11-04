@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.0.1-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.0.2-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -55,7 +55,7 @@
 - **One scrolling flight through space (v2)** — the home page is a single long page over a fixed 3D night sky. As you scroll, the camera flies between waypoints: the whole sky for the hero, the home planet for About, each constellation in turn for Projects, the ringed planet for Toolkit, the security nebula for Write-ups and the signal beacon for Contact. Long hops pull the camera back mid-flight so they read as flights, not pans.
 - **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases and Cybersecurity, each with a block of project cards that the camera frames as you reach it.
 - **Spruce, the holographic guide** — in Contact, the avatar (`public/avatar/spruce.webp`) boots up as a hologram over the beacon (scanlines, projector cone, float) when the section scrolls in, then talks: a speech bubble types out his lines while voice bars bounce. **Next** skips to the end of a line, then moves on; a short glitch plays between lines. Screen readers get each full line from a live region.
-- **Themed transitions** — sections resolve with a "signal acquired" scan-line wipe and blur-to-focus, section titles decrypt, orbit dividers carry travelling data packets, long jumps from the header play a hyperspace star-streak, a left-hand altitude rail and the header's progress line track the flight, and moving to the blog or a project page scans the new page in with the View Transitions API (plain swap where unsupported).
+- **Themed transitions** — sections resolve with a "signal acquired" scan-line wipe and blur-to-focus, section titles decrypt, orbit dividers carry travelling data packets, long jumps from the header play a hyperspace star-streak, a left-hand altitude rail and the header's progress line track the flight (paced by section, so the rail fill meets each tick as that section becomes active), and moving to the blog or a project page scans the new page in with the View Transitions API (plain swap where unsupported).
 - **Blog** — write-ups and notes written in Markdown (`content/posts/*.md`), compiled to HTML with syntax highlighting at build time, so the browser never downloads a Markdown parser.
 - **A constellation that grows** — every post with `constellation: security` becomes a star in the Cybersecurity constellation and a card in the Write-ups section.
 - **Celestial bodies for everything else** — a home planet (**About**), a ringed planet (**Toolkit** / tech stack) and a pulsing signal beacon (**Contact**).
@@ -67,8 +67,8 @@
 - **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
 - **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, page assets, security headers, SEO files). `main` is the only branch and is protected against force pushes and deletion.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets stays behind the page, with a light CSS parallax.
-- **Accessible** — every project, section and post is a real link in the page; one `<h1>`, then `<h2>` sections and `<h3>`/`<h4>` cards; the 3D canvas is decorative and hidden from assistive tech; *reduce motion* turns off camera flights, reveals, warp and typing.
-- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and nothing at all with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
+- **Accessible** — every project, section and post is a real link in the page; one `<h1>`, then `<h2>` sections and `<h3>`/`<h4>` cards; the 3D canvas is decorative and hidden from assistive tech; *reduce motion* turns off ambient motion, the warp flash and typing; scroll-driven motion (camera flight, parallax, reveals, page transitions) follows the reader's own scrolling and stays on, so desktop and phone look the same.
+- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and only for camera flights with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -402,7 +402,7 @@ Run the automated checks:
 npm test
 ```
 
-`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every sky URL round-trips. `src/scroll/sections.test.ts` checks that every section's URL leads back to it and that other paths are rejected. `src/scroll/cameraPath.test.ts` checks that every body and constellation has a camera waypoint in both orientations, and that flight poses land on each waypoint, stay finite for any scroll value and snap under reduced motion. `src/data/dialogue.test.ts` keeps Spruce's lines non-empty and short enough for the bubble. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every sky URL round-trips. `src/scroll/sections.test.ts` checks that every section's URL leads back to it, that other paths are rejected, and that the section-paced progress hits each section's tick exactly and never runs backwards. `src/scroll/cameraPath.test.ts` checks that every body and constellation has a camera waypoint in both orientations, and that flight poses land on each waypoint, stay finite for any scroll value and arrive at the next waypoint without a jump. `src/data/dialogue.test.ts` keeps Spruce's lines non-empty and short enough for the bubble. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
 
 ### Continuous integration
 
@@ -429,7 +429,8 @@ Before shipping, also check by hand:
 - [ ] Project **details →** and Blog links scan the new page in (Chrome, Edge, Safari); **← star map** returns to Projects.
 - [ ] Phone (375×812, browser dev tools device mode): no horizontal scroll, header chips swipe sideways, cards are one column, Spruce sits above his speech bubble.
 - [ ] `?mode=static`: the SVG map stays behind the page and every section still works.
-- [ ] OS *reduce motion* on: no flights (the camera snaps per section), no reveals, warp or typing; Spruce shows whole lines.
+- [ ] OS *reduce motion* on: the camera still flies and sections still reveal while scrolling; no warp flash, twinkle, shooting stars or typing; Spruce shows whole lines.
+- [ ] The left rail fill reaches each tick exactly as that section turns active, and the header line is full at the bottom of the page.
 - [ ] `⌘K` / `/` opens the terminal; `open ran` + Tab completes; Enter opens RankIT and closes the terminal; `open about` scrolls to About.
 - [ ] `theme redteam` turns the HUD crimson and survives a reload; `theme default` restores it.
 - [ ] Phone (375×812): the terminal opens as a bottom sheet.
@@ -446,6 +447,7 @@ Before shipping, also check by hand:
 | Problem | Fix |
 | --- | --- |
 | Only the flat star map shows | The browser has no WebGL (or it crashed). Enable hardware acceleration, or remove `?mode=static` from the URL. |
+| Background looks frozen on a Windows PC | Expected before v2.0.2 when Windows *Animation effects* is off (the browser reports reduced motion). From v2.0.2 the scroll flight runs anyway; only ambient effects stop. |
 | Port 5173 already in use | Stop the other process, or run `npx vite --port 5174`. |
 | Can't open the site on a phone | Use the *Network* URL Vite prints, on the same Wi-Fi; allow Node through the firewall. |
 | The URL changes while scrolling | Expected: the address bar follows the section in view (with `replace`, so Back isn't flooded). |

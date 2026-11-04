@@ -90,7 +90,7 @@ function SceneContent({ layout, portrait, activeBody, animate, starCount, onRead
         <SkyStars stars={layout.stars} selectedId={null} hoveredId={null} onHover={noop} onSelect={noop} animate={animate} />
         <Bodies portrait={portrait} selectedId={activeBody} hoveredId={null} onHover={noop} onSelect={noop} animate={animate} touch={false} />
       </group>
-      <ScrollRig portrait={portrait} animate={animate} />
+      <ScrollRig portrait={portrait} />
     </>
   )
 }
@@ -116,8 +116,11 @@ function AmbientTicker({ animate }: { animate: boolean }) {
   return null
 }
 
-/** Maps the scroll position to a camera pose and eases the camera towards it. */
-function ScrollRig({ portrait, animate }: { portrait: boolean; animate: boolean }) {
+/**
+ * Maps the scroll position to a camera pose and eases the camera towards it. The flight follows the
+ * reader's own scrolling, so it runs under reduced motion too; only the ambient effects stop.
+ */
+function ScrollRig({ portrait }: { portrait: boolean }) {
   const { camera, size, invalidate } = useThree()
   const goal = useRef<Pose | null>(null)
   const look = useRef(new THREE.Vector3())
@@ -151,12 +154,11 @@ function ScrollRig({ portrait, animate }: { portrait: boolean; animate: boolean 
         points.map((p) => p.wp),
         i,
         t,
-        !animate,
       )
       goalPos.current.set(...goal.current.pos)
       goalTarget.current.set(...goal.current.target)
-      // First pose (and every pose under reduced motion) is applied at once, without a flight.
-      if (snapNext || !animate) {
+      // The first pose is applied at once, without a flight.
+      if (snapNext) {
         snapNext = false
         camera.position.copy(goalPos.current)
         look.current.copy(goalTarget.current)
@@ -179,7 +181,7 @@ function ScrollRig({ portrait, animate }: { portrait: boolean; animate: boolean 
       ro.disconnect()
       window.removeEventListener('scroll', onScroll)
     }
-  }, [camera, size.width, size.height, portrait, animate, invalidate])
+  }, [camera, size.width, size.height, portrait, invalidate])
 
   useFrame((_, dt) => {
     if (!goal.current) return

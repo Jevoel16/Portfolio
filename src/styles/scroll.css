@@ -621,24 +621,10 @@
   }
 }
 
+/* Scroll-linked motion (parallax, reveals, page transitions) stays on: it follows the reader's own
+   scrolling and clicks. Only the hyperspace flash is dropped. */
 @media (prefers-reduced-motion: reduce) {
-  [data-reveal='armed'] {
-    opacity: 1;
-    filter: none;
-    transform: none;
-    clip-path: none;
-  }
-  .backdrop::before,
-  .backdrop::after,
-  .backdrop-map {
-    transform: none;
-  }
   .warp {
     display: none;
-  }
-  ::view-transition-group(*),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation: none !important;
   }
 }

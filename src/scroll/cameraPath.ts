@@ -100,14 +100,11 @@ function poseOf(target: Vec3, distance: number, [tx, ty]: [number, number]): Pos
 /**
  * Camera pose between waypoint `i` and `i + 1` at progress `t`. Long hops pull the camera back
  * mid-flight, so moving between distant subjects reads as a flight rather than a pan.
- * `snap` (reduced motion) jumps to whichever waypoint is closer.
  */
-export function poseAt(waypoints: Waypoint[], i: number, t: number, snap = false): Pose {
+export function poseAt(waypoints: Waypoint[], i: number, t: number): Pose {
   const a = waypoints[Math.min(Math.max(i, 0), waypoints.length - 1)]
   const b = waypoints[Math.min(Math.max(i + 1, 0), waypoints.length - 1)]
-  let k = clamp01(t)
-  if (snap) k = k < 0.5 ? 0 : 1
-  const e = ease(k)
+  const e = ease(clamp01(t))
   const target: Vec3 = [lerp(a.target[0], b.target[0], e), lerp(a.target[1], b.target[1], e), lerp(a.target[2], b.target[2], e)]
   const travel = Math.hypot(b.target[0] - a.target[0], b.target[1] - a.target[1], b.target[2] - a.target[2])
   const distance = lerp(a.distance, b.distance, e) + Math.sin(Math.PI * e) * travel * 0.35

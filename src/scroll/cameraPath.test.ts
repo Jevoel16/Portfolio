@@ -67,10 +67,9 @@ describe('poseAt', () => {
     }
   })
 
-  it('snaps to the nearer waypoint under reduced motion', () => {
-    const same = (a: ReturnType<typeof poseAt>, b: ReturnType<typeof poseAt>) =>
-      [...a.pos, ...a.target].forEach((v, k) => expect(v).toBeCloseTo([...b.pos, ...b.target][k], 6))
-    same(poseAt(wps, 0, 0.4, true), poseAt(wps, 0, 0))
-    same(poseAt(wps, 0, 0.6, true), poseAt(wps, 1, 0))
+  it('arrives at the next waypoint without a jump', () => {
+    const a = poseAt(wps, 0, 1)
+    const b = poseAt(wps, 1, 0)
+    ;[...a.pos, ...a.target].forEach((v, k) => expect(v).toBeCloseTo([...b.pos, ...b.target][k], 6))
   })
 })
