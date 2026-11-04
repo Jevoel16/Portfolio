@@ -18,8 +18,9 @@
 ![Vitest](https://img.shields.io/badge/Vitest-3.2.7-blue?style=flat)
 ![marked](https://img.shields.io/badge/marked-15.0.12-blue?style=flat)
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
+![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.2.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.3.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -56,6 +57,9 @@
 - **Fly-to camera** — selecting a star or planet glides the camera to it and opens a details panel.
 - **Phone-first gestures** — drag to look around, pinch to zoom, tap to fly; panels become bottom sheets with the target lifted above them; safe-area aware for notched phones.
 - **Ambient motion** — twinkling stars, nebula clouds, a slow sway and occasional shooting stars (all switched off with *reduce motion*).
+- **Prerendered for search engines** — every page (sky panels, projects, blog posts, 404) is rendered to static HTML at build time with its own title, description, canonical URL, Open Graph/Twitter card and JSON-LD, then hydrated in the browser. Crawlers and no-JS visitors get real content and real links.
+- **SEO files** — `sitemap.xml` and `llms.txt` are generated from the data; `robots.txt`, favicon, touch icon, web manifest and a 1200×630 share image live in `public/`.
+- **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets takes over automatically.
 - **Accessible** — keyboard-reachable list of every star and planet, focus-trapped dialogs, Escape to close.
 - **Light on data** — three.js loads lazily in its own chunk; all textures are drawn in code (no image downloads); fewer background stars on data saver or slow connections.
@@ -75,7 +79,9 @@
 | 3D | three.js, React Three Fiber, drei (`OrbitControls`, `Html`, `Line`, `Billboard`) |
 | Build | Vite 6, `@vitejs/plugin-react` |
 | Styling | Plain CSS with custom properties (`src/index.css`) |
-| Fonts | Space Grotesk, JetBrains Mono (Google Fonts) |
+| Fonts | Space Grotesk and JetBrains Mono variable fonts, self-hosted via Fontsource |
+| Prerender / SEO | `vite build --ssr` + `scripts/prerender.mjs` (`renderToString` per route), `src/seo/meta.ts` |
+| Hosting | Vercel (`vercel.json`: clean URLs, headers, caching) |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -132,7 +138,17 @@ Routes:
 | `/blog/<slug>` | A full post (`slug` = the Markdown file name) |
 | anything else | 404 page |
 
-`vercel.json` rewrites unknown paths to `index.html` so deep links work on Vercel.
+Every route is prerendered to its own HTML file (`/about` → `dist/about.html`), and Vercel's `cleanUrls` serves it without the extension. Unknown paths get `dist/404.html` with a real 404 status.
+
+Hosting files:
+
+| File | Purpose |
+| --- | --- |
+| `vercel.json` | Clean URLs, `www` → apex redirect, security headers (HSTS, CSP, …), one-year caching for hashed `/assets/*` |
+| `public/robots.txt` | Allows all crawlers and points to the sitemap |
+| `public/site.webmanifest`, `favicon.svg`, `apple-touch-icon.png`, `icon-512.png` | Icons for tabs, home screens and installs |
+| `public/og-default.png` | 1200×630 image used by link previews |
+| `src/seo/meta.ts` | Titles, descriptions, canonicals and JSON-LD for every route; `SITE_URL` is the production domain |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -200,6 +216,18 @@ npm run build
 
 Rules the build enforces: `title`, `date` and `summary` are required, dates use `YYYY-MM-DD`, and every image needs alt text (`![what it shows](/images/x.png)`). Headings start at `##`; the post title is the page's only `<h1>`.
 
+### Search engines and sharing
+
+After deploying, submit `https://jevoelorbilla.dev/sitemap.xml` in [Google Search Console](https://search.google.com/search-console) and Bing Webmaster Tools, and test a page with the [Rich Results Test](https://search.google.com/test/rich-results).
+
+Backlink ideas (do these yourself; nothing here is posted automatically):
+
+- Link the site from the GitHub profile README and from each project repository's *About → Website* field.
+- Cross-post blog write-ups to dev.to or Hashnode with the canonical URL set to the post on this site.
+- Add the site to your LinkedIn *Featured* section and to TryHackMe / Hack The Box profiles.
+- Share security write-ups in communities that allow it (r/netsec rules permitting, Discord study groups), linking the post rather than the home page.
+- Ask your school organisation or course pages that list student projects to link to the relevant project page.
+
 ### Adding a project
 
 1. Add it to `projects` in `src/data/projects.ts`.
@@ -219,7 +247,10 @@ Portfolio/
 ├── docs/logo.svg              # README logo
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
-├── vercel.json                # SPA rewrites for deep links
+├── vercel.json                # Clean URLs, redirects, security and cache headers
+├── public/                    # robots.txt, icons, manifest, share image (copied as-is)
+├── scripts/
+│   └── prerender.mjs          # Writes one HTML file per route, sitemap.xml and llms.txt
 ├── tsconfig.json              # References the app and node configs
 ├── tsconfig.app.json          # Browser code (src/)
 ├── tsconfig.node.json         # vite.config.ts, plugins/, scripts/
@@ -228,7 +259,8 @@ Portfolio/
 │   └── posts.ts               # Vite plugin: Markdown → JS modules at build time
 ├── .claude/launch.json        # Local dev-server entry for Claude's preview (git-ignored)
 └── src/
-    ├── main.tsx               # Router + hydrate/render
+    ├── main.tsx               # Router + hydrate/render, self-hosted fonts
+    ├── entry-server.tsx       # Server entry used only by the prerender step
     ├── App.tsx                # Route table
     ├── routes.ts              # URL ⇄ sky selection helpers
     ├── content/
@@ -250,10 +282,13 @@ Portfolio/
     │   ├── projects.ts
     │   ├── constellations.ts  # Stars, layout helpers (orient, skyBounds, targetFor)
     │   └── bodies.ts          # Planets and beacon
+    ├── seo/
+    │   ├── meta.ts            # Per-route title, description, canonical, Open Graph, JSON-LD
+    │   └── RouteHead.tsx      # Keeps <head> in sync during client-side navigation
     ├── hooks/
-    │   ├── device.ts          # Touch detection
-    │   ├── usePortrait.ts     # Rotates the sky on tall screens
-    │   └── useSceneSupport.ts # WebGL / data-saver detection, reduced motion
+    │   ├── device.ts          # Touch detection for the 3D scene
+    │   ├── useMediaQuery.ts   # Hydration-safe media queries; PORTRAIT_QUERY rotates the sky
+    │   └── useSceneSupport.ts # WebGL / data-saver detection, reduced motion, coarse pointer
     ├── scene/                 # Lazy-loaded three.js chunk
     │   ├── SpaceScene.tsx     # Canvas, camera rig, gestures
     │   ├── Constellation.tsx  # Star sprites, lines, labels
@@ -276,7 +311,7 @@ Portfolio/
 | Command | Description |
 | --- | --- |
 | `npm run dev` | Start the Vite dev server on port 5173 (also on your LAN) |
-| `npm run build` | Type-check with `tsc -b`, then build to `dist/` |
+| `npm run build` | Type-check, build the client, build the server entry, then prerender every route plus `sitemap.xml` and `llms.txt` into `dist/` |
 | `npm run preview` | Serve the production build locally |
 | `npm test` | Run the Vitest suite once |
 | `npm run test:watch` | Run Vitest in watch mode |
@@ -293,7 +328,7 @@ Run the automated checks:
 npm test
 ```
 
-`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
 
 Before shipping, also check by hand:
 
@@ -305,6 +340,8 @@ Before shipping, also check by hand:
 - [ ] `?mode=static`: SVG map shows the constellations and the three planets, and panels open.
 - [ ] OS *reduce motion* on: no sway, twinkle or shooting stars; camera jumps instead of flying.
 - [ ] No errors in the browser console.
+- [ ] `npm run build && npm run preview`: view the page source of `/projects/rankit` and a blog post — one `<h1>`, the canonical link, Open Graph tags, JSON-LD and the text are all in the HTML.
+- [ ] `/sitemap.xml`, `/robots.txt` and `/llms.txt` load from the preview server.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -320,6 +357,8 @@ Before shipping, also check by hand:
 | Sky looks cut off under the notch | Make sure `viewport-fit=cover` is still in the viewport meta tag in `index.html`. |
 | Build fails with a frontmatter error | The message names the file and field: fix the date format, add the missing field, or add alt text to the image. |
 | A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |
+| `Minified React error #418` in the console | The page's HTML doesn't match what the client renders. Make sure values read from `window` go through `useMediaQuery` / `useSceneSupport` (they return a fixed server value during hydration). |
+| A deep link 404s on Vercel | The route must be listed by `indexablePaths()` or `extraPaths()` in `src/seo/meta.ts` so the prerender step writes its HTML file. |
 | Large chunk warning on build | Expected: three.js lives in the lazily loaded `SpaceScene` chunk on purpose. |
 
 <p align="right"><a href="#top">back to top ↑</a></p>

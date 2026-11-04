@@ -21,7 +21,7 @@ export function ProjectPanel({ project, onClose, onSelect }: Props) {
         <span className="dot" aria-hidden="true" /> {constellation.name}
         {project.featured && <span className="featured-tag">Featured</span>}
       </p>
-      <h2 id="panel-title">{project.name}</h2>
+      <h1 id="panel-title">{project.name}</h1>
       <p className="panel-desc">{project.description}</p>
       <ul className="chips" aria-label="Tech stack">
         {project.stack.map((t) => (
@@ -33,7 +33,7 @@ export function ProjectPanel({ project, onClose, onSelect }: Props) {
       </a>
       {siblings.length > 0 && (
         <div className="panel-siblings">
-          <h3>Also in {constellation.name}</h3>
+          <h2>Also in {constellation.name}</h2>
           <ul>
             {siblings.map((p) => (
               <li key={p.id}>

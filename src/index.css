@@ -13,8 +13,8 @@
   --gutter: 16px;
   --hud-x: max(var(--gutter), env(safe-area-inset-left), env(safe-area-inset-right));
   --radius: 14px;
-  --font: 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', Consolas, monospace;
+  --font: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
   color-scheme: dark;
 }
 
@@ -266,7 +266,7 @@ button {
   opacity: 0;
   transform: translateY(-8px);
 }
-.hero h1 {
+.hero .hero-title {
   margin: 2px 0;
   font-size: clamp(34px, 7vw, 72px);
   line-height: 1;
@@ -394,7 +394,7 @@ button {
   .has-panel .hero {
     transform: translate(-50%, -8px);
   }
-  .hero h1 {
+  .hero .hero-title {
     font-size: 26px;
     margin-top: 4px;
   }
@@ -427,6 +427,18 @@ button {
   transition:
     opacity 1s ease,
     visibility 0s linear 1s;
+}
+/* Must match PORTRAIT_QUERY in src/hooks/useMediaQuery.ts, so the map and the 3D sky agree. */
+.static-sky.portrait {
+  display: none;
+}
+@media (max-aspect-ratio: 1/1) {
+  .static-sky.landscape {
+    display: none;
+  }
+  .static-sky.portrait {
+    display: block;
+  }
 }
 
 .edge {
@@ -741,7 +753,7 @@ button {
   font-size: 12px;
   color: var(--accent);
 }
-.panel h2 {
+.panel h1 {
   margin: 8px 0 10px;
   padding-right: 30px;
   font-size: 26px;
@@ -756,7 +768,7 @@ button {
   padding-top: 18px;
   border-top: 1px solid var(--border);
 }
-.panel-siblings h3 {
+.panel-siblings h2 {
   margin: 0 0 8px;
   font-family: var(--mono);
   font-size: 12px;
@@ -810,7 +822,7 @@ button {
   font-size: 11.5px;
   padding-top: 3px;
 }
-.stack-group h3 {
+.stack-group h2 {
   margin: 0 0 8px;
   font-size: 11.5px;
   font-weight: 500;

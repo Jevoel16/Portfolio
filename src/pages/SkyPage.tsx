@@ -8,9 +8,8 @@ import { PostPanel } from '../components/PostPanel'
 import { postBySlug } from '../content/posts'
 import { constellations, firstStarId } from '../data/constellations'
 import { projectById, projects } from '../data/projects'
-import { coarsePointer } from '../hooks/device'
-import { usePortrait } from '../hooks/usePortrait'
-import { usePrefersReducedMotion, useSceneSupport } from '../hooks/useSceneSupport'
+import { PORTRAIT_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
+import { useCoarsePointer, usePrefersReducedMotion, useSceneSupport } from '../hooks/useSceneSupport'
 import { pathFor, selectionFromPath } from '../routes'
 import { StaticSky } from '../static/StaticSky'
 
@@ -35,7 +34,7 @@ class SceneBoundary extends Component<{ onError: () => void; children: ReactNode
 export function SkyPage() {
   const { webgl, lite } = useSceneSupport()
   const reducedMotion = usePrefersReducedMotion()
-  const [touch] = useState(coarsePointer)
+  const touch = useCoarsePointer()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const selectedId = selectionFromPath(pathname) ?? null
@@ -44,7 +43,7 @@ export function SkyPage() {
   const [away, setAway] = useState(false)
   const [recenter, setRecenter] = useState(0)
   const stageRef = useRef<HTMLDivElement>(null)
-  const portrait = usePortrait(stageRef, true)
+  const portrait = useMediaQuery(PORTRAIT_QUERY)
 
   const show3d = webgl && !sceneFailed
   const project = selectedId ? projectById.get(selectedId) : undefined
@@ -93,12 +92,13 @@ export function SkyPage() {
         <p className="hero-kicker mono">
           // {projects.length} projects · {constellations.length} constellations
         </p>
-        <h1>Sprucetrap</h1>
+        {/* One h1 per page: the brand on the home view, the panel title when a panel is open. */}
+        {selectedId ? <p className="hero-title">Sprucetrap</p> : <h1 className="hero-title">Sprucetrap</h1>}
         <p className="hero-sub">Aspiring Cybersecurity Professional · Full-Stack Developer</p>
       </div>
 
       <div ref={stageRef} className="stage">
-        <StaticSky portrait={portrait} selectedId={selectedId} onSelect={setSelectedId} covered={show3d && sceneReady} />
+        <StaticSky selectedId={selectedId} onSelect={setSelectedId} covered={show3d && sceneReady} />
       </div>
 
       <div className="sky-footer">

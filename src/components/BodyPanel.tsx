@@ -27,7 +27,7 @@ export function BodyPanel({ body, onClose, onSelect }: Props) {
 function About({ onSelect }: { onSelect: (id: string) => void }) {
   return (
     <>
-      <h2 id="panel-title">Sprucetrap</h2>
+      <h1 id="panel-title">Sprucetrap</h1>
       <p className="panel-desc">
         I'm early in my cybersecurity career and building my skills step by step. Along the way I've built full-stack web
         apps, worked with several kinds of databases, put together machine learning pipelines, and written network servers
@@ -40,7 +40,7 @@ function About({ onSelect }: { onSelect: (id: string) => void }) {
         <li><span className="mono">open to</span> Working on ideas and projects that help me grow in cybersecurity</li>
       </ul>
       <div className="panel-siblings">
-        <h3>{projects.length} stars across {constellations.length} constellations</h3>
+        <h2>{projects.length} stars across {constellations.length} constellations</h2>
         <ul>
           {constellations.map((c) => {
             const first = firstStarId(c)
@@ -62,11 +62,11 @@ function About({ onSelect }: { onSelect: (id: string) => void }) {
 function Toolkit() {
   return (
     <>
-      <h2 id="panel-title">Toolkit</h2>
+      <h1 id="panel-title">Toolkit</h1>
       <p className="panel-desc">The languages, frameworks and tools that orbit my projects.</p>
       {techStack.map((g) => (
         <div key={g.group} className="stack-group">
-          <h3 className="mono">{g.group}</h3>
+          <h2 className="mono">{g.group}</h2>
           <ul className="chips">
             {g.items.map((t) => (
               <li key={t}>{t}</li>
@@ -81,7 +81,7 @@ function Toolkit() {
 function Contact() {
   return (
     <>
-      <h2 id="panel-title">Get in touch</h2>
+      <h1 id="panel-title">Get in touch</h1>
       <p className="panel-desc">
         Have an idea or want to work together? Open an issue in one of my public repositories and I'll get back to you.
       </p>

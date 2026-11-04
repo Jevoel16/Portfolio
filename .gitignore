@@ -5,3 +5,4 @@ commit-msg.txt
 tsconfig.tsbuildinfo
 .claude/
 CLAUDE.md
+dist-ssr

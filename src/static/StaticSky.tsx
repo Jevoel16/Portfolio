@@ -1,21 +1,65 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from 'react'
 import { bodies } from '../data/bodies'
 import { bodyLabelPosition, constellations, labelPosition, orient, skyBounds, starItem } from '../data/constellations'
+import { pathFor } from '../routes'
 
 interface Props {
-  portrait: boolean
   selectedId: string | null
   onSelect: (id: string) => void
   /** Covered by the 3D scene: faded out and removed from the tab order. */
   covered?: boolean
 }
 
-/** Lightweight star map: plain SVG + CSS, no WebGL and no extra download. */
-export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
+/**
+ * Lightweight star map: plain SVG + CSS, no WebGL and no extra download. It is the prerendered
+ * first paint, the loading placeholder and the no-WebGL fallback. Both orientations are rendered
+ * and CSS picks one with the same media query the 3D scene uses, so the right one shows before JS.
+ */
+export function StaticSky(props: Props) {
+  return (
+    <>
+      <SkyMap {...props} portrait={false} />
+      <SkyMap {...props} portrait />
+    </>
+  )
+}
+
+interface LinkProps extends Props {
+  id: string
+  label: string
+  className: string
+  style?: CSSProperties
+  children: ReactNode
+}
+
+/** Real links, so crawlers and no-JS visitors can follow every star; with JS the router takes over. */
+function SkyLink({ id, label, className, style, children, selectedId, onSelect, covered }: LinkProps) {
+  const onClick = (e: MouseEvent) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+    e.preventDefault()
+    onSelect(id)
+  }
+  return (
+    <a
+      href={pathFor(id)}
+      className={`${className}${selectedId === id ? ' selected' : ''}`}
+      style={style}
+      tabIndex={covered ? -1 : undefined}
+      aria-label={label}
+      aria-current={selectedId === id ? 'page' : undefined}
+      onClick={onClick}
+    >
+      {children}
+    </a>
+  )
+}
+
+function SkyMap({ portrait, ...props }: Props & { portrait: boolean }) {
   const svgRef = useRef<SVGSVGElement>(null)
   const b = useMemo(() => skyBounds(portrait), [portrait])
+  const ns = portrait ? 'p' : 'l'
   // Sky units per screen pixel, so text and stars keep a readable size at any width.
-  const [unit, setUnit] = useState(0.02)
+  const [unit, setUnit] = useState(0.022)
 
   useEffect(() => {
     const el = svgRef.current
@@ -38,29 +82,29 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
   return (
     <svg
       ref={svgRef}
-      className={`static-sky${covered ? ' covered' : ''}`}
+      className={`static-sky ${portrait ? 'portrait' : 'landscape'}${props.covered ? ' covered' : ''}`}
       viewBox={`${b.minX} ${-b.maxY} ${b.width} ${b.height}`}
       preserveAspectRatio="xMidYMid meet"
       role="group"
-      aria-label="Star map of my projects. Each constellation is a skill area; each named star is a project. The planets hold About, Toolkit and Contact."
-      aria-hidden={covered || undefined}
+      aria-label="Star map of my projects. Each constellation is a skill area; each named star is a project or write-up. The planets hold About, Toolkit and Contact."
+      aria-hidden={props.covered || undefined}
     >
       <defs>
-        <radialGradient id="glow">
+        <radialGradient id={`${ns}-glow`}>
           <stop offset="0" stopColor="#fff" stopOpacity="0.9" />
           <stop offset="0.25" stopColor="var(--accent)" stopOpacity="0.55" />
           <stop offset="1" stopColor="var(--accent)" stopOpacity="0" />
         </radialGradient>
-        <radialGradient id="nebula">
+        <radialGradient id={`${ns}-nebula`}>
           <stop offset="0" stopColor="#ff7a9c" stopOpacity="0.32" />
           <stop offset="0.5" stopColor="#8a5cff" stopOpacity="0.12" />
           <stop offset="1" stopColor="#8a5cff" stopOpacity="0" />
         </radialGradient>
-        {bodies.map((b) => (
-          <radialGradient key={b.id} id={`planet-${b.id}`} cx="0.35" cy="0.3" r="0.8">
+        {bodies.map((body) => (
+          <radialGradient key={body.id} id={`${ns}-planet-${body.id}`} cx="0.35" cy="0.3" r="0.8">
             <stop offset="0" stopColor="#fff" stopOpacity="0.9" />
-            <stop offset="0.25" stopColor={b.color} />
-            <stop offset="1" stopColor={b.color2} />
+            <stop offset="0.25" stopColor={body.color} />
+            <stop offset="1" stopColor={body.color2} />
           </radialGradient>
         ))}
       </defs>
@@ -73,12 +117,13 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
           <g
             key={c.id}
             className={`constellation${c.forming ? ' forming' : ''}`}
-            style={{ '--accent': c.color, '--delay': `${ci * 0.25}s` } as React.CSSProperties}
+            style={{ '--accent': c.color, '--delay': `${ci * 0.25}s` } as CSSProperties}
           >
-            {c.forming && (() => {
-              const [cx, cy] = pt(0.1, 0.2)
-              return <ellipse className="nebula" cx={cx} cy={cy} rx={portrait ? 2.6 : 3.2} ry={portrait ? 3.2 : 2.6} fill="url(#nebula)" />
-            })()}
+            {c.id === 'security' &&
+              (() => {
+                const [cx, cy] = pt(0.1, 0.2)
+                return <ellipse className="nebula" cx={cx} cy={cy} rx={portrait ? 2.6 : 3.2} ry={portrait ? 3.2 : 2.6} fill={`url(#${ns}-nebula)`} />
+              })()}
 
             {c.edges.map(([a, z]) => {
               const [x1, y1] = pt(byKey.get(a)!.x, byKey.get(a)!.y)
@@ -101,32 +146,23 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
 
             {c.stars.map((s, si) => {
               const [x, y] = pt(s.x, s.y)
-              const project = starItem(s)
-              const twinkle = { animationDelay: `${(ci * 7 + si * 3) % 11 * 0.37}s` }
-              if (!project) {
+              const item = starItem(s)
+              const twinkle = { animationDelay: `${((ci * 7 + si * 3) % 11) * 0.37}s` }
+              if (!item) {
                 return <circle key={s.key} className="star-minor" cx={x} cy={y} r={px(c.forming ? 2 : 2.4)} style={twinkle} />
               }
-              const r = px(project.featured ? 5 : 3.6)
-              const selected = selectedId === project.id
-              const rightSide = x > (b.minX + b.width) - b.width * 0.22
+              const r = px(item.featured ? 5 : 3.6)
+              const rightSide = x > b.minX + b.width - b.width * 0.22
               return (
-                <g
+                <SkyLink
                   key={s.key}
-                  className={`star${project.featured ? ' featured' : ''}${selected ? ' selected' : ''}`}
-                  role="button"
-                  tabIndex={covered ? -1 : 0}
-                  aria-label={`${project.name}, ${c.name}${project.featured ? ', featured' : ''}`}
-                  aria-pressed={selected}
-                  onClick={() => onSelect(project.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault()
-                      onSelect(project.id)
-                    }
-                  }}
+                  {...props}
+                  id={item.id}
+                  className={`star${item.featured ? ' featured' : ''}`}
+                  label={`${item.name}, ${c.name}${item.featured ? ', featured' : ''}`}
                 >
                   <circle className="hit" cx={x} cy={y} r={px(22)} />
-                  <circle className="halo" cx={x} cy={y} r={r * 4.5} fill="url(#glow)" style={twinkle} />
+                  <circle className="halo" cx={x} cy={y} r={r * 4.5} fill={`url(#${ns}-glow)`} style={twinkle} />
                   <circle className="core" cx={x} cy={y} r={r} />
                   <circle className="ring" cx={x} cy={y} r={r * 2.6} strokeWidth={px(1.2)} />
                   <text
@@ -137,9 +173,9 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
                     fontSize={px(13)}
                     strokeWidth={px(4)}
                   >
-                    {project.name}
+                    {item.name}
                   </text>
-                </g>
+                </SkyLink>
               )
             })}
 
@@ -159,26 +195,17 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
         const [x, y] = pt(body.x, body.y)
         const [lox, loy] = bodyLabelPosition(body, portrait)
         const r = body.radius
-        const selected = selectedId === body.id
         return (
-          <g
+          <SkyLink
             key={body.id}
-            className={`body ${body.kind}${selected ? ' selected' : ''}`}
-            style={{ '--accent': body.color, '--accent-2': body.color2 } as React.CSSProperties}
-            role="button"
-            tabIndex={covered ? -1 : 0}
-            aria-label={`${body.name}, ${body.caption}`}
-            aria-pressed={selected}
-            onClick={() => onSelect(body.id)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault()
-                onSelect(body.id)
-              }
-            }}
+            {...props}
+            id={body.id}
+            className={`body ${body.kind}`}
+            style={{ '--accent': body.color, '--accent-2': body.color2 } as CSSProperties}
+            label={`${body.name}, ${body.caption}`}
           >
             <circle className="hit" cx={x} cy={y} r={Math.max(r * 1.6, px(26))} />
-            <circle cx={x} cy={y} r={r * 2.4} fill="url(#glow)" opacity={0.7} />
+            <circle cx={x} cy={y} r={r * 2.4} fill={`url(#${ns}-glow)`} opacity={0.7} />
             {body.kind === 'beacon' ? (
               <>
                 <circle className="pulse" cx={x} cy={y} r={r * 2} strokeWidth={px(1.4)} />
@@ -190,7 +217,7 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
                 {body.kind === 'ringed' && (
                   <ellipse className="ring-back" cx={x} cy={y} rx={r * 2.1} ry={r * 0.55} strokeWidth={px(3)} transform={`rotate(-18 ${x} ${y})`} />
                 )}
-                <circle cx={x} cy={y} r={r} fill={`url(#planet-${body.id})`} />
+                <circle cx={x} cy={y} r={r} fill={`url(#${ns}-planet-${body.id})`} />
                 {body.kind === 'ringed' && (
                   <path
                     className="ring-front"
@@ -208,7 +235,7 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
                 {body.caption}
               </tspan>
             </text>
-          </g>
+          </SkyLink>
         )
       })}
     </svg>

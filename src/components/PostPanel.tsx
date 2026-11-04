@@ -22,7 +22,7 @@ export function PostPanel({ post, onClose, onSelect }: Props) {
       <p className="panel-kicker">
         <span className="dot" aria-hidden="true" /> {constellation.name} · write-up
       </p>
-      <h2 id="panel-title">{post.title}</h2>
+      <h1 id="panel-title">{post.title}</h1>
       <p className="post-meta mono">
         <time dateTime={post.date}>{formatDate(post.date)}</time> · {post.readingMinutes} min read
       </p>
@@ -39,7 +39,7 @@ export function PostPanel({ post, onClose, onSelect }: Props) {
       </Link>
       {siblings.length > 0 && (
         <div className="panel-siblings">
-          <h3>Also in {constellation.name}</h3>
+          <h2>Also in {constellation.name}</h2>
           <ul>
             {siblings.map((s) => (
               <li key={s.id}>

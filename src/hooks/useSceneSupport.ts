@@ -1,8 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
+import { useMediaQuery } from './useMediaQuery'
 
 interface NetworkInformation {
   saveData?: boolean
   effectiveType?: string
+}
+
+interface SceneSupport {
+  webgl: boolean
+  /** Draw fewer background stars on data saver or slow connections. */
+  lite: boolean
 }
 
 function hasWebGL(): boolean {
@@ -19,26 +26,25 @@ function isLite(): boolean {
   return !!conn?.saveData || (!!conn?.effectiveType && ['slow-2g', '2g', '3g'].includes(conn.effectiveType))
 }
 
-/**
- * Whether the 3D sky can run here. `?mode=static` forces the SVG fallback, for testing it.
- * `lite` asks the scene to draw fewer background stars on data saver or slow connections.
- */
-export function useSceneSupport() {
-  const [support] = useState(() => ({
+// Probed once per page load; a stable object keeps useSyncExternalStore from re-rendering.
+let support: SceneSupport | undefined
+const clientSupport = () =>
+  (support ??= {
     webgl: new URLSearchParams(window.location.search).get('mode') !== 'static' && hasWebGL(),
     lite: isLite(),
-  }))
-  return support
+  })
+const SERVER: SceneSupport = { webgl: false, lite: false }
+const noSubscribe = () => () => {}
+
+/**
+ * Whether the 3D sky can run here. `?mode=static` forces the SVG fallback, for testing it.
+ * The prerendered page always starts with the static map; the scene mounts after hydration.
+ */
+export function useSceneSupport() {
+  return useSyncExternalStore(noSubscribe, clientSupport, () => SERVER)
 }
 
-export function usePrefersReducedMotion() {
-  const query = '(prefers-reduced-motion: reduce)'
-  const [reduced, setReduced] = useState(() => window.matchMedia(query).matches)
-  useEffect(() => {
-    const mql = window.matchMedia(query)
-    const onChange = () => setReduced(mql.matches)
-    mql.addEventListener('change', onChange)
-    return () => mql.removeEventListener('change', onChange)
-  }, [])
-  return reduced
-}
+export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)')
+
+/** Touch-first devices (phones, tablets), where there is no hover. */
+export const useCoarsePointer = () => useMediaQuery('(pointer: coarse)')

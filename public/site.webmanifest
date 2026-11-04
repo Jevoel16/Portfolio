@@ -1,0 +1,14 @@
+{
+  "name": "Sprucetrap · Constellations",
+  "short_name": "Sprucetrap",
+  "description": "Cybersecurity and full-stack portfolio, explored like a night sky.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04060d",
+  "theme_color": "#04060d",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ]
+}
