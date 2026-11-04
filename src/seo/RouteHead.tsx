@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router'
 import { SITE_URL, metaFor } from './meta'
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {

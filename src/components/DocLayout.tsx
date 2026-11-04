@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router'
 import { openTerminal } from '../hud/CommandTerminal'
 
 /** Scrolling page shell for the blog and 404: same identity as the sky, without WebGL. */

@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot, hydrateRoot } from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter } from 'react-router'
 import App from './App'
 import { loadPost } from './content/posts'
 import '@fontsource-variable/space-grotesk'

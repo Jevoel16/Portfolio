@@ -14,13 +14,13 @@
 ![three.js](https://img.shields.io/badge/three.js-0.170.0-blue?style=flat)
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-8.18.0-blue?style=flat)
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
-![React Router](https://img.shields.io/badge/React%20Router-6.30.6-blue?style=flat)
+![React Router](https://img.shields.io/badge/React%20Router-7.18.5-blue?style=flat)
 ![Vitest](https://img.shields.io/badge/Vitest-3.2.7-blue?style=flat)
 ![marked](https://img.shields.io/badge/marked-15.0.12-blue?style=flat)
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.4.1-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.4.2-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -76,7 +76,7 @@
 | Area | Tools |
 | --- | --- |
 | UI | React 18, TypeScript |
-| Routing | React Router 6 (`BrowserRouter`, one layout route for the sky) |
+| Routing | React Router 7 in declarative mode (`BrowserRouter`, one layout route for the sky; `StaticRouter` for prerendering) |
 | Blog | Markdown + frontmatter, compiled by a Vite plugin (`plugins/posts.ts`) with marked and Shiki |
 | Testing | Vitest |
 | 3D | three.js, React Three Fiber (on-demand frameloop), drei (`OrbitControls`, `Line`, `Billboard`), custom GLSL point shader |

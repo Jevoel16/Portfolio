@@ -20,7 +20,7 @@ export default defineConfig({
           if (!id.includes('node_modules')) return undefined
           if (/[\/]node_modules[\/]three[\/]/.test(id)) return 'three'
           if (/[\/]node_modules[\/](@react-three|three-stdlib|troika|maath|zustand|suspend-react|its-fine)/.test(id)) return 'r3f'
-          if (/[\/]node_modules[\/](react|react-dom|scheduler|react-router|react-router-dom|@remix-run)[\/]/.test(id)) return 'react'
+          if (/[\/]node_modules[\/](react|react-dom|scheduler|react-router|cookie|set-cookie-parser)[\/]/.test(id)) return 'react'
           return undefined
         },
       },

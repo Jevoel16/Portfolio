@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { formatDate } from '../content/posts'
 import type { PostMeta } from '../content/types'
 import { constellationById, starItem } from '../data/constellations'

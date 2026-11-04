@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
 import { complete, QUICK_COMMANDS, runCommand } from './commands'
 import { setTheme } from './theme'
 

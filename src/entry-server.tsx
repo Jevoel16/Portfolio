@@ -1,7 +1,7 @@
 // Built with `vite build --ssr` and run by scripts/prerender.mjs, never shipped to the browser.
 import { StrictMode } from 'react'
 import { renderToString } from 'react-dom/server'
-import { StaticRouter } from 'react-router-dom/server'
+import { StaticRouter } from 'react-router'
 import App from './App'
 import { loadPost, posts } from './content/posts'
 import { extraPaths, headHtml, indexablePaths, metaFor } from './seo/meta'

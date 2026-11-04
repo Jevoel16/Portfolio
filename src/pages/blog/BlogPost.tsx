@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router'
 import { DocLayout } from '../../components/DocLayout'
 import { cachedPost, formatDate, loadPost, postBySlug, posts } from '../../content/posts'
 import type { Post } from '../../content/types'

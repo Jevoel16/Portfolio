@@ -1,5 +1,5 @@
 import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router'
 import { BodyPanel } from '../components/BodyPanel'
 import { Header } from '../components/Header'
 import { ProjectPanel } from '../components/ProjectPanel'

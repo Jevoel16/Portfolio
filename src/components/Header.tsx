@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router'
 import { bodies } from '../data/bodies'
 import { openTerminal } from '../hud/CommandTerminal'
 
