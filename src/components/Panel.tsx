@@ -28,7 +28,7 @@ export function Panel({ accent, labelledBy, closeLabel, onClose, children }: Pro
         return
       }
       if (e.key !== 'Tab' || !panelRef.current) return
-      const focusable = panelRef.current.querySelectorAll<HTMLElement>('a[href], button')
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')
       if (!focusable.length) return
       const first = focusable[0]
       const last = focusable[focusable.length - 1]

@@ -15,7 +15,7 @@
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-8.18.0-blue?style=flat)
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.0.1-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.0.2-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
