@@ -1,4 +1,5 @@
-import type { ConstellationId } from './projects'
+import { posts } from '../content/posts'
+import { projectById, projects, type ConstellationId } from './projects'
 import { bodies, bodyById, type Body, type BodyId } from './bodies'
 
 // Sky coordinates: x right, y up, z toward the viewer. Roughly x ∈ [-9, 9], y ∈ [-6, 6].
@@ -8,6 +9,8 @@ export interface Star {
   key: string
   /** Project id, or undefined for a decorative star that only shapes the figure. */
   projectId?: string
+  /** Blog post slug, for write-up stars in the Cybersecurity constellation. */
+  postSlug?: string
   x: number
   y: number
   z: number
@@ -105,38 +108,86 @@ export const constellations: Constellation[] = [
       ['school', 'mongo'],
     ],
   },
-  {
+  securityConstellation(),
+]
+
+/**
+ * The Cybersecurity figure grows from blog write-ups: each post with `constellation: security`
+ * claims one of the five base stars (oldest first), and later posts orbit around them.
+ */
+function securityConstellation(): Constellation {
+  const base: Star[] = [
+    { key: 's1', x: -0.9, y: 0.7, z: 0.3 },
+    { key: 's2', x: 0.4, y: 1.3, z: -0.4 },
+    { key: 's3', x: 1.3, y: 0.1, z: 0.5 },
+    { key: 's4', x: 0.1, y: -0.8, z: -0.2 },
+    { key: 's5', x: -1.2, y: -0.4, z: 0.1 },
+  ]
+  const edges: [string, string][] = [
+    ['s1', 's2'],
+    ['s2', 's3'],
+    ['s3', 's4'],
+    ['s4', 's5'],
+    ['s5', 's1'],
+  ]
+  const writeups = posts.filter((p) => p.constellation === 'security').reverse()
+  const stars = base.map((s, i) => (writeups[i] ? { ...s, postSlug: writeups[i].slug } : s))
+  writeups.slice(base.length).forEach((p, i) => {
+    // Golden-angle spiral keeps extra stars evenly spread without hand placement.
+    const angle = i * 2.39996 + 0.4
+    const r = 2 + 0.18 * i
+    const key = `w${i}`
+    stars.push({ key, postSlug: p.slug, x: 0.1 + Math.cos(angle) * r, y: 0.2 + Math.sin(angle) * r * 0.8, z: ((i % 3) - 1) * 0.4 })
+    edges.push([key, base[i % base.length].key])
+  })
+  const forming = writeups.length === 0
+  return {
     id: 'security',
     name: 'Cybersecurity',
-    blurb: 'My current focus. This constellation is still forming — stars appear here as I finish security projects.',
+    blurb: forming
+      ? 'My current focus. This constellation is still forming — stars appear here as I publish write-ups and finish security projects.'
+      : 'My current focus: write-ups, labs and notes from learning cybersecurity. Each star is a post.',
     color: '#ff7a9c',
     label: { x: 0, y: -1.9 },
-    forming: true,
-    stars: [
-      { key: 's1', x: -0.9, y: 0.7, z: 0.3 },
-      { key: 's2', x: 0.4, y: 1.3, z: -0.4 },
-      { key: 's3', x: 1.3, y: 0.1, z: 0.5 },
-      { key: 's4', x: 0.1, y: -0.8, z: -0.2 },
-      { key: 's5', x: -1.2, y: -0.4, z: 0.1 },
-    ],
-    edges: [
-      ['s1', 's2'],
-      ['s2', 's3'],
-      ['s3', 's4'],
-      ['s4', 's5'],
-      ['s5', 's1'],
-    ],
-  },
-]
+    forming,
+    stars,
+    edges,
+  }
+}
+
+const trimLabel = (text: string, max = 24) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text)
+
+/** Selection id of a star: project id, `post:<slug>` for write-ups, or undefined for decorative stars. */
+export const starId = (s: Star) => s.projectId ?? (s.postSlug ? `post:${s.postSlug}` : undefined)
+
+export interface StarItem {
+  id: string
+  name: string
+  featured: boolean
+}
+
+/** What a clickable star stands for, for labels in both the 3D and SVG skies. */
+export function starItem(s: Star): StarItem | undefined {
+  if (s.projectId) {
+    const p = projectById.get(s.projectId)
+    return p && { id: p.id, name: p.name, featured: p.featured }
+  }
+  const post = s.postSlug ? posts.find((p) => p.slug === s.postSlug) : undefined
+  return post && { id: `post:${post.slug}`, name: post.short ?? trimLabel(post.title), featured: false }
+}
 
 export const constellationById = new Map(constellations.map((c) => [c.id, c]))
 
-/** Star lookup for a project: which constellation and where. */
-export const starForProject = new Map(
-  constellations.flatMap((c) =>
-    c.stars.filter((s) => s.projectId).map((s) => [s.projectId!, { constellation: c, star: s }] as const),
-  ),
+/** Star lookup by selection id (project id or `post:<slug>`): which constellation and where. */
+export const starForId = new Map(
+  constellations.flatMap((c) => c.stars.flatMap((s) => (starId(s) ? [[starId(s)!, { constellation: c, star: s }] as const] : []))),
 )
+
+/** Star to open when a constellation chip is pressed: a featured project first, then any star. */
+export function firstStarId(c: Constellation): string | undefined {
+  const ids = c.stars.map(starId).filter((id): id is string => !!id)
+  return ids.find((id) => projectById.get(id)?.featured) ?? ids[0] ?? projects.find((p) => p.constellation === c.id)?.id
+}
 
 /** On portrait screens the wide sky is rotated a quarter turn so it fills the height. */
 export function orient(x: number, y: number, portrait: boolean): [number, number] {
@@ -158,7 +209,7 @@ export function labelPosition(c: Constellation, portrait: boolean): [number, num
 /** Oriented sky position of a project star or a celestial body, or undefined for an unknown id. */
 export function targetFor(id: string, portrait: boolean): { x: number; y: number; z: number; body?: Body } | undefined {
   const body = bodyById.get(id as BodyId)
-  const src = body ?? starForProject.get(id)?.star
+  const src = body ?? starForId.get(id)?.star
   if (!src) return undefined
   const [x, y] = orient(src.x, src.y, portrait)
   return { x, y, z: src.z, body }

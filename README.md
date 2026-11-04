@@ -16,8 +16,10 @@
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
 ![React Router](https://img.shields.io/badge/React%20Router-6.30.6-blue?style=flat)
 ![Vitest](https://img.shields.io/badge/Vitest-3.2.7-blue?style=flat)
+![marked](https://img.shields.io/badge/marked-15.0.12-blue?style=flat)
+![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.1.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.2.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -46,7 +48,9 @@
 ## Features
 
 - **One full-screen interactive sky** — the whole site is a 3D space scene; there are no plain list or scrolling sections.
-- **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases, and a Cybersecurity constellation that is still forming.
+- **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases and Cybersecurity.
+- **Blog** — write-ups and notes written in Markdown (`content/posts/*.md`), compiled to HTML with syntax highlighting at build time, so the browser never downloads a Markdown parser.
+- **A constellation that grows** — every post with `constellation: security` becomes a star in the Cybersecurity constellation, with a teaser panel that links to the full write-up.
 - **Celestial bodies for everything else** — a home planet (**About**), a ringed planet (**Toolkit** / tech stack) and a pulsing signal beacon (**Contact**).
 - **Deep links** — every panel has its own URL (`/about`, `/toolkit`, `/contact`, `/projects/<slug>`); Back and Forward open and close panels, and unknown URLs show a 404 page.
 - **Fly-to camera** — selecting a star or planet glides the camera to it and opens a details panel.
@@ -66,6 +70,8 @@
 | --- | --- |
 | UI | React 18, TypeScript |
 | Routing | React Router 6 (`BrowserRouter`, one layout route for the sky) |
+| Blog | Markdown + frontmatter, compiled by a Vite plugin (`plugins/posts.ts`) with marked and Shiki |
+| Testing | Vitest |
 | 3D | three.js, React Three Fiber, drei (`OrbitControls`, `Html`, `Line`, `Billboard`) |
 | Build | Vite 6, `@vitejs/plugin-react` |
 | Styling | Plain CSS with custom properties (`src/index.css`) |
@@ -106,6 +112,7 @@ No environment variables are needed. Content lives in data files:
 | `src/data/constellations.ts` | Constellation names, colours and star positions in sky coordinates |
 | `src/data/bodies.ts` | The About / Toolkit / Contact planets: kind, colours, position, size |
 | `src/components/BodyPanel.tsx` | The text shown in the About, Toolkit and Contact panels |
+| `content/posts/*.md` | Blog posts (see [Writing a post](#writing-a-post)) |
 
 URL options:
 
@@ -120,6 +127,9 @@ Routes:
 | `/` | The full sky, no panel |
 | `/about`, `/toolkit`, `/contact` | That planet's panel |
 | `/projects/<slug>` | A project's panel (`slug` = the project's `id` in `src/data/projects.ts`) |
+| `/writeups/<slug>` | A Cybersecurity write-up star's teaser panel |
+| `/blog` | List of posts, newest first |
+| `/blog/<slug>` | A full post (`slug` = the Markdown file name) |
 | anything else | 404 page |
 
 `vercel.json` rewrites unknown paths to `index.html` so deep links work on Vercel.
@@ -157,6 +167,39 @@ Open <http://localhost:5173>. The server also listens on your LAN (`host: true`)
 
 Press **Tab** from the top of the page to reach a list of every star and planet; **Enter** opens its panel. Panels trap focus and close with **Escape**.
 
+### Readers of the blog
+
+1. Open **Blog** from a panel link or go to `/blog`.
+2. Pick a post; long posts show an *On this page* table of contents.
+3. Security posts have **View in the sky**, which flies to the post's star in the Cybersecurity constellation.
+
+### Writing a post
+
+Create `content/posts/<slug>.md` (the file name is the URL, lowercase and hyphenated):
+
+```markdown
+---
+title: Hardening a static portfolio with security headers
+short: Security headers          # optional, the star label in the sky
+date: 2026-11-04                 # YYYY-MM-DD
+updated: 2026-11-20              # optional
+summary: One or two sentences for the list, the sky panel and search results.
+tags: [web-security, headers]
+constellation: security          # optional: show it as a star in the Cybersecurity constellation
+draft: true                      # optional: visible only on the dev server
+---
+
+## First section
+
+Text, `code`, [links](https://example.com) and fenced code blocks with a language:
+
+```bash
+npm run build
+```
+```
+
+Rules the build enforces: `title`, `date` and `summary` are required, dates use `YYYY-MM-DD`, and every image needs alt text (`![what it shows](/images/x.png)`). Headings start at `##`; the post title is the page's only `<h1>`.
+
 ### Adding a project
 
 1. Add it to `projects` in `src/data/projects.ts`.
@@ -177,19 +220,31 @@ Portfolio/
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
 ├── vercel.json                # SPA rewrites for deep links
+├── tsconfig.json              # References the app and node configs
+├── tsconfig.app.json          # Browser code (src/)
+├── tsconfig.node.json         # vite.config.ts, plugins/, scripts/
+├── content/posts/             # Blog posts in Markdown
+├── plugins/
+│   └── posts.ts               # Vite plugin: Markdown → JS modules at build time
 ├── .claude/launch.json        # Local dev-server entry for Claude's preview (git-ignored)
 └── src/
     ├── main.tsx               # Router + hydrate/render
     ├── App.tsx                # Route table
     ├── routes.ts              # URL ⇄ sky selection helpers
+    ├── content/
+    │   ├── posts.ts           # Post list, lazy post loader, date formatting
+    │   └── types.ts           # PostMeta / Post shapes
     ├── pages/
     │   ├── SkyPage.tsx        # Full-screen sky, HUD, panels, fallback switching
-    │   └── NotFound.tsx       # 404 page
+    │   ├── NotFound.tsx       # 404 page
+    │   └── blog/              # BlogIndex, BlogPost
     ├── index.css              # All styles (HUD, panels, labels, static map)
     ├── components/
     │   ├── Header.tsx         # Brand + About / Toolkit / Contact shortcuts
     │   ├── Panel.tsx          # Shared dialog shell (side sheet / bottom sheet)
     │   ├── ProjectPanel.tsx   # Project details
+    │   ├── PostPanel.tsx      # Write-up star teaser
+    │   ├── DocLayout.tsx      # Scrolling shell for blog and 404 pages
     │   └── BodyPanel.tsx      # About, Toolkit and Contact content
     ├── data/
     │   ├── projects.ts
@@ -238,7 +293,7 @@ Run the automated checks:
 npm test
 ```
 
-`src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
 
 Before shipping, also check by hand:
 
@@ -263,6 +318,8 @@ Before shipping, also check by hand:
 | Port 5173 already in use | Stop the other process, or run `npx vite --port 5174`. |
 | Can't open the site on a phone | Use the *Network* URL Vite prints, on the same Wi-Fi; allow Node through the firewall. |
 | Sky looks cut off under the notch | Make sure `viewport-fit=cover` is still in the viewport meta tag in `index.html`. |
+| Build fails with a frontmatter error | The message names the file and field: fix the date format, add the missing field, or add alt text to the image. |
+| A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |
 | Large chunk warning on build | Expected: three.js lives in the lazily loaded `SpaceScene` chunk on purpose. |
 
 <p align="right"><a href="#top">back to top ↑</a></p>

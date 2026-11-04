@@ -4,7 +4,9 @@ import { BodyPanel } from '../components/BodyPanel'
 import { Header } from '../components/Header'
 import { ProjectPanel } from '../components/ProjectPanel'
 import { bodies, bodyById, type BodyId } from '../data/bodies'
-import { constellations } from '../data/constellations'
+import { PostPanel } from '../components/PostPanel'
+import { postBySlug } from '../content/posts'
+import { constellations, firstStarId } from '../data/constellations'
 import { projectById, projects } from '../data/projects'
 import { coarsePointer } from '../hooks/device'
 import { usePortrait } from '../hooks/usePortrait'
@@ -28,8 +30,6 @@ class SceneBoundary extends Component<{ onError: () => void; children: ReactNode
   }
 }
 
-const firstStar = (constellationId: string) =>
-  projects.find((p) => p.constellation === constellationId && p.featured) ?? projects.find((p) => p.constellation === constellationId)
 
 /** The full-screen sky. The URL is the selection, so every panel is linkable and Back closes it. */
 export function SkyPage() {
@@ -49,6 +49,7 @@ export function SkyPage() {
   const show3d = webgl && !sceneFailed
   const project = selectedId ? projectById.get(selectedId) : undefined
   const body = selectedId ? bodyById.get(selectedId as BodyId) : undefined
+  const post = selectedId?.startsWith('post:') ? postBySlug.get(selectedId.slice(5)) : undefined
 
   useEffect(() => {
     if (!show3d) setSceneReady(false)
@@ -111,14 +112,14 @@ export function SkyPage() {
         </div>
         <ul className="legend" aria-label="Constellations">
           {constellations.map((c) => {
-            const first = firstStar(c.id)
+            const first = firstStarId(c)
             return (
               <li key={c.id} style={{ '--accent': c.color } as React.CSSProperties}>
                 <button
                   type="button"
                   className="hud-chip"
                   disabled={!first}
-                  onClick={() => first && setSelectedId(first.id)}
+                  onClick={() => first && setSelectedId(first)}
                   title={first ? `Visit ${c.name}` : `${c.name} is still forming`}
                 >
                   <span className="dot" aria-hidden="true" />
@@ -147,11 +148,21 @@ export function SkyPage() {
               </button>
             </li>
           ))}
+          {constellations
+            .flatMap((c) => c.stars.filter((s) => s.postSlug).map((s) => postBySlug.get(s.postSlug!)!))
+            .map((p) => (
+              <li key={p.slug}>
+                <button type="button" onClick={() => setSelectedId(`post:${p.slug}`)}>
+                  {p.title} (write-up)
+                </button>
+              </li>
+            ))}
         </ul>
       </nav>
 
       {project && <ProjectPanel key={project.id} project={project} onClose={close} onSelect={setSelectedId} />}
       {body && <BodyPanel key={body.id} body={body} onClose={close} onSelect={setSelectedId} />}
+      {post && <PostPanel key={post.slug} post={post} onClose={close} onSelect={setSelectedId} />}
     </main>
   )
 }

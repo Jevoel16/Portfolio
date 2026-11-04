@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { bodies } from '../data/bodies'
-import { bodyLabelPosition, constellations, labelPosition, orient, skyBounds } from '../data/constellations'
-import { projectById } from '../data/projects'
+import { bodyLabelPosition, constellations, labelPosition, orient, skyBounds, starItem } from '../data/constellations'
 
 interface Props {
   portrait: boolean
@@ -102,7 +101,7 @@ export function StaticSky({ portrait, selectedId, onSelect, covered }: Props) {
 
             {c.stars.map((s, si) => {
               const [x, y] = pt(s.x, s.y)
-              const project = s.projectId ? projectById.get(s.projectId) : undefined
+              const project = starItem(s)
               const twinkle = { animationDelay: `${(ci * 7 + si * 3) % 11 * 0.37}s` }
               if (!project) {
                 return <circle key={s.key} className="star-minor" cx={x} cy={y} r={px(c.forming ? 2 : 2.4)} style={twinkle} />

@@ -3,8 +3,7 @@ import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import { Html, Line } from '@react-three/drei'
 import * as THREE from 'three'
 import type { Constellation as ConstellationData, Star } from '../data/constellations'
-import { labelPosition, orient } from '../data/constellations'
-import { projectById } from '../data/projects'
+import { labelPosition, orient, starItem } from '../data/constellations'
 import { coarsePointer } from '../hooks/device'
 import { glowTexture } from './textures'
 
@@ -83,7 +82,7 @@ function StarSprite({ star, pos, color, phase, faint, selectedId, onSelect, anim
   const sprite = useRef<THREE.Sprite>(null)
   const [hovered, setHovered] = useState(false)
   const [touch] = useState(coarsePointer)
-  const project = star.projectId ? projectById.get(star.projectId) : undefined
+  const project = starItem(star)
   const selected = !!project && selectedId === project.id
   const base = project ? (project.featured ? 1.35 : 1.0) : faint ? 0.45 : 0.55
 

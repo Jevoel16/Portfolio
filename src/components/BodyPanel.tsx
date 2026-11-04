@@ -1,5 +1,5 @@
 import type { Body } from '../data/bodies'
-import { constellations } from '../data/constellations'
+import { constellations, firstStarId } from '../data/constellations'
 import { projects, techStack } from '../data/projects'
 import { Panel } from './Panel'
 
@@ -43,10 +43,10 @@ function About({ onSelect }: { onSelect: (id: string) => void }) {
         <h3>{projects.length} stars across {constellations.length} constellations</h3>
         <ul>
           {constellations.map((c) => {
-            const first = projects.find((p) => p.constellation === c.id && p.featured) ?? projects.find((p) => p.constellation === c.id)
+            const first = firstStarId(c)
             return (
               <li key={c.id} style={{ '--accent': c.color } as React.CSSProperties}>
-                <button type="button" disabled={!first} onClick={() => first && onSelect(first.id)}>
+                <button type="button" disabled={!first} onClick={() => first && onSelect(first)}>
                   <span className="dot" aria-hidden="true" /> {c.name}
                   {!first && <small> · in formation</small>}
                 </button>

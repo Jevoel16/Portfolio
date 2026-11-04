@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { posts } from './plugins/posts'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), posts()],
   // host: true listens on all interfaces so other devices on the LAN can reach the dev server.
   server: { port: 5173, host: true },
   preview: { host: true },
