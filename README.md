@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.0.3-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.0.4-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -39,8 +39,7 @@
 - [Usage](#usage)
 - [Project structure](#project-structure)
 - [Scripts](#scripts)
-- [Testing](#testing)
-- [Troubleshooting](#troubleshooting)
+- [Deployment](#deployment)
 - [Contributing](#contributing)
 - [License](#license)
 - [Author](#author)
@@ -223,7 +222,7 @@ visitor@sprucetrap:~$ theme redteam
 
 ### Visitors on phones
 
-1. Scroll as usual; the sky flies behind the page in portrait orientation.
+1. Scroll as usual; the sky flies behind the page in portrait orientation. Phones get solid glass cards instead of blurred ones and a lighter canvas, so fast scrolling stays smooth.
 2. Swipe the header chip row sideways to reach **Contact**, **Blog** and the terminal.
 3. In **Contact**, Spruce sits above his speech bubble; tap the bubble or **Next** to continue.
 4. Tap `>_` for the terminal; the quick-command chips cover the common commands without typing.
@@ -394,15 +393,7 @@ Portfolio/
 
 ---
 
-## Testing
-
-Run the automated checks:
-
-```bash
-npm test
-```
-
-`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every sky URL round-trips. `src/scroll/sections.test.ts` checks that every section's URL leads back to it, that other paths are rejected, and that the section-paced progress hits each section's tick exactly and never runs backwards. `src/scroll/cameraPath.test.ts` checks that every body and constellation has a camera waypoint in both orientations, and that flight poses land on each waypoint, stay finite for any scroll value and arrive at the next waypoint without a jump. `src/data/dialogue.test.ts` keeps Spruce's lines non-empty and short enough for the bubble. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+## Deployment
 
 ### Continuous integration
 
@@ -412,54 +403,13 @@ npm test
 npm ci && npm audit --audit-level=high && npm test && npm run build
 ```
 
-### Deployment and smoke test
+### Vercel and smoke test
 
 Vercel builds and deploys through its Git integration: pushes to `main` go to production, other branches get preview URLs. When Vercel marks a commit on `main` as deployed (its "Vercel" commit status turns green), [`.github/workflows/smoke.yml`](.github/workflows/smoke.yml) runs `scripts/smoke.mjs` against https://www.jevoelorbilla.dev: every key route, redirect loops, the 404 page, that the home page's scripts, styles and icons load, security headers and the SEO files. It also runs every Monday and can be started by hand from the Actions tab. No secrets are needed.
 
 ```bash
 npm run smoke
 ```
-
-Before shipping, also check by hand:
-
-- [ ] Desktop: scrolling flies the camera from the full sky to each planet and constellation; the subject sits right of the text.
-- [ ] The URL and tab title change to `/about`, `/#projects`, `/toolkit`, `/#writeups`, `/contact` as each section comes into view.
-- [ ] Opening `/contact` directly lands on Contact; Spruce boots up, types his first line, and **Next** / **Skip** / **Replay** work.
-- [ ] Header chips and the left rail jump to sections; long jumps play the hyperspace streak.
-- [ ] Project **details →** and Blog links scan the new page in (Chrome, Edge, Safari); **← star map** returns to Projects.
-- [ ] Phone (375×812, browser dev tools device mode): no horizontal scroll, header chips swipe sideways, cards are one column, Spruce sits above his speech bubble.
-- [ ] `?mode=static`: the SVG map stays behind the page and every section still works.
-- [ ] OS *reduce motion* on: the camera still flies and sections still reveal while scrolling; no warp flash, twinkle, shooting stars or typing; Spruce shows whole lines.
-- [ ] The left rail fill reaches each tick exactly as that section turns active, and the header line is full at the bottom of the page.
-- [ ] `⌘K` / `/` opens the terminal; `open ran` + Tab completes; Enter opens RankIT and closes the terminal; `open about` scrolls to About.
-- [ ] `theme redteam` turns the HUD crimson and survives a reload; `theme default` restores it.
-- [ ] Phone (375×812): the terminal opens as a bottom sheet.
-- [ ] No errors in the browser console.
-- [ ] `npm run build && npm run preview`: view the page source of `/projects/rankit` and a blog post — one `<h1>`, the canonical link, Open Graph tags, JSON-LD and the text are all in the HTML.
-- [ ] `/sitemap.xml`, `/robots.txt` and `/llms.txt` load from the preview server.
-
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
-
-## Troubleshooting
-
-| Problem | Fix |
-| --- | --- |
-| Only the flat star map shows | The browser has no WebGL (or it crashed). Enable hardware acceleration, or remove `?mode=static` from the URL. |
-| Background looks frozen on a Windows PC | Expected before v2.0.2 when Windows *Animation effects* is off (the browser reports reduced motion). From v2.0.2 the scroll flight runs anyway; only ambient effects stop. |
-| Port 5173 already in use | Stop the other process, or run `npx vite --port 5174`. |
-| Can't open the site on a phone | Use the *Network* URL Vite prints, on the same Wi-Fi; allow Node through the firewall. |
-| The URL changes while scrolling | Expected: the address bar follows the section in view (with `replace`, so Back isn't flooded). |
-| The wheel or touch won't scroll the page | Don't put `overflow: hidden` on `html` or `body`: the page scrolls the window, and the sky is a fixed backdrop. |
-| Sky looks cut off under the notch | Make sure `viewport-fit=cover` is still in the viewport meta tag in `index.html`. |
-| Build fails with a frontmatter error | The message names the file and field: fix the date format, add the missing field, or add alt text to the image. |
-| A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |
-| `Minified React error #418` in the console | The page's HTML doesn't match what the client renders. Make sure values read from `window` go through `useMediaQuery` / `useSceneSupport` (they return a fixed server value during hydration). |
-| `ERR_TOO_MANY_REDIRECTS` on every page but the home page | Vercel *Domains* redirects the apex to `www`; nothing in `vercel.json` may redirect `www` back to the apex. Keep `SITE_URL` in `src/seo/meta.ts` on the primary domain. |
-| A deep link 404s on Vercel | The route must be listed by `indexablePaths()` or `extraPaths()` in `src/seo/meta.ts` so the prerender step writes its HTML file. |
-| Large chunk warning on build | three.js is ~690 KB in its own lazily loaded `three` chunk on purpose; the limit is set just above it in `vite.config.ts`. |
-| The 3D sky stays blank in a background tab | Expected: the canvas only renders when the browser grants animation frames, which it throttles for hidden tabs and windows. |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -470,7 +420,7 @@ Before shipping, also check by hand:
 1. Create a branch with a matching prefix: `feat/short-description`, `fix/short-description`, `docs/…`, `refactor/…`.
 2. Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `style:`, `perf:`, `test:` — an imperative subject of 72 characters or less, a blank line, then one bullet per change.
 3. End every commit subject with the bumped [SemVer](https://semver.org/) version, e.g. `feat: add CSV export (v1.4.0)` (breaking → major, `feat` → minor, anything else → patch), and keep `package.json` and the README version badge in sync. `.claude/` (local Claude settings and worktrees) and `CLAUDE.md` (personal instructions for Claude) are git-ignored.
-4. Run `npm run build` and the manual checks in [Testing](#testing), on desktop and a phone-sized viewport.
+4. Run `npm test` and `npm run build`, and check the change on desktop and a phone-sized viewport.
 5. **Update this README with every change**, including the version badges when dependencies change.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
