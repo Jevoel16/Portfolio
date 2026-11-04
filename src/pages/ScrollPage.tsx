@@ -93,7 +93,7 @@ export function ScrollPage() {
 
   return (
     <div className={`v2${sceneReady ? ' three-ready' : ''}${warping ? ' is-warping' : ''}`} data-active={active}>
-      <div className="backdrop" aria-hidden="true">
+      <div className="backdrop" aria-hidden="true" data-scroll-var>
         <div className="backdrop-map">
           <StaticSky covered={show3d && sceneReady} />
         </div>
@@ -312,7 +312,7 @@ function OrbitDivider() {
 function ScrollRail({ active }: { active: SectionId }) {
   return (
     <nav className="scroll-rail" aria-label="Page sections">
-      <span className="rail-track" aria-hidden="true">
+      <span className="rail-track" aria-hidden="true" data-scroll-var>
         <span className="rail-fill" />
       </span>
       <ol>

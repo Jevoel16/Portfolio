@@ -11,7 +11,7 @@ const accentFor = (id: SectionId) => bodyById.get(id as BodyId)?.color ?? 'var(-
 /** Sticky HUD bar: brand, the section chips (active one lit), the blog and the terminal. */
 export function Header({ active }: { active: SectionId }) {
   return (
-    <header className="header">
+    <header className="header" data-scroll-var>
       <Link to="/" className="brand" aria-label="Sprucetrap, back to the top">
         <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
           <path d="M16 3l3 10 10 3-10 3-3 10-3-10-10-3 10-3z" fill="var(--gold)" />

@@ -8,10 +8,17 @@
 /* The sky stays put while the page scrolls over it; the 3D camera is what moves. */
 .backdrop {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Sized to the large viewport so a phone's toolbar hiding or showing mid-scroll never resizes the
+     WebGL canvas (a resize reallocates its buffers and stalls a frame). */
+  height: 100vh;
+  height: 100lvh;
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
+  contain: paint;
   background:
     radial-gradient(ellipse 60% 45% at 50% 52%, rgba(138, 92, 255, 0.1), transparent 70%),
     radial-gradient(ellipse 40% 35% at 18% 25%, rgba(58, 91, 217, 0.12), transparent 70%),
@@ -626,5 +633,29 @@
 @media (prefers-reduced-motion: reduce) {
   .warp {
     display: none;
+  }
+}
+
+/* On phones, blurring what's behind each card means re-blurring the 3D sky every frame it redraws,
+   which is what made fast scrolling stutter. Near-opaque glass reads the same and costs nothing. */
+@media (max-width: 760px), (pointer: coarse) {
+  .glass,
+  .project-card,
+  .hud-chip,
+  .header,
+  .v2 .holo-speech {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .glass,
+  .project-card,
+  .hud-chip {
+    background-color: rgba(9, 13, 30, 0.86);
+  }
+  .header {
+    background: linear-gradient(rgba(4, 6, 13, 0.94), rgba(4, 6, 13, 0.82));
+  }
+  .v2 .holo-speech {
+    background: rgba(8, 22, 30, 0.9);
   }
 }

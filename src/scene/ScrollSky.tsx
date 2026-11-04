@@ -32,17 +32,21 @@ const noop = () => {}
  * drives the camera between the waypoints marked with `data-cam` on the page's sections.
  */
 export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, onReady }: Props) {
-  const starCount = useMemo(() => (lite ? 1200 : window.innerWidth < 760 ? 2200 : 4500), [lite])
+  // Phones have dense screens and weak GPUs: fewer pixels and no MSAA keep the flight at frame rate.
+  const narrow = useMemo(() => window.innerWidth < 760, [])
+  const starCount = lite ? 1200 : narrow ? 2200 : 4500
   const layout = useMemo(() => skyLayout(portrait), [portrait])
   const animate = !reducedMotion
 
   return (
     <div className="space-canvas" aria-hidden="true">
       <Canvas
-        dpr={[1, 1.5]}
+        dpr={narrow ? [1, 1.25] : [1, 1.5]}
         frameloop="demand"
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+        gl={{ antialias: !narrow, alpha: true, powerPreference: 'high-performance' }}
         camera={{ fov: 50, near: 0.1, far: 400, position: [0, 0, 16] }}
+        // The canvas is a fixed backdrop, so scrolling never moves it; don't re-measure on every scroll.
+        resize={{ scroll: false, debounce: { scroll: 0, resize: 150 } }}
         // Purely decorative: the page above it owns every gesture, including scrolling.
         style={{ pointerEvents: 'none' }}
       >
@@ -126,12 +130,13 @@ function ScrollRig({ portrait }: { portrait: boolean }) {
   const look = useRef(new THREE.Vector3())
   const goalPos = useRef(new THREE.Vector3())
   const goalTarget = useRef(new THREE.Vector3())
+  // Only the very first pose snaps; a later resize (e.g. a phone's toolbar hiding) must fly, not jump.
+  const snapNext = useRef(true)
 
   useEffect(() => {
     const cam = camera as THREE.PerspectiveCamera
     const view = { portrait, aspect: size.width / Math.max(1, size.height), fov: cam.fov }
     let points: { el: HTMLElement; wp: Waypoint }[] = []
-    let snapNext = true
     let frame = 0
 
     const collect = () => {
@@ -158,8 +163,8 @@ function ScrollRig({ portrait }: { portrait: boolean }) {
       goalPos.current.set(...goal.current.pos)
       goalTarget.current.set(...goal.current.target)
       // The first pose is applied at once, without a flight.
-      if (snapNext) {
-        snapNext = false
+      if (snapNext.current) {
+        snapNext.current = false
         camera.position.copy(goalPos.current)
         look.current.copy(goalTarget.current)
         camera.lookAt(look.current)

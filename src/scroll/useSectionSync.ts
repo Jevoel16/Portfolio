@@ -33,7 +33,8 @@ function sectionAnchors(): number[] {
  * Keeps the URL and the scroll position in step, both ways:
  * - navigating to `/about`, `/#projects`, … scrolls to that section (instantly on first load);
  * - scrolling replaces the URL with the section in view, so the title, canonical and Back stay right.
- * Also writes `--scroll` (0–1 progress, paced by section so it meets the rail ticks) on <html>.
+ * Also writes `--scroll` (0–1 progress, paced by section so it meets the rail ticks) on the
+ * elements marked `data-scroll-var`.
  */
 export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: () => void }) {
   const location = useLocation()
@@ -84,13 +85,22 @@ export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: 
   // Scroll → URL.
   useEffect(() => {
     let frame = 0
+    let lastProgress = ''
+    // Only the few elements that draw progress get the variable: setting it on <html> would restyle
+    // the whole page on every scroll frame, which is what made fast scrolling stutter on phones.
+    const targets = [...document.querySelectorAll<HTMLElement>('[data-scroll-var]')]
     const update = () => {
       frame = 0
+      // All layout reads first, then the one style write, so the browser never recalculates mid-frame.
       const doc = document.documentElement
       const max = doc.scrollHeight - window.innerHeight
-      doc.style.setProperty('--scroll', sectionProgress(sectionAnchors(), window.scrollY, max).toFixed(4))
-      if (autoScrolling.current) return
-      const id = sectionInFocus()
+      const progress = sectionProgress(sectionAnchors(), window.scrollY, max).toFixed(4)
+      const id = autoScrolling.current ? null : sectionInFocus()
+      if (progress !== lastProgress) {
+        lastProgress = progress
+        for (const el of targets) el.style.setProperty('--scroll', progress)
+      }
+      if (!id) return
       setActive(id)
       const loc = current.current
       if (sectionForLocation(loc.pathname, loc.hash) === id) return
@@ -108,7 +118,7 @@ export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: 
       window.removeEventListener('scroll', onScroll)
       window.removeEventListener('scrollend', onScroll)
       window.removeEventListener('resize', onScroll)
-      document.documentElement.style.removeProperty('--scroll')
+      for (const el of targets) el.style.removeProperty('--scroll')
     }
   }, [navigate])
 
