@@ -10,7 +10,7 @@
 
 ![React](https://img.shields.io/badge/React-18.3.1-blue?style=flat)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue?style=flat)
-![Vite](https://img.shields.io/badge/Vite-6.4.4-blue?style=flat)
+![Vite](https://img.shields.io/badge/Vite-6.4.5-blue?style=flat)
 ![three.js](https://img.shields.io/badge/three.js-0.170.0-blue?style=flat)
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-8.18.0-blue?style=flat)
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.4.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.4.1-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
