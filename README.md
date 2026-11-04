@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.4.2-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.4.3-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -260,7 +260,7 @@ Rules the build enforces: `title`, `date` and `summary` are required, dates use 
 
 ### Search engines and sharing
 
-After deploying, submit `https://jevoelorbilla.dev/sitemap.xml` in [Google Search Console](https://search.google.com/search-console) and Bing Webmaster Tools, and test a page with the [Rich Results Test](https://search.google.com/test/rich-results).
+After deploying, submit `https://www.jevoelorbilla.dev/sitemap.xml` in [Google Search Console](https://search.google.com/search-console) and Bing Webmaster Tools, and test a page with the [Rich Results Test](https://search.google.com/test/rich-results).
 
 Backlink ideas (do these yourself; nothing here is posted automatically):
 
@@ -289,7 +289,7 @@ Portfolio/
 ├── docs/logo.svg              # README logo
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
-├── vercel.json                # Clean URLs, redirects, security and cache headers
+├── vercel.json                # Clean URLs, security and cache headers (apex → www is set in Vercel Domains)
 ├── public/                    # robots.txt, icons, manifest, share image (copied as-is)
 ├── scripts/
 │   └── prerender.mjs          # Writes one HTML file per route, sitemap.xml and llms.txt
@@ -382,7 +382,7 @@ Run the automated checks:
 npm test
 ```
 
-`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
 
 Before shipping, also check by hand:
 
@@ -415,6 +415,7 @@ Before shipping, also check by hand:
 | Build fails with a frontmatter error | The message names the file and field: fix the date format, add the missing field, or add alt text to the image. |
 | A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |
 | `Minified React error #418` in the console | The page's HTML doesn't match what the client renders. Make sure values read from `window` go through `useMediaQuery` / `useSceneSupport` (they return a fixed server value during hydration). |
+| `ERR_TOO_MANY_REDIRECTS` on every page but the home page | Vercel *Domains* redirects the apex to `www`; nothing in `vercel.json` may redirect `www` back to the apex. Keep `SITE_URL` in `src/seo/meta.ts` on the primary domain. |
 | A deep link 404s on Vercel | The route must be listed by `indexablePaths()` or `extraPaths()` in `src/seo/meta.ts` so the prerender step writes its HTML file. |
 | Large chunk warning on build | three.js is ~690 KB in its own lazily loaded `three` chunk on purpose; the limit is set just above it in `vite.config.ts`. |
 | The 3D sky stays blank in a background tab | Expected: the canvas only renders when the browser grants animation frames, which it throttles for hidden tabs and windows. |

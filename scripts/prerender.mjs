@@ -7,9 +7,10 @@ import { pathToFileURL } from 'node:url'
 const root = process.cwd()
 const dist = path.join(root, 'dist')
 const ssrDir = path.join(root, 'dist-ssr')
-const SITE_URL = 'https://jevoelorbilla.dev'
 
 const server = await import(pathToFileURL(path.join(ssrDir, 'entry-server.js')).href)
+// One source of truth for the canonical origin (src/seo/meta.ts).
+const { SITE_URL } = server
 const template = await readFile(path.join(dist, 'index.html'), 'utf8')
 
 const HEAD = /<!--head:start-->[\s\S]*?<!--head:end-->/

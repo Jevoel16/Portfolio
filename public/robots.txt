@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jevoelorbilla.dev/sitemap.xml
+Sitemap: https://www.jevoelorbilla.dev/sitemap.xml

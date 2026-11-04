@@ -4,9 +4,9 @@ import { renderToString } from 'react-dom/server'
 import { StaticRouter } from 'react-router'
 import App from './App'
 import { loadPost, posts } from './content/posts'
-import { extraPaths, headHtml, indexablePaths, metaFor } from './seo/meta'
+import { SITE_URL, extraPaths, headHtml, indexablePaths, metaFor } from './seo/meta'
 
-export { extraPaths, indexablePaths, metaFor, posts }
+export { extraPaths, indexablePaths, metaFor, posts, SITE_URL }
 
 export async function render(url: string) {
   const post = /^\/blog\/([a-z0-9-]+)$/.exec(url)

@@ -3,7 +3,8 @@ import { bodies, bodyById, type BodyId } from '../data/bodies'
 import { constellationById } from '../data/constellations'
 import { projectById, projects, techStack } from '../data/projects'
 
-export const SITE_URL = 'https://jevoelorbilla.dev'
+// www is the primary domain in Vercel (the apex 308s to it), so every canonical URL must use it.
+export const SITE_URL = 'https://www.jevoelorbilla.dev'
 export const SITE_NAME = 'Sprucetrap'
 const GITHUB = 'https://github.com/Jevoel16'
 const OG_IMAGE = `${SITE_URL}/og-default.png`

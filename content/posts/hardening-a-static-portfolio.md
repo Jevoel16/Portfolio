@@ -48,7 +48,7 @@ file served as text could be "sniffed" and run as a script.
 ### Referrer-Policy
 
 When a visitor clicks a link to another site, `strict-origin-when-cross-origin` sends only the origin
-(`https://jevoelorbilla.dev`), never the full path they were on.
+(`https://www.jevoelorbilla.dev`), never the full path they were on.
 
 ### X-Frame-Options and frame-ancestors
 
