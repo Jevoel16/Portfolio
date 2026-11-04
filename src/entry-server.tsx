@@ -9,7 +9,7 @@ import { SITE_URL, extraPaths, headHtml, indexablePaths, metaFor } from './seo/m
 export { extraPaths, indexablePaths, metaFor, posts, SITE_URL }
 
 export async function render(url: string) {
-  const post = /^\/blog\/([a-z0-9-]+)$/.exec(url)
+  const post = /^\/(?:blog|writeups)\/([a-z0-9-]+)$/.exec(url)
   // Load the post body first so the prerendered page contains the full article, not a loader.
   if (post) await loadPost(post[1])
   const html = renderToString(

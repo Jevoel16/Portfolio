@@ -46,8 +46,8 @@ export function BlogPost() {
             ))}
           </ul>
           {meta.constellation === 'security' && (
-            <Link className="btn ghost" to={`/writeups/${meta.slug}`}>
-              View in the sky <span aria-hidden="true">↗</span>
+            <Link className="btn ghost" to="/#writeups" viewTransition>
+              See it on the star map <span aria-hidden="true">↗</span>
             </Link>
           )}
         </header>

@@ -67,8 +67,8 @@ const line = (url) => {
 const llms = `# Sprucetrap
 
 > Portfolio and blog of Sprucetrap, an aspiring cybersecurity professional and full-stack developer.
-> Projects are shown as stars in constellations (skill areas) in an interactive 3D night sky;
-> every star also has its own prerendered page.
+> One scrolling page flies through a 3D night sky: projects are stars in constellations (skill areas),
+> About, Toolkit and Contact are celestial bodies. Every project also has its own prerendered page.
 
 ## Pages
 

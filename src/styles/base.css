@@ -4,9 +4,13 @@
   box-sizing: border-box;
 }
 
-/* The sky pages never scroll and never rubber-band on phones; blog pages scroll normally. */
-html:has(.sky),
-html:has(.sky) body {
+/* Leaves room for the sticky header when jumping to a section. */
+html {
+  scroll-padding-top: 64px;
+  overscroll-behavior-y: none;
+}
+
+body {
   height: 100%;
   overflow: hidden;
   overscroll-behavior: none;

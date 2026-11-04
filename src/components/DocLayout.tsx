@@ -8,17 +8,19 @@ export function DocLayout({ children }: { children: ReactNode }) {
     <div className="doc">
       <div className="doc-stars" aria-hidden="true" />
       <header className="doc-header">
-        <Link to="/" className="brand">
+        <Link to="/" className="brand" viewTransition>
           <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
             <path d="M16 3l3 10 10 3-10 3-3 10-3-10-10-3 10-3z" fill="var(--gold)" />
           </svg>
           <span>Sprucetrap</span>
         </Link>
         <nav className="doc-nav" aria-label="Site">
-          <NavLink to="/" end>
+          <NavLink to="/" end viewTransition>
             Sky
           </NavLink>
-          <NavLink to="/blog">Blog</NavLink>
+          <NavLink to="/blog" viewTransition>
+            Blog
+          </NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
           <button type="button" className="doc-terminal" onClick={openTerminal} aria-label="Open command terminal" title="Command terminal (⌘K or /)">

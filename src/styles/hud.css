@@ -1,13 +1,13 @@
-/* ---------- Observatory HUD: frame, identity, telemetry, reticles ---------- */
+/* ---------- Observatory HUD: frame, identity, telemetry ---------- */
 .signal {
   color: var(--signal);
 }
 
 /* Viewport corner brackets and a faint scanline veil over the sky. */
 .hud-frame {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 3;
+  z-index: 30;
   pointer-events: none;
 }
 .hud-frame .corner {
@@ -137,31 +137,6 @@
   box-shadow: inset 0 -3px 0 -1.5px var(--signal);
 }
 
-/* Target lock around the hovered or selected star. */
-.reticle {
-  width: 30px;
-  height: 30px;
-  opacity: 0;
-  transform: scale(1.6) rotate(45deg);
-  transition:
-    opacity 0.2s ease,
-    transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-  background:
-    linear-gradient(var(--signal), var(--signal)) 0 0 / 7px 1px,
-    linear-gradient(var(--signal), var(--signal)) 0 0 / 1px 7px,
-    linear-gradient(var(--signal), var(--signal)) 100% 0 / 7px 1px,
-    linear-gradient(var(--signal), var(--signal)) 100% 0 / 1px 7px,
-    linear-gradient(var(--signal), var(--signal)) 0 100% / 7px 1px,
-    linear-gradient(var(--signal), var(--signal)) 0 100% / 1px 7px,
-    linear-gradient(var(--signal), var(--signal)) 100% 100% / 7px 1px,
-    linear-gradient(var(--signal), var(--signal)) 100% 100% / 1px 7px;
-  background-repeat: no-repeat;
-}
-.reticle.locked {
-  opacity: 0.9;
-  transform: scale(1) rotate(0deg);
-}
-
 .doc-terminal {
   padding: 6px 10px;
   border: 1px solid color-mix(in srgb, var(--signal) 35%, transparent);
@@ -196,18 +171,10 @@
   }
 }
 
-/* Small phones: six header chips must fit in one row without clipping. */
+/* Small phones: the header chips scroll sideways, so drop the extras that cost width. */
 @media (max-width: 480px) {
-  .header .brand {
-    display: none;
-  }
-  .nav {
-    flex: 1;
-    justify-content: space-between;
-    gap: 4px;
-  }
   .nav .hud-chip {
-    padding: 4px 9px;
+    padding: 4px 10px;
     font-size: 12px;
     gap: 5px;
   }

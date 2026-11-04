@@ -18,7 +18,7 @@ const app = (
 
 async function start() {
   // A prerendered post must have its HTML ready before hydrating, or React would swap it for a loader.
-  const post = /^\/blog\/([a-z0-9-]+)\/?$/.exec(location.pathname)
+  const post = /^\/(?:blog|writeups)\/([a-z0-9-]+)\/?$/.exec(location.pathname)
   if (post) await loadPost(post[1]).catch(() => undefined)
   // Hydrate only markup prerendered for this exact URL. The dev server's empty root and the
   // shared 404.html (served for any unknown path) are rendered from scratch instead.

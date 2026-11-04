@@ -6,7 +6,7 @@
 
 # Sprucetrap · Constellations
 
-**A cybersecurity × full-stack portfolio you explore like a night sky, through an observatory HUD: every skill is a constellation, every project and write-up is a star.**
+**A cybersecurity × full-stack portfolio you scroll through like a flight across the night sky, through an observatory HUD: every skill is a constellation, every project is a star, and a holographic guide answers the comms.**
 
 ![React](https://img.shields.io/badge/React-18.3.1-blue?style=flat)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.6.3-blue?style=flat)
@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.4.7-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.0.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -52,22 +52,23 @@
 - **Observatory HUD** — corner brackets, a faint scanline veil, a one-time `> establishing uplink… ok` boot line, a blinking caret, a live telemetry readout (pointer RA/Dec, locked target, uptime), target-lock reticles and a short "decrypt" scramble on star names, and data packets travelling along constellation lines like traffic on a network map. All motion switches off with *reduce motion*.
 - **⌘K command terminal** — press `⌘K` / `Ctrl+K` or `/` anywhere (or the `>_` button) for a small shell: `whoami`, `ls projects`, `open <slug>` with Tab completion, `cat about`, `blog`, `contact`, `theme redteam`, `sudo hire-me`, `help`. Every command maps to a page, so it doubles as keyboard navigation; on phones it is a bottom sheet with tappable quick commands.
 - **Red team mode** — `theme redteam` or the Konami code (↑↑↓↓←→←→BA) swaps the HUD to crimson; the choice is remembered in the browser.
-- **One full-screen interactive sky** — the whole site is a 3D space scene; there are no plain list or scrolling sections.
-- **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases and Cybersecurity.
+- **One scrolling flight through space (v2)** — the home page is a single long page over a fixed 3D night sky. As you scroll, the camera flies between waypoints: the whole sky for the hero, the home planet for About, each constellation in turn for Projects, the ringed planet for Toolkit, the security nebula for Write-ups and the signal beacon for Contact. Long hops pull the camera back mid-flight so they read as flights, not pans.
+- **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases and Cybersecurity, each with a block of project cards that the camera frames as you reach it.
+- **Spruce, the holographic guide** — in Contact, the avatar (`public/avatar/spruce.webp`) boots up as a hologram over the beacon (scanlines, projector cone, float) when the section scrolls in, then talks: a speech bubble types out his lines while voice bars bounce. **Next** skips to the end of a line, then moves on; a short glitch plays between lines. Screen readers get each full line from a live region.
+- **Themed transitions** — sections resolve with a "signal acquired" scan-line wipe and blur-to-focus, section titles decrypt, orbit dividers carry travelling data packets, long jumps from the header play a hyperspace star-streak, a left-hand altitude rail and the header's progress line track the flight, and moving to the blog or a project page scans the new page in with the View Transitions API (plain swap where unsupported).
 - **Blog** — write-ups and notes written in Markdown (`content/posts/*.md`), compiled to HTML with syntax highlighting at build time, so the browser never downloads a Markdown parser.
-- **A constellation that grows** — every post with `constellation: security` becomes a star in the Cybersecurity constellation, with a teaser panel that links to the full write-up.
+- **A constellation that grows** — every post with `constellation: security` becomes a star in the Cybersecurity constellation and a card in the Write-ups section.
 - **Celestial bodies for everything else** — a home planet (**About**), a ringed planet (**Toolkit** / tech stack) and a pulsing signal beacon (**Contact**).
-- **Deep links** — every panel has its own URL (`/about`, `/toolkit`, `/contact`, `/projects/<slug>`); Back and Forward open and close panels, and unknown URLs show a 404 page.
-- **Fly-to camera** — selecting a star or planet glides the camera to it and opens a details panel.
-- **Phone-first gestures** — drag to look around, pinch to zoom, tap to fly; panels become bottom sheets you can swipe down to dismiss, with the target lifted above them; safe-area aware for notched phones.
+- **Deep links that scroll** — `/about`, `/toolkit` and `/contact` open the page scrolled to that section, `/#projects` and `/#writeups` to theirs, and the URL, title and canonical follow along as you scroll. Each project has its own page at `/projects/<slug>`; unknown URLs show a 404 page.
+- **Phone-first** — native scrolling, a swipeable header chip row, cards in one column, the avatar stacked above its speech bubble, and safe-area padding for notched phones.
 - **Ambient motion** — twinkling stars, nebula clouds, a slow sway and occasional shooting stars (all switched off with *reduce motion*).
-- **Prerendered for search engines** — every page (sky panels, projects, blog posts, 404) is rendered to static HTML at build time with its own title, description, canonical URL, Open Graph/Twitter card and JSON-LD, then hydrated in the browser. Crawlers and no-JS visitors get real content and real links.
+- **Prerendered for search engines** — every page (each section URL with every section in its HTML, projects, blog posts, 404) is rendered to static HTML at build time with its own title, description, canonical URL, Open Graph/Twitter card and JSON-LD, then hydrated in the browser. Crawlers and no-JS visitors get real content and real links.
 - **SEO files** — `sitemap.xml` and `llms.txt` are generated from the data; `robots.txt`, favicon, touch icon, web manifest and a 1200×630 share image live in `public/`.
 - **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
 - **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, page assets, security headers, SEO files). `main` is the only branch and is protected against force pushes and deletion.
-- **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets takes over automatically.
-- **Accessible** — keyboard-reachable list of every star and planet, focus-trapped dialogs, Escape to close.
-- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while you drag, fly or hover, ~30 fps for ambient motion, and nothing at all with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
+- **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets stays behind the page, with a light CSS parallax.
+- **Accessible** — every project, section and post is a real link in the page; one `<h1>`, then `<h2>` sections and `<h3>`/`<h4>` cards; the 3D canvas is decorative and hidden from assistive tech; *reduce motion* turns off camera flights, reveals, warp and typing.
+- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and nothing at all with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -78,12 +79,12 @@
 | Area | Tools |
 | --- | --- |
 | UI | React 18, TypeScript |
-| Routing | React Router 7 in declarative mode (`BrowserRouter`, one layout route for the sky; `StaticRouter` for prerendering) |
+| Routing | React Router 7 in declarative mode (`BrowserRouter`, one layout route for the scroll page, `viewTransition` links; `StaticRouter` for prerendering) |
 | Blog | Markdown + frontmatter, compiled by a Vite plugin (`plugins/posts.ts`) with marked and Shiki |
 | Testing | Vitest |
-| 3D | three.js, React Three Fiber (on-demand frameloop), drei (`OrbitControls`, `Line`, `Billboard`), custom GLSL point shader |
+| 3D | three.js, React Three Fiber (on-demand frameloop, scroll-driven camera), drei (`Billboard`), custom GLSL point shader |
 | Build | Vite 6, `@vitejs/plugin-react` |
-| Styling | Plain CSS with custom properties, split by area in `src/styles/` |
+| Styling | Plain CSS with custom properties, split by area in `src/styles/`; transitions are CSS plus IntersectionObserver, no animation library |
 | Fonts | Space Grotesk and JetBrains Mono variable fonts, self-hosted via Fontsource |
 | Prerender / SEO | `vite build --ssr` + `scripts/prerender.mjs` (`renderToString` per route), `src/seo/meta.ts` |
 | Hosting | Vercel (`vercel.json`: clean URLs, headers, caching), deployed by the Vercel Git integration |
@@ -123,7 +124,10 @@ No environment variables are needed. Content lives in data files:
 | `src/data/projects.ts` | Every project (name, description, stack, GitHub URL) and the Toolkit tech-stack groups |
 | `src/data/constellations.ts` | Constellation names, colours and star positions in sky coordinates |
 | `src/data/bodies.ts` | The About / Toolkit / Contact planets: kind, colours, position, size |
-| `src/components/BodyPanel.tsx` | The text shown in the About, Toolkit and Contact panels |
+| `src/pages/ScrollPage.tsx` | The About copy, section order and section text |
+| `src/data/profile.ts` | GitHub and license links, and the avatar image path, size and alt text |
+| `src/data/dialogue.ts` | What Spruce says in the Contact section |
+| `public/avatar/spruce.webp` | The avatar artwork (black background; the page blends it out) |
 | `content/posts/*.md` | Blog posts (see [Writing a post](#writing-a-post)) |
 
 URL options:
@@ -136,10 +140,11 @@ Routes:
 
 | Path | Opens |
 | --- | --- |
-| `/` | The full sky, no panel |
-| `/about`, `/toolkit`, `/contact` | That planet's panel |
-| `/projects/<slug>` | A project's panel (`slug` = the project's `id` in `src/data/projects.ts`) |
-| `/writeups/<slug>` | A Cybersecurity write-up star's teaser panel |
+| `/` | The scroll page from the top |
+| `/about`, `/toolkit`, `/contact` | The scroll page, scrolled to that section |
+| `/#projects`, `/#writeups` | The scroll page, scrolled to that section |
+| `/projects/<slug>` | A project's own page (`slug` = the project's `id` in `src/data/projects.ts`) |
+| `/writeups/<slug>` | v1 write-up star links; shows the post and canonicalises to `/blog/<slug>` |
 | `/blog` | List of posts, newest first |
 | `/blog/<slug>` | A full post (`slug` = the Markdown file name) |
 | anything else | 404 page |
@@ -172,11 +177,11 @@ Open <http://localhost:5173>. The server also listens on your LAN (`host: true`)
 
 ### Visitors on desktop
 
-1. Drag anywhere to look around; scroll to zoom.
-2. Click a star to fly to it and read about the project; **View on GitHub** opens the repo.
-3. Click **About**, **Toolkit** or **Contact** (top right, or the planets themselves) to open those panels.
-4. Use the constellation chips at the bottom to jump to a skill area; **Recenter** returns to the full sky.
-5. Press **Escape** or click empty sky to close a panel.
+1. Scroll: the camera flies from the full sky to each section's planet or constellation while the text scrolls over it.
+2. Use the header chips (**About**, **Projects**, **Toolkit**, **Contact**) or the altitude rail on the left to jump; long jumps play the hyperspace streak.
+3. In **Projects**, open **details →** for a project's own page or **source ↗** for its repository.
+4. In **Contact**, Spruce boots up and starts talking; press **Next** to hear the rest.
+5. The URL follows the section you're in, so you can copy it and share that exact spot.
 
 ### The command terminal
 
@@ -190,7 +195,7 @@ visitor@sprucetrap:~$ ls projects
 ★ the-pulse            The Pulse
 ★ rankit               RankIT
 …
-visitor@sprucetrap:~$ open ran⇥        # Tab completes to `open rankit`, Enter flies there
+visitor@sprucetrap:~$ open ran⇥        # Tab completes to `open rankit`, Enter opens its page
 visitor@sprucetrap:~$ theme redteam
 > red team mode engaged. be nice.
 ```
@@ -203,36 +208,35 @@ visitor@sprucetrap:~$ theme redteam
 | `help` | List commands |
 | `whoami` | Who runs the site |
 | `ls [projects\|posts\|constellations]` | List what is in the sky |
-| `open <slug>` | Fly to a project or planet (`about`, `toolkit`, `contact`); Tab completes |
-| `cat about` | Open the About panel |
+| `open <slug>` | Open a project page, or scroll to `about`, `toolkit` or `contact`; Tab completes |
+| `cat about` | Scroll to About |
 | `blog [slug]` | Open the blog or a post |
-| `contact` | Open the Contact panel |
-| `sky` | Back to the full sky |
+| `contact` | Scroll to Contact |
+| `sky` | Back to the top of the page |
 | `theme default\|redteam` | Switch HUD colours |
 | `sudo hire-me` | Escalate privileges (opens Contact) |
 | `clear`, `exit` | Clear the screen, close the terminal |
 
-↑ / ↓ walk through command history; Esc closes the terminal without closing a panel underneath.
+↑ / ↓ walk through command history; Esc closes the terminal.
 
 </details>
 
 ### Visitors on phones
 
-1. Drag with one finger to look around; pinch to zoom.
-2. Tap a star or planet — the details slide up as a bottom sheet with the target kept in view above it.
-3. Swipe the constellation chip row sideways to reach every constellation.
-4. Swipe the sheet down by its handle, tap the dimmed sky above it, or tap × to close it.
-5. Tap `>_` for the terminal; the quick-command chips cover the common commands without typing.
+1. Scroll as usual; the sky flies behind the page in portrait orientation.
+2. Swipe the header chip row sideways to reach **Contact**, **Blog** and the terminal.
+3. In **Contact**, Spruce sits above his speech bubble; tap the bubble or **Next** to continue.
+4. Tap `>_` for the terminal; the quick-command chips cover the common commands without typing.
 
 ### Keyboard and screen-reader users
 
-Press **Tab** from the top of the page to reach a list of every star and planet; **Enter** opens its panel. Panels trap focus and close with **Escape**.
+Tab moves through the header, the section rail and every card link in reading order. Sections are landmarks with `<h2>` headings, the 3D sky is hidden from assistive tech, and Spruce's lines are announced whole through a polite live region rather than letter by letter.
 
 ### Readers of the blog
 
-1. Open **Blog** from a panel link or go to `/blog`.
+1. Open **Blog** from the header or the Write-ups section, or go to `/blog`.
 2. Pick a post; long posts show an *On this page* table of contents.
-3. Security posts have **View in the sky**, which flies to the post's star in the Cybersecurity constellation.
+3. Security posts have **See it on the star map**, which goes back to the Write-ups section.
 
 ### Writing a post
 
@@ -244,7 +248,7 @@ title: Hardening a static portfolio with security headers
 short: Security headers          # optional, the star label in the sky
 date: 2026-11-04                 # YYYY-MM-DD
 updated: 2026-11-20              # optional
-summary: One or two sentences for the list, the sky panel and search results.
+summary: One or two sentences for the list, the Write-ups card and search results.
 tags: [web-security, headers]
 constellation: security          # optional: show it as a star in the Cybersecurity constellation
 draft: true                      # optional: visible only on the dev server
@@ -275,7 +279,7 @@ Backlink ideas (do these yourself; nothing here is posted automatically):
 
 ### Adding a project
 
-1. Add it to `projects` in `src/data/projects.ts`.
+1. Add it to `projects` in `src/data/projects.ts`; its card appears under its constellation and `/projects/<id>` is prerendered.
 2. Give it a star in the right constellation in `src/data/constellations.ts` (`projectId` = the project's `id`) and, optionally, edges to link it in.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
@@ -297,7 +301,7 @@ Portfolio/
 │   ├── workflows/ci.yml       # Audit, test and build on push / PR to main
 │   └── workflows/smoke.yml    # Smoke test the live site after each production deploy
 ├── vercel.json                # Clean URLs, security and cache headers (apex → www is set in Vercel Domains)
-├── public/                    # robots.txt, icons, manifest, share image (copied as-is)
+├── public/                    # robots.txt, icons, manifest, share image, avatar/spruce.webp (copied as-is)
 ├── scripts/
 │   ├── prerender.mjs          # Writes one HTML file per route, sitemap.xml and llms.txt
 │   └── smoke.mjs              # Post-deploy checks against the live site
@@ -317,28 +321,36 @@ Portfolio/
     │   ├── posts.ts           # Post list, lazy post loader, date formatting
     │   └── types.ts           # PostMeta / Post shapes
     ├── pages/
-    │   ├── SkyPage.tsx        # Full-screen sky, HUD, panels, fallback switching
+    │   ├── ScrollPage.tsx     # v2 home: fixed sky backdrop, HUD, rail and every section
+    │   ├── ProjectPage.tsx    # One page per project
     │   ├── NotFound.tsx       # 404 page
     │   └── blog/              # BlogIndex, BlogPost
     ├── index.css              # Imports the stylesheets below in order
-    ├── styles/                # tokens, base, sky, static-sky, labels, panel, doc, hud, terminal
+    ├── styles/                # tokens, base, sky (chrome), static-sky, ui, scroll, holo, doc, hud, terminal
     ├── components/
-    │   ├── Header.tsx         # Brand + About / Toolkit / Contact shortcuts
-    │   ├── Panel.tsx          # Shared dialog shell (side sheet / bottom sheet)
-    │   ├── ProjectPanel.tsx   # Project details
-    │   ├── PostPanel.tsx      # Write-up star teaser
-    │   ├── DocLayout.tsx      # Scrolling shell for blog and 404 pages
-    │   └── BodyPanel.tsx      # About, Toolkit and Contact content
+    │   ├── Header.tsx         # Sticky bar: brand, section chips, blog, terminal, progress line
+    │   ├── HoloAvatar.tsx     # Spruce: hologram, typed speech, Next / Skip / Replay
+    │   ├── SectionHeading.tsx # Section h2 that decrypts on first view
+    │   ├── Reveal.tsx         # "Signal acquired" reveal wrapper
+    │   └── DocLayout.tsx      # Scrolling shell for blog, project and 404 pages
     ├── data/
     │   ├── projects.ts
     │   ├── constellations.ts  # Stars, layout helpers (orient, skyBounds, targetFor)
-    │   └── bodies.ts          # Planets and beacon
+    │   ├── bodies.ts          # Planets and beacon
+    │   ├── profile.ts         # GitHub / license links, avatar image
+    │   └── dialogue.ts        # Spruce's lines
     ├── hud/
     │   ├── Hud.tsx            # HudFrame (brackets, scanlines), BootLine, Telemetry
     │   ├── CommandTerminal.tsx# ⌘K terminal dialog / phone bottom sheet
     │   ├── commands.ts        # Pure command parser, completion, quick commands
     │   ├── theme.ts           # Red team theme + Konami code
-    │   └── Scramble.tsx       # "Decrypt" text effect for star labels
+    │   ├── useTypewriter.ts   # Typing effect for the avatar's speech
+    │   └── Scramble.tsx       # "Decrypt" text effect for section titles
+    ├── scroll/
+    │   ├── sections.ts        # Section order, URL ⇄ section mapping
+    │   ├── useSectionSync.ts  # Scroll to the URL's section; keep the URL on the section in view
+    │   ├── useReveal.ts       # One-shot IntersectionObserver reveal state
+    │   └── cameraPath.ts      # Pure camera maths: waypoints, tracking, eased flight poses
     ├── seo/
     │   ├── meta.ts            # Per-route title, description, canonical, Open Graph, JSON-LD
     │   └── RouteHead.tsx      # Keeps <head> in sync during client-side navigation
@@ -346,20 +358,19 @@ Portfolio/
     │   ├── useMediaQuery.ts   # Hydration-safe media queries; PORTRAIT_QUERY rotates the sky
     │   └── useSceneSupport.ts # WebGL / data-saver detection, reduced motion, coarse pointer
     ├── scene/                 # Lazy-loaded three.js chunk
-    │   ├── SpaceScene.tsx     # Canvas, on-demand frameloop, camera rig, gestures
+    │   ├── ScrollSky.tsx      # Fixed canvas, on-demand frameloop, scroll-driven camera rig
     │   ├── skyLayout.ts       # Star, edge and label positions for one orientation
     │   ├── SkyStars.tsx       # All constellation stars as one shader point buffer + picking
     │   ├── SkyLines.tsx       # All edges in two line-segment draws
     │   ├── SkyPackets.tsx     # Packets travelling along edges (GPU-animated points)
     │   ├── pointScale.ts      # Pixel scale shared by the point shaders
-    │   ├── LabelLayer.tsx     # One DOM label layer, projected each frame
     │   ├── cursor.ts          # Pointer cursor while hovering clickable things
     │   ├── Bodies.tsx         # Planets, ringed planet, beacon
     │   ├── ShootingStars.tsx
     │   ├── Starfield.tsx      # Background stars and nebulae
     │   └── textures.ts        # Canvas-drawn textures
     └── static/
-        └── StaticSky.tsx      # SVG placeholder and no-WebGL fallback
+        └── StaticSky.tsx      # Decorative SVG placeholder and no-WebGL fallback
 ```
 
 </details>
@@ -391,7 +402,7 @@ Run the automated checks:
 npm test
 ```
 
-`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every panel URL round-trips. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+`plugins/posts.test.ts` checks frontmatter parsing, validation and Markdown rendering. `src/routes.test.ts` checks that every sky URL round-trips. `src/scroll/sections.test.ts` checks that every section's URL leads back to it and that other paths are rejected. `src/scroll/cameraPath.test.ts` checks that every body and constellation has a camera waypoint in both orientations, and that flight poses land on each waypoint, stay finite for any scroll value and snap under reduced motion. `src/data/dialogue.test.ts` keeps Spruce's lines non-empty and short enough for the bubble. `src/hud/commands.test.ts` checks terminal commands, easter eggs and Tab completion. `src/seo/domain.test.ts` keeps the canonical host on `www` and stops `vercel.json` from redirecting back to the apex (which caused a redirect loop). `src/seo/meta.test.ts` checks unique titles, descriptions, canonicals, lowercase URLs and escaping in `<head>`. `src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
 
 ### Continuous integration
 
@@ -411,16 +422,17 @@ npm run smoke
 
 Before shipping, also check by hand:
 
-- [ ] Desktop: drag, wheel zoom, click a star → panel opens and the star sits left of the panel.
-- [ ] About, Toolkit and Contact open from both the header chips and the planets.
-- [ ] Clicking empty sky or pressing Escape closes the panel; **Recenter** returns home.
-- [ ] Phone (375×812, browser dev tools device mode): HUD fits with no horizontal scroll, labels don't overlap, constellation chips swipe sideways, tapping a star opens the bottom sheet with the star visible above it, the page never scrolls.
-- [ ] Phone in landscape (812×375): compact title, sky still fits.
-- [ ] `?mode=static`: SVG map shows the constellations and the three planets, and panels open.
-- [ ] OS *reduce motion* on: no sway, twinkle or shooting stars; camera jumps instead of flying.
-- [ ] `⌘K` / `/` opens the terminal; `open ran` + Tab completes; Enter flies to RankIT and closes the terminal; Esc closes only the terminal.
+- [ ] Desktop: scrolling flies the camera from the full sky to each planet and constellation; the subject sits right of the text.
+- [ ] The URL and tab title change to `/about`, `/#projects`, `/toolkit`, `/#writeups`, `/contact` as each section comes into view.
+- [ ] Opening `/contact` directly lands on Contact; Spruce boots up, types his first line, and **Next** / **Skip** / **Replay** work.
+- [ ] Header chips and the left rail jump to sections; long jumps play the hyperspace streak.
+- [ ] Project **details →** and Blog links scan the new page in (Chrome, Edge, Safari); **← star map** returns to Projects.
+- [ ] Phone (375×812, browser dev tools device mode): no horizontal scroll, header chips swipe sideways, cards are one column, Spruce sits above his speech bubble.
+- [ ] `?mode=static`: the SVG map stays behind the page and every section still works.
+- [ ] OS *reduce motion* on: no flights (the camera snaps per section), no reveals, warp or typing; Spruce shows whole lines.
+- [ ] `⌘K` / `/` opens the terminal; `open ran` + Tab completes; Enter opens RankIT and closes the terminal; `open about` scrolls to About.
 - [ ] `theme redteam` turns the HUD crimson and survives a reload; `theme default` restores it.
-- [ ] Phone (375×812): all header chips fit, the terminal opens as a bottom sheet, and a panel can be swiped down to close.
+- [ ] Phone (375×812): the terminal opens as a bottom sheet.
 - [ ] No errors in the browser console.
 - [ ] `npm run build && npm run preview`: view the page source of `/projects/rankit` and a blog post — one `<h1>`, the canonical link, Open Graph tags, JSON-LD and the text are all in the HTML.
 - [ ] `/sitemap.xml`, `/robots.txt` and `/llms.txt` load from the preview server.
@@ -436,6 +448,7 @@ Before shipping, also check by hand:
 | Only the flat star map shows | The browser has no WebGL (or it crashed). Enable hardware acceleration, or remove `?mode=static` from the URL. |
 | Port 5173 already in use | Stop the other process, or run `npx vite --port 5174`. |
 | Can't open the site on a phone | Use the *Network* URL Vite prints, on the same Wi-Fi; allow Node through the firewall. |
+| The URL changes while scrolling | Expected: the address bar follows the section in view (with `replace`, so Back isn't flooded). |
 | Sky looks cut off under the notch | Make sure `viewport-fit=cover` is still in the viewport meta tag in `index.html`. |
 | Build fails with a frontmatter error | The message names the file and field: fix the date format, add the missing field, or add alt text to the image. |
 | A new post doesn't show | Posts with `draft: true` only appear on the dev server. Restart `npm run dev` after adding the first post. |

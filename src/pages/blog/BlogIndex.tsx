@@ -25,7 +25,9 @@ export function BlogIndex() {
                   {p.draft && <span className="draft-tag">draft</span>}
                 </p>
                 <h2>
-                  <Link to={`/blog/${p.slug}`}>{p.title}</Link>
+                  <Link to={`/blog/${p.slug}`} viewTransition>
+                    {p.title}
+                  </Link>
                 </h2>
                 <p>{p.summary}</p>
                 <ul className="chips" aria-label="Tags">

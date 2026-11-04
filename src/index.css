@@ -3,8 +3,9 @@
 @import './styles/base.css';
 @import './styles/sky.css';
 @import './styles/static-sky.css';
-@import './styles/labels.css';
-@import './styles/panel.css';
+@import './styles/ui.css';
+@import './styles/scroll.css';
+@import './styles/holo.css';
 @import './styles/doc.css';
 @import './styles/hud.css';
 @import './styles/terminal.css';

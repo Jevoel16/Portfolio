@@ -2,11 +2,11 @@ import { postBySlug, posts } from '../content/posts'
 import { bodies, bodyById, type BodyId } from '../data/bodies'
 import { constellationById } from '../data/constellations'
 import { projectById, projects, techStack } from '../data/projects'
+import { GITHUB } from '../data/profile'
 
 // www is the primary domain in Vercel (the apex 308s to it), so every canonical URL must use it.
 export const SITE_URL = 'https://www.jevoelorbilla.dev'
 export const SITE_NAME = 'Sprucetrap'
-const GITHUB = 'https://github.com/Jevoel16'
 const OG_IMAGE = `${SITE_URL}/og-default.png`
 const TAGLINE = 'Aspiring Cybersecurity Professional · Full-Stack Developer'
 
