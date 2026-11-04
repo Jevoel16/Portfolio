@@ -1,0 +1,326 @@
+/* ---------- Full-screen sky ---------- */
+.sky {
+  position: fixed;
+  inset: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  isolation: isolate;
+  user-select: none;
+  -webkit-user-select: none;
+  background:
+    radial-gradient(ellipse 60% 45% at 50% 52%, rgba(138, 92, 255, 0.1), transparent 70%),
+    radial-gradient(ellipse 40% 35% at 18% 25%, rgba(58, 91, 217, 0.12), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 85% 80%, rgba(31, 163, 138, 0.08), transparent 70%),
+    radial-gradient(ellipse at 50% 40%, #0b1430 0%, #070b1a 50%, var(--bg) 100%);
+}
+
+/* Cheap CSS starfield behind the static map; fades out once the 3D stars take over. */
+.sky::before,
+.sky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  transition: opacity 1.2s ease;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 27% 72%, #dfe8ff, transparent),
+    radial-gradient(1.5px 1.5px at 44% 33%, #fff, transparent),
+    radial-gradient(1px 1px at 63% 81%, #ffe9c4, transparent),
+    radial-gradient(1px 1px at 79% 12%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 91% 55%, #b9cfff, transparent),
+    radial-gradient(1px 1px at 6% 90%, #fff, transparent),
+    radial-gradient(1px 1px at 52% 6%, #dfe8ff, transparent);
+  background-size: 340px 340px;
+}
+.sky::after {
+  background-size: 520px 520px;
+  background-position: 130px 80px;
+  opacity: 0.7;
+  animation: twinkle-field 6s ease-in-out infinite alternate;
+}
+.sky.three-ready::before,
+.sky.three-ready::after {
+  opacity: 0;
+}
+
+@keyframes twinkle-field {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+
+.space-canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.three-ready .space-canvas {
+  opacity: 1;
+}
+/* One DOM layer for every 3D label; LabelProjector writes each label's transform per frame. */
+.label-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sky-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  will-change: transform;
+}
+
+/* Everything over the canvas lets gestures through, except the controls themselves. */
+.header,
+.hero,
+.sky-footer {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: max(12px, env(safe-area-inset-top)) var(--hud-x) 0;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+}
+.nav {
+  display: flex;
+  gap: 6px;
+}
+
+.hud-chip {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 5px 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 13px;
+  white-space: nowrap;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.hud-chip:hover:not(:disabled),
+.hud-chip.active {
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px -4px var(--accent);
+}
+.hud-chip:disabled {
+  cursor: default;
+  opacity: 0.6;
+  border-style: dashed;
+}
+
+/* Tiny CSS versions of the three bodies, for the nav chips. */
+.body-icon {
+  position: relative;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff, var(--accent) 45%, color-mix(in srgb, var(--accent) 40%, #000));
+  box-shadow: 0 0 8px var(--accent);
+}
+.body-icon.ringed::after {
+  content: '';
+  position: absolute;
+  inset: 3px -4px;
+  border: 1.5px solid var(--accent);
+  border-radius: 50%;
+  transform: rotate(-20deg);
+}
+.body-icon.beacon {
+  width: 6px;
+  height: 6px;
+  margin: 2px;
+  background: #e9fff8;
+  box-shadow:
+    0 0 0 2px rgba(4, 6, 13, 0.9),
+    0 0 0 3.5px var(--accent);
+}
+
+.hero {
+  text-align: center;
+  padding: clamp(10px, 3vh, 34px) var(--hud-x) 0;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+.has-panel .hero {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+.hero .hero-title {
+  margin: 2px 0;
+  font-size: clamp(34px, 7vw, 72px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  background: linear-gradient(180deg, #fff 30%, #c8d3ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 24px rgba(160, 180, 255, 0.25));
+}
+.hero-kicker {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+}
+.hero-sub {
+  margin: 4px 0 0;
+  font-size: clamp(13px, 2vw, 18px);
+  color: var(--text-dim);
+  text-wrap: balance;
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-height: 0;
+  margin: 6px clamp(4px, 2vw, 24px) 0;
+}
+.three-ready .stage {
+  pointer-events: none;
+}
+
+.sky-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 8px var(--hud-x) max(14px, env(safe-area-inset-bottom));
+}
+.hint-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hint {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+.recenter {
+  --accent: var(--gold);
+  min-height: 30px;
+  padding: 3px 11px;
+  font-size: 12px;
+}
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.legend .hud-chip {
+  font-size: 12.5px;
+}
+
+@media (max-width: 760px) {
+  .brand > span {
+    display: none;
+  }
+  .nav .hud-chip {
+    padding: 5px 11px;
+    font-size: 12.5px;
+  }
+  .sky-footer {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 8px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .hint-row {
+    justify-content: center;
+    padding: 0 var(--hud-x);
+  }
+  .hint {
+    text-align: center;
+  }
+  /* One swipeable row instead of chips wrapping over the sky. */
+  .legend {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 2px var(--hud-x);
+    scrollbar-width: none;
+    touch-action: pan-x;
+    pointer-events: auto;
+    mask-image: linear-gradient(90deg, transparent, #000 var(--gutter), #000 calc(100% - var(--gutter)), transparent);
+  }
+  .legend::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Phones held sideways: the sky needs every pixel of height. */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-kicker,
+  .hero-sub,
+  .hint,
+  .body-label-3d span {
+    display: none;
+  }
+  .hero {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+  }
+  .has-panel .hero {
+    transform: translate(-50%, -8px);
+  }
+  .hero .hero-title {
+    font-size: 26px;
+    margin-top: 4px;
+  }
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  flex: none;
+}

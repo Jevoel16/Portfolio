@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.3.1-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.3.2-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -78,7 +78,7 @@
 | Testing | Vitest |
 | 3D | three.js, React Three Fiber (on-demand frameloop), drei (`OrbitControls`, `Line`, `Billboard`), custom GLSL point shader |
 | Build | Vite 6, `@vitejs/plugin-react` |
-| Styling | Plain CSS with custom properties (`src/index.css`) |
+| Styling | Plain CSS with custom properties, split by area in `src/styles/` |
 | Fonts | Space Grotesk and JetBrains Mono variable fonts, self-hosted via Fontsource |
 | Prerender / SEO | `vite build --ssr` + `scripts/prerender.mjs` (`renderToString` per route), `src/seo/meta.ts` |
 | Hosting | Vercel (`vercel.json`: clean URLs, headers, caching) |
@@ -270,7 +270,8 @@ Portfolio/
     │   ├── SkyPage.tsx        # Full-screen sky, HUD, panels, fallback switching
     │   ├── NotFound.tsx       # 404 page
     │   └── blog/              # BlogIndex, BlogPost
-    ├── index.css              # All styles (HUD, panels, labels, static map)
+    ├── index.css              # Imports the stylesheets below in order
+    ├── styles/                # tokens, base, sky, static-sky, labels, panel, doc
     ├── components/
     │   ├── Header.tsx         # Brand + About / Toolkit / Contact shortcuts
     │   ├── Panel.tsx          # Shared dialog shell (side sheet / bottom sheet)

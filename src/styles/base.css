@@ -1,0 +1,93 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* The sky pages never scroll and never rubber-band on phones; blog pages scroll normally. */
+html:has(.sky),
+html:has(.sky) body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+.mono {
+  font-family: var(--mono);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+/* Keyboard users tabbing into the hidden star list can see where they are. */
+.sr-only:focus-within {
+  z-index: 60;
+  top: 10px;
+  left: var(--hud-x);
+  width: auto;
+  height: auto;
+  max-height: 70dvh;
+  overflow: auto;
+  clip: auto;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-solid);
+}
+.sr-only ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sr-only button {
+  border: 0;
+  background: none;
+  padding: 4px 0;
+  cursor: pointer;
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+  }
+  .edge {
+    stroke-dashoffset: 0;
+  }
+  .body .pulse {
+    opacity: 0.4;
+  }
+}

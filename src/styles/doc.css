@@ -1,0 +1,306 @@
+/* ---------- Document pages (blog, 404) ---------- */
+.doc {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+}
+/* CSS-only starfield: two tiled layers of tiny dots, no canvas or images. */
+.doc-stars {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 20px 30px, #fff8, transparent),
+    radial-gradient(1px 1px at 140px 80px, #dfe8ff99, transparent),
+    radial-gradient(1.5px 1.5px at 90px 160px, #ffe9c4aa, transparent),
+    radial-gradient(1px 1px at 200px 220px, #b9cfff88, transparent),
+    radial-gradient(ellipse 70% 50% at 80% 0%, rgba(138, 92, 255, 0.12), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(58, 91, 217, 0.1), transparent 70%),
+    var(--bg);
+  background-size: 240px 240px, 240px 240px, 240px 240px, 240px 240px, auto, auto, auto;
+}
+.doc-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: max(12px, env(safe-area-inset-top)) var(--hud-x) 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(4, 6, 13, 0.8);
+  backdrop-filter: blur(10px);
+}
+.doc-header .brand {
+  text-decoration: none;
+}
+.doc-nav {
+  display: flex;
+  gap: 4px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.doc-nav a {
+  padding: 6px 10px;
+  border-radius: 8px;
+  color: var(--text-dim);
+  text-decoration: none;
+}
+.doc-nav a:hover,
+.doc-nav a.active {
+  color: var(--text);
+  background: rgba(160, 180, 255, 0.08);
+}
+.doc-main {
+  flex: 1;
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px var(--hud-x) 64px;
+}
+.doc-footer {
+  padding: 20px var(--hud-x) max(20px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-faint);
+  text-align: center;
+}
+.doc-hero {
+  margin-bottom: 32px;
+}
+.doc-hero h1 {
+  margin: 6px 0 12px;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.kicker,
+.post-meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.post-meta a {
+  color: var(--text-dim);
+}
+.lede {
+  margin: 0 0 16px;
+  font-size: 1.1rem;
+  color: var(--text-dim);
+}
+.empty {
+  color: var(--text-dim);
+}
+.draft-tag {
+  margin-left: 8px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: #ff7a9c33;
+  color: #ff7a9c;
+}
+
+.post-list {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.post-list article {
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--glass);
+}
+.post-list h2 {
+  margin: 4px 0 8px;
+  font-size: 1.35rem;
+  line-height: 1.25;
+}
+.post-list h2 a {
+  text-decoration: none;
+}
+.post-list h2 a:hover {
+  color: var(--gold);
+}
+.post-list p {
+  margin: 0 0 12px;
+  color: var(--text-dim);
+}
+.post-list .chips {
+  margin: 0;
+}
+
+.btn.ghost {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.toc {
+  margin: 0 0 32px;
+  padding: 14px 18px;
+  border-left: 2px solid var(--gold);
+  background: var(--glass);
+  font-size: 14px;
+}
+.toc p {
+  margin: 0 0 6px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.toc ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.toc .depth-3 {
+  padding-left: 16px;
+}
+.toc a {
+  color: var(--text-dim);
+  text-decoration: none;
+}
+.toc a:hover {
+  color: var(--text);
+}
+
+/* Long-form text: comfortable measure and rhythm. */
+.prose {
+  max-width: 68ch;
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.prose h2,
+.prose h3 {
+  position: relative;
+  margin: 2.2em 0 0.6em;
+  line-height: 1.25;
+  scroll-margin-top: 80px;
+}
+.prose h2 {
+  font-size: 1.6rem;
+}
+.prose h3 {
+  font-size: 1.2rem;
+}
+.prose .anchor {
+  position: absolute;
+  left: -1.1em;
+  color: var(--text-faint);
+  text-decoration: none;
+  opacity: 0;
+}
+.prose h2:hover .anchor,
+.prose h3:hover .anchor {
+  opacity: 1;
+}
+.prose a {
+  color: var(--gold);
+}
+.prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+  background: rgba(160, 180, 255, 0.1);
+  font-family: var(--mono);
+  font-size: 0.88em;
+}
+.prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.prose blockquote {
+  margin: 1.5em 0;
+  padding: 0.2em 1em;
+  border-left: 2px solid var(--border);
+  color: var(--text-dim);
+}
+.code-block {
+  position: relative;
+  margin: 1.5em 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+/* Language label styled like a terminal title bar. */
+.code-block::before {
+  content: '● ● ●   ' attr(data-lang);
+  display: block;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(160, 180, 255, 0.06);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+}
+.code-block pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.post-pager {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 56px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.post-pager a {
+  display: grid;
+  gap: 4px;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  text-decoration: none;
+}
+.post-pager a:hover {
+  border-color: var(--gold);
+}
+.post-pager .next {
+  grid-column: 2;
+  text-align: right;
+}
+.post-pager small {
+  color: var(--text-faint);
+}
+
+.not-found {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  padding-top: 10vh;
+  text-align: center;
+}
+.not-found h1 {
+  margin: 0;
+  font-size: clamp(1.6rem, 5vw, 2.4rem);
+}
+.not-found p {
+  margin: 0;
+  color: var(--text-dim);
+}
+
+@media (max-width: 560px) {
+  .doc-nav a {
+    padding: 6px 7px;
+  }
+  .post-pager {
+    grid-template-columns: 1fr;
+  }
+  .post-pager .next {
+    grid-column: 1;
+  }
+  .prose .anchor {
+    display: none;
+  }
+}
