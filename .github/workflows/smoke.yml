@@ -1,8 +1,9 @@
 name: Production smoke test
 
-# Vercel deploys on push through its Git integration; this checks the live site once it reports success.
+# Vercel deploys on push through its Git integration and reports back as a commit status named "Vercel"
+# (not a GitHub deployment), so this listens for that status turning green on a commit in main.
 on:
-  deployment_status:
+  status:
   schedule:
     - cron: '0 6 * * 1' # every Monday, to catch domain or DNS changes made outside the repo
   workflow_dispatch:
@@ -18,8 +19,9 @@ jobs:
   smoke:
     name: Smoke test the live site
     if: >-
-      github.event_name != 'deployment_status' ||
-      (github.event.deployment_status.state == 'success' && github.event.deployment.environment == 'Production')
+      github.event_name != 'status' ||
+      (github.event.context == 'Vercel' && github.event.state == 'success' &&
+       contains(github.event.branches.*.name, 'main'))
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

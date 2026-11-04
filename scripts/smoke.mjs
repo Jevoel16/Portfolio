@@ -41,6 +41,18 @@ for (const path of ['/', '/about', '/toolkit', '/contact', '/blog', '/projects/t
   })
 }
 
+// A page can return 200 while its CSS/JS redirect away (CSP then blocks them), leaving it unstyled and dead.
+await check('home page scripts, styles and icons load', async () => {
+  const { res } = await get(`${base}/`)
+  const html = await res.text()
+  const refs = [...html.matchAll(/(?:src|href)="(\/(?:assets\/[^"]+|favicon\.svg|site\.webmanifest))"/g)].map((m) => m[1])
+  if (!refs.some((r) => r.endsWith('.js'))) throw new Error('no /assets/*.js referenced by the home page')
+  for (const ref of new Set(refs)) {
+    const asset = await fetch(base + ref, { redirect: 'manual' })
+    if (asset.status !== 200) throw new Error(`${ref} returned ${asset.status}`)
+  }
+})
+
 await check('unknown path returns 404', async () => {
   const { res } = await get(`${base}/this-page-does-not-exist`)
   expectStatus(res, 404)

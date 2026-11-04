@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.4.5-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.4.6-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -64,7 +64,7 @@
 - **Prerendered for search engines** — every page (sky panels, projects, blog posts, 404) is rendered to static HTML at build time with its own title, description, canonical URL, Open Graph/Twitter card and JSON-LD, then hydrated in the browser. Crawlers and no-JS visitors get real content and real links.
 - **SEO files** — `sitemap.xml` and `llms.txt` are generated from the data; `robots.txt`, favicon, touch icon, web manifest and a 1200×630 share image live in `public/`.
 - **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
-- **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, security headers, SEO files). Dependabot opens weekly update PRs.
+- **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, page assets, security headers, SEO files). Dependabot opens weekly update PRs.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets takes over automatically.
 - **Accessible** — keyboard-reachable list of every star and planet, focus-trapped dialogs, Escape to close.
 - **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while you drag, fly or hover, ~30 fps for ambient motion, and nothing at all with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
@@ -404,7 +404,7 @@ npm ci && npm audit --audit-level=high && npm test && npm run build
 
 ### Deployment and smoke test
 
-Vercel builds and deploys through its Git integration: pushes to `main` go to production, other branches get preview URLs. When Vercel reports a successful **Production** deployment, [`.github/workflows/smoke.yml`](.github/workflows/smoke.yml) runs `scripts/smoke.mjs` against https://www.jevoelorbilla.dev. It also runs every Monday and can be started by hand from the Actions tab. No secrets are needed.
+Vercel builds and deploys through its Git integration: pushes to `main` go to production, other branches get preview URLs. When Vercel marks a commit on `main` as deployed (its "Vercel" commit status turns green), [`.github/workflows/smoke.yml`](.github/workflows/smoke.yml) runs `scripts/smoke.mjs` against https://www.jevoelorbilla.dev: every key route, redirect loops, the 404 page, that the home page's scripts, styles and icons load, security headers and the SEO files. It also runs every Monday and can be started by hand from the Actions tab. No secrets are needed.
 
 ```bash
 npm run smoke
