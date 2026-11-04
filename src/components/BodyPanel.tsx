@@ -92,7 +92,12 @@ function Contact() {
         “Things are not meant to last, but they will last to give meaning to things.”
         <cite>— Sprucetrap</cite>
       </blockquote>
-      <p className="credit mono">© {new Date().getFullYear()} Sprucetrap · built with React, Vite & three.js</p>
+      <p className="credit mono">
+        © {new Date().getFullYear()} Sprucetrap · source-available under the{' '}
+        <a href="https://github.com/Jevoel16/Portfolio/blob/main/LICENSE" target="_blank" rel="noreferrer">
+          Sprucetrap license
+        </a>
+      </p>
     </>
   )
 }

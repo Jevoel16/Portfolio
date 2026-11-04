@@ -15,8 +15,8 @@
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-8.18.0-blue?style=flat)
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.0.0-informational?style=flat)
-![License](https://img.shields.io/badge/license-All%20rights%20reserved-lightgrey?style=flat)
+![Version](https://img.shields.io/badge/version-1.0.1-informational?style=flat)
+![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
 </div>
@@ -243,7 +243,7 @@ There are no automated tests. `npm run build` type-checks the project. Before sh
 
 1. Create a branch with a matching prefix: `feat/short-description`, `fix/short-description`, `docs/…`, `refactor/…`.
 2. Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `style:`, `perf:`, `test:` — an imperative subject of 72 characters or less, a blank line, then one bullet per change.
-3. Write the commit message in `commit-msg.txt` at the project root. It is git-ignored, so it stays a local draft. `.claude/` (local Claude settings and worktrees) and `CLAUDE.md` (personal instructions for Claude) are git-ignored too.
+3. End every commit subject with the bumped [SemVer](https://semver.org/) version, e.g. `feat: add CSV export (v1.4.0)` (breaking → major, `feat` → minor, anything else → patch), and keep `package.json` and the README version badge in sync. `.claude/` (local Claude settings and worktrees) and `CLAUDE.md` (personal instructions for Claude) are git-ignored.
 4. Run `npm run build` and the manual checks in [Testing](#testing), on desktop and a phone-sized viewport.
 5. **Update this README with every change**, including the version badges when dependencies change.
 
@@ -253,7 +253,11 @@ There are no automated tests. `npm run build` type-checks the project. Before sh
 
 ## License
 
-All rights reserved. No license has been chosen yet; contact the author before reusing the code or content.
+Released under the **Sprucetrap Source-Available License 1.0**. See [`LICENSE`](LICENSE).
+
+- You may view, study, run and fork the code for **non-commercial** purposes.
+- Copies and forks must keep the license, credit the author visibly with a link — *"Based on Sprucetrap · Constellations by Sprucetrap (https://github.com/Jevoel16)"* — and say what was changed.
+- Commercial use, reselling, or rebranding the site as your own needs written permission from the author.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
