@@ -14,9 +14,10 @@
 ![three.js](https://img.shields.io/badge/three.js-0.170.0-blue?style=flat)
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-8.18.0-blue?style=flat)
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
+![React Router](https://img.shields.io/badge/React%20Router-6.30.6-blue?style=flat)
 ![Vitest](https://img.shields.io/badge/Vitest-3.2.7-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.0.3-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.1.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -47,6 +48,7 @@
 - **One full-screen interactive sky** — the whole site is a 3D space scene; there are no plain list or scrolling sections.
 - **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases, and a Cybersecurity constellation that is still forming.
 - **Celestial bodies for everything else** — a home planet (**About**), a ringed planet (**Toolkit** / tech stack) and a pulsing signal beacon (**Contact**).
+- **Deep links** — every panel has its own URL (`/about`, `/toolkit`, `/contact`, `/projects/<slug>`); Back and Forward open and close panels, and unknown URLs show a 404 page.
 - **Fly-to camera** — selecting a star or planet glides the camera to it and opens a details panel.
 - **Phone-first gestures** — drag to look around, pinch to zoom, tap to fly; panels become bottom sheets with the target lifted above them; safe-area aware for notched phones.
 - **Ambient motion** — twinkling stars, nebula clouds, a slow sway and occasional shooting stars (all switched off with *reduce motion*).
@@ -63,6 +65,7 @@
 | Area | Tools |
 | --- | --- |
 | UI | React 18, TypeScript |
+| Routing | React Router 6 (`BrowserRouter`, one layout route for the sky) |
 | 3D | three.js, React Three Fiber, drei (`OrbitControls`, `Html`, `Line`, `Billboard`) |
 | Build | Vite 6, `@vitejs/plugin-react` |
 | Styling | Plain CSS with custom properties (`src/index.css`) |
@@ -109,6 +112,17 @@ URL options:
 | Query | Effect |
 | --- | --- |
 | `?mode=static` | Forces the SVG fallback map (useful for testing devices without WebGL) |
+
+Routes:
+
+| Path | Opens |
+| --- | --- |
+| `/` | The full sky, no panel |
+| `/about`, `/toolkit`, `/contact` | That planet's panel |
+| `/projects/<slug>` | A project's panel (`slug` = the project's `id` in `src/data/projects.ts`) |
+| anything else | 404 page |
+
+`vercel.json` rewrites unknown paths to `index.html` so deep links work on Vercel.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -162,10 +176,15 @@ Portfolio/
 ├── docs/logo.svg              # README logo
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
+├── vercel.json                # SPA rewrites for deep links
 ├── .claude/launch.json        # Local dev-server entry for Claude's preview (git-ignored)
 └── src/
-    ├── main.tsx
-    ├── App.tsx                # Full-screen sky, HUD, panels, fallback switching
+    ├── main.tsx               # Router + hydrate/render
+    ├── App.tsx                # Route table
+    ├── routes.ts              # URL ⇄ sky selection helpers
+    ├── pages/
+    │   ├── SkyPage.tsx        # Full-screen sky, HUD, panels, fallback switching
+    │   └── NotFound.tsx       # 404 page
     ├── index.css              # All styles (HUD, panels, labels, static map)
     ├── components/
     │   ├── Header.tsx         # Brand + About / Toolkit / Contact shortcuts

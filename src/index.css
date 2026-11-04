@@ -939,3 +939,16 @@ button {
     opacity: 0.4;
   }
 }
+
+/* ---------- 404 ---------- */
+.not-found {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  gap: 14px;
+  padding: 24px var(--gutter);
+  text-align: center;
+  justify-items: center;
+}
+.not-found h1 { font-size: clamp(1.6rem, 5vw, 2.4rem); }
+.not-found p { color: var(--text-dim); }
