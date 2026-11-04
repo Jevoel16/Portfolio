@@ -24,6 +24,16 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  /* HUD corner ticks in the panel's accent colour. */
+  background-image:
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent)),
+    linear-gradient(var(--accent), var(--accent));
+  background-size: 14px 1px, 1px 14px, 14px 1px, 1px 14px;
+  background-position: 0 100%, 0 100%, 100% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  transition: transform 0.25s ease;
   animation: panel-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 @keyframes panel-in {
@@ -181,16 +191,31 @@
       transform: translateY(40px);
     }
   }
+  /* A generous invisible grab area; the visible bar is drawn by ::before. */
   .panel-handle {
     display: block;
     position: absolute;
-    top: 8px;
+    top: 0;
     left: 50%;
+    width: 140px;
+    height: 28px;
+    margin-left: -70px;
+    touch-action: none;
+    cursor: grab;
+  }
+  .panel-handle::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50px;
     width: 40px;
     height: 4px;
-    margin-left: -20px;
     border-radius: 2px;
     background: var(--border);
+  }
+  .panel.dragging {
+    transition: none;
+    animation: none;
   }
 }
 

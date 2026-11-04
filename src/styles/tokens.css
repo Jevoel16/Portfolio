@@ -9,6 +9,9 @@
   --text-dim: #a3aed6;
   --text-faint: #6f7aa3;
   --gold: #f5c86b;
+  /* Phosphor green for HUD chrome (prompts, readouts, terminal); --alert for errors. */
+  --signal: #7cffc4;
+  --alert: #ff5c7a;
   --accent: var(--gold);
   --gutter: 16px;
   --hud-x: max(var(--gutter), env(safe-area-inset-left), env(safe-area-inset-right));
@@ -16,4 +19,11 @@
   --font: 'Space Grotesk Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
   color-scheme: dark;
+}
+
+/* Red team mode (`theme redteam` in the terminal, or the Konami code). */
+:root[data-theme='redteam'] {
+  --signal: #ff5c7a;
+  --gold: #ff9a6b;
+  --border: rgba(255, 120, 140, 0.2);
 }

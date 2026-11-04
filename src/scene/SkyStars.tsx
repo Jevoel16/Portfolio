@@ -3,6 +3,7 @@ import { useFrame, useThree, type ThreeEvent } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { StarPoint } from './skyLayout'
 import { setPointerCursor } from './cursor'
+import { pointScale } from './pointScale'
 
 interface Props {
   stars: StarPoint[]
@@ -55,7 +56,6 @@ const fragmentShader = /* glsl */ `
 export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, animate }: Props) {
   const points = useRef<THREE.Points>(null)
   const { gl, camera, invalidate } = useThree()
-  const size = useRef(new THREE.Vector2())
 
   const geometry = useMemo(() => {
     const g = new THREE.BufferGeometry()
@@ -94,10 +94,7 @@ export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, anim
     const u = material.uniforms
     u.uTime.value = clock.elapsedTime
     u.uAnimate.value = animate ? 1 : 0
-    // Pixels per sky unit at distance 1: matches sprite sizing so stars keep their world size.
-    gl.getDrawingBufferSize(size.current)
-    const fov = THREE.MathUtils.degToRad((camera as THREE.PerspectiveCamera).fov)
-    u.uScale.value = size.current.y / (2 * Math.tan(fov / 2))
+    u.uScale.value = pointScale(gl, camera)
 
     // Ease each star's highlight toward hovered/selected, and keep rendering until it settles.
     const attr = geometry.getAttribute('highlight') as THREE.BufferAttribute

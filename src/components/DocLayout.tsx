@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { openTerminal } from '../hud/CommandTerminal'
 
 /** Scrolling page shell for the blog and 404: same identity as the sky, without WebGL. */
 export function DocLayout({ children }: { children: ReactNode }) {
@@ -20,6 +21,9 @@ export function DocLayout({ children }: { children: ReactNode }) {
           <NavLink to="/blog">Blog</NavLink>
           <NavLink to="/about">About</NavLink>
           <NavLink to="/contact">Contact</NavLink>
+          <button type="button" className="doc-terminal" onClick={openTerminal} aria-label="Open command terminal" title="Command terminal (⌘K or /)">
+            &gt;_
+          </button>
         </nav>
       </header>
       <main className="doc-main">{children}</main>

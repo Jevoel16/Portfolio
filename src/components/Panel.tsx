@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react'
 
 interface Props {
   accent: string
@@ -13,6 +13,29 @@ interface Props {
 export function Panel({ accent, labelledBy, closeLabel, onClose, children }: Props) {
   const panelRef = useRef<HTMLElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const drag = useRef<{ y: number; dy: number } | null>(null)
+
+  // Bottom sheet on phones: drag the handle down to dismiss, or let go early to snap back.
+  const onDragStart = (e: PointerEvent<HTMLElement>) => {
+    if (e.pointerType === 'mouse') return
+    drag.current = { y: e.clientY, dy: 0 }
+    e.currentTarget.setPointerCapture(e.pointerId)
+    panelRef.current?.classList.add('dragging')
+  }
+  const onDragMove = (e: PointerEvent<HTMLElement>) => {
+    if (!drag.current || !panelRef.current) return
+    drag.current.dy = Math.max(0, e.clientY - drag.current.y)
+    panelRef.current.style.transform = `translateY(${drag.current.dy}px)`
+  }
+  const onDragEnd = () => {
+    const panel = panelRef.current
+    if (!drag.current || !panel) return
+    const { dy } = drag.current
+    drag.current = null
+    panel.classList.remove('dragging')
+    panel.style.transform = ''
+    if (dy > Math.min(120, panel.offsetHeight * 0.25)) onClose()
+  }
 
   useEffect(() => {
     const previous = document.activeElement as HTMLElement | null
@@ -55,7 +78,14 @@ export function Panel({ accent, labelledBy, closeLabel, onClose, children }: Pro
         aria-labelledby={labelledBy}
         style={{ '--accent': accent } as React.CSSProperties}
       >
-        <span className="panel-handle" aria-hidden="true" />
+        <span
+          className="panel-handle"
+          aria-hidden="true"
+          onPointerDown={onDragStart}
+          onPointerMove={onDragMove}
+          onPointerUp={onDragEnd}
+          onPointerCancel={onDragEnd}
+        />
         <button ref={closeRef} type="button" className="panel-close" onClick={onClose} aria-label={closeLabel}>
           ×
         </button>

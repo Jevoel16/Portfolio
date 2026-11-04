@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { BlogIndex } from './pages/blog/BlogIndex'
 import { BlogPost } from './pages/blog/BlogPost'
@@ -5,6 +6,8 @@ import { NotFound } from './pages/NotFound'
 import { SkyPage } from './pages/SkyPage'
 import { selectionFromPath } from './routes'
 import { RouteHead } from './seo/RouteHead'
+import { CommandTerminal } from './hud/CommandTerminal'
+import { useKonami, useTheme } from './hud/theme'
 
 /** Unknown project slugs fall through to the 404 page instead of an empty sky. */
 function SkyRoute() {
@@ -13,9 +16,12 @@ function SkyRoute() {
 }
 
 export default function App() {
+  const [theme, setTheme] = useTheme()
+  useKonami(useCallback(() => setTheme(theme === 'redteam' ? 'default' : 'redteam'), [theme, setTheme]))
   return (
     <>
       <RouteHead />
+      <CommandTerminal />
       <Routes>
         {/* One layout route for every sky URL keeps the canvas mounted while panels change. */}
         <Route element={<SkyRoute />}>

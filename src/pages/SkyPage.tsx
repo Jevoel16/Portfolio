@@ -12,6 +12,8 @@ import { PORTRAIT_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
 import { useCoarsePointer, usePrefersReducedMotion, useSceneSupport } from '../hooks/useSceneSupport'
 import { pathFor, selectionFromPath } from '../routes'
 import { StaticSky } from '../static/StaticSky'
+import { BootLine, HudFrame, Telemetry } from '../hud/Hud'
+import { posts } from '../content/posts'
 
 const SpaceScene = lazy(() => import('../scene/SpaceScene'))
 
@@ -104,15 +106,19 @@ export function SkyPage() {
         </SceneBoundary>
       )}
 
+      <HudFrame />
       <Header selectedId={selectedId} onSelect={setSelectedId} />
 
       <div className="hero">
-        <p className="hero-kicker mono">
-          // {projects.length} projects · {constellations.length} constellations
-        </p>
+        <BootLine stats={`// ${projects.length} projects · ${posts.length} write-up${posts.length === 1 ? '' : 's'} · ${constellations.length} constellations`} />
         {/* One h1 per page: the brand on the home view, the panel title when a panel is open. */}
         {selectedId ? <p className="hero-title">Sprucetrap</p> : <h1 className="hero-title">Sprucetrap</h1>}
-        <p className="hero-sub">Aspiring Cybersecurity Professional · Full-Stack Developer</p>
+        <p className="hero-sub">
+          Cybersecurity <span className="signal">×</span> Full-Stack Development<span className="caret" aria-hidden="true" />
+        </p>
+        <p className="status-chip mono">
+          <span className="pulse-dot" aria-hidden="true" /> learning security · building the web
+        </p>
       </div>
 
       <div ref={stageRef} className="stage">
@@ -121,7 +127,10 @@ export function SkyPage() {
 
       <div className="sky-footer">
         <div className="hint-row">
-          <p className="hint mono">{hint}</p>
+          <div className="hint-stack">
+            <Telemetry target={selectedId} />
+            <p className="hint mono">{hint}</p>
+          </div>
           {(away || selectedId) && show3d && (
             <button type="button" className="hud-chip recenter" onClick={goHome}>
               <span aria-hidden="true">◎</span> Recenter

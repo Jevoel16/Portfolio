@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, type CSSProperties, type RefObject } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
+import { Scramble } from '../hud/Scramble'
 import type { SkyLabel } from './skyLayout'
 
 interface LayerProps {
@@ -8,17 +9,25 @@ interface LayerProps {
   hoveredId: string | null
   selectedId: string | null
   layerRef: RefObject<HTMLDivElement>
+  animate: boolean
 }
 
 /**
  * Every sky label in one plain DOM layer over the canvas. React only renders the text and
  * classes; positions are written straight to `transform` by LabelProjector each frame.
  */
-export function LabelLayer({ labels, hoveredId, selectedId, layerRef }: LayerProps) {
+export function LabelLayer({ labels, hoveredId, selectedId, layerRef, animate }: LayerProps) {
   return (
     <div ref={layerRef} className="label-layer" aria-hidden="true">
       {labels.map((l) => {
         const active = !!l.id && (l.id === hoveredId || l.id === selectedId)
+        if (l.kind === 'reticle') {
+          return (
+            <div key={l.key} data-key={l.key} className="sky-label">
+              <div className={`reticle${active ? ' locked' : ''}`} style={{ '--accent': l.color } as CSSProperties} />
+            </div>
+          )
+        }
         const className =
           l.kind === 'constellation'
             ? 'const-label-3d'
@@ -28,7 +37,7 @@ export function LabelLayer({ labels, hoveredId, selectedId, layerRef }: LayerPro
         return (
           <div key={l.key} data-key={l.key} className="sky-label">
             <div className={className} style={{ color: l.kind === 'star' ? undefined : l.color } as CSSProperties}>
-              {l.title}
+              {l.kind === 'star' ? <Scramble text={l.title} active={active} enabled={animate} /> : l.title}
               {l.sub && (l.kind !== 'star' || active) && (l.kind === 'star' ? <small>{l.sub}</small> : <span>{l.sub}</span>)}
             </div>
           </div>

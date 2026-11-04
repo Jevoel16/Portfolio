@@ -6,3 +6,5 @@
 @import './styles/labels.css';
 @import './styles/panel.css';
 @import './styles/doc.css';
+@import './styles/hud.css';
+@import './styles/terminal.css';

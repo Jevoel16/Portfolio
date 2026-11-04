@@ -10,6 +10,7 @@ import { Bodies } from './Bodies'
 import { LabelLayer, LabelProjector } from './LabelLayer'
 import { ShootingStars } from './ShootingStars'
 import { SkyLines } from './SkyLines'
+import { SkyPackets } from './SkyPackets'
 import { skyLayout } from './skyLayout'
 import { SkyStars } from './SkyStars'
 import { Nebula, Starfield } from './Starfield'
@@ -68,7 +69,7 @@ export default function SpaceScene({ onDismiss, reducedMotion, lite, portrait, s
           labelLayer={labelLayer}
         />
       </Canvas>
-      <LabelLayer labels={layout.labels} hoveredId={hoveredId} selectedId={selectedId} layerRef={labelLayer} />
+      <LabelLayer labels={layout.labels} hoveredId={hoveredId} selectedId={selectedId} layerRef={labelLayer} animate={!reducedMotion} />
     </div>
   )
 }
@@ -108,6 +109,7 @@ function SceneContent({ layout, portrait, selectedId, hoveredId, onHover, onSele
       <group ref={group}>
         <Nebula />
         <SkyLines edges={layout.edges} />
+        {animate && <SkyPackets edges={layout.edges} />}
         <SkyStars stars={layout.stars} selectedId={selectedId} hoveredId={hoveredId} onHover={onHover} onSelect={onSelect} animate={animate} />
         <Bodies portrait={portrait} selectedId={selectedId} hoveredId={hoveredId} onHover={onHover} onSelect={onSelect} animate={animate} touch={touch} />
       </group>

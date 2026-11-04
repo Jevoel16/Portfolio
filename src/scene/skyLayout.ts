@@ -23,7 +23,7 @@ export interface Edge {
 
 export interface SkyLabel {
   key: string
-  kind: 'constellation' | 'star' | 'body'
+  kind: 'constellation' | 'star' | 'body' | 'reticle'
   pos: THREE.Vector3
   color: string
   title: string
@@ -61,6 +61,8 @@ export function skyLayout(portrait: boolean) {
         phase: i * 1.7 + c.label.x,
       })
       if (item) {
+        // Target-lock brackets around the star itself, shown on hover and selection.
+        labels.push({ key: `lock-${item.id}`, kind: 'reticle', pos, color: c.color, title: '', id: item.id })
         labels.push({
           key: `star-${item.id}`,
           kind: 'star',

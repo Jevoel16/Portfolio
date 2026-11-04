@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom'
 import { bodies } from '../data/bodies'
+import { openTerminal } from '../hud/CommandTerminal'
 
 interface Props {
   selectedId: string | null
@@ -16,6 +18,14 @@ export function Header({ selectedId, onSelect }: Props) {
         <span>Sprucetrap</span>
       </span>
       <nav className="nav" aria-label="Sections">
+        <button type="button" className="hud-chip terminal-chip mono" onClick={openTerminal} aria-label="Open command terminal" title="Command terminal (⌘K or /)">
+          <span aria-hidden="true">&gt;_</span>
+          <kbd>⌘K</kbd>
+        </button>
+        <Link to="/blog" className="hud-chip" style={{ '--accent': 'var(--signal)' } as React.CSSProperties}>
+          <span className="blog-icon" aria-hidden="true" />
+          Blog
+        </Link>
         {bodies.map((b) => (
           <button
             key={b.id}
