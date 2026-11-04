@@ -14,8 +14,9 @@
 ![three.js](https://img.shields.io/badge/three.js-0.170.0-blue?style=flat)
 ![React Three Fiber](https://img.shields.io/badge/React%20Three%20Fiber-8.18.0-blue?style=flat)
 ![drei](https://img.shields.io/badge/drei-9.122.0-blue?style=flat)
+![Vitest](https://img.shields.io/badge/Vitest-3.2.7-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-1.0.2-informational?style=flat)
+![Version](https://img.shields.io/badge/version-1.0.3-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
@@ -203,6 +204,8 @@ Portfolio/
 | `npm run dev` | Start the Vite dev server on port 5173 (also on your LAN) |
 | `npm run build` | Type-check with `tsc -b`, then build to `dist/` |
 | `npm run preview` | Serve the production build locally |
+| `npm test` | Run the Vitest suite once |
+| `npm run test:watch` | Run Vitest in watch mode |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -210,7 +213,15 @@ Portfolio/
 
 ## Testing
 
-There are no automated tests. `npm run build` type-checks the project. Before shipping, check by hand:
+Run the automated checks:
+
+```bash
+npm test
+```
+
+`src/data/data.test.ts` guards the hand-edited data: unique slug ids, every project has a star in its own constellation, edges only join real stars, and every repo link is an `https://github.com/` URL. `npm run build` also type-checks the project.
+
+Before shipping, also check by hand:
 
 - [ ] Desktop: drag, wheel zoom, click a star → panel opens and the star sits left of the panel.
 - [ ] About, Toolkit and Contact open from both the header chips and the planets.
