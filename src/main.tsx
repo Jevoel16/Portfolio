@@ -3,9 +3,13 @@ import { createRoot, hydrateRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App'
 import { loadPost } from './content/posts'
+import { applyMotionAttribute } from './hooks/useMotion'
 import '@fontsource-variable/space-grotesk'
 import '@fontsource-variable/jetbrains-mono'
 import './index.css'
+
+// Before the first paint of the app, so a visitor who paused motion never sees it start.
+applyMotionAttribute()
 
 const root = document.getElementById('root')!
 const app = (

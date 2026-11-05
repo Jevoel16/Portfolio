@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { usePrefersReducedMotion } from '../hooks/useSceneSupport'
+import { useReducedMotion } from '../hooks/useMotion'
 
 /** Viewport corner brackets plus a faint scanline/grain veil: the "observatory screen" frame. */
 export function HudFrame() {
@@ -21,7 +21,7 @@ const BOOT_KEY = 'sprucetrap-booted'
  * and returning visitors see the stats straight away; reduced motion skips the typing.
  */
 export function BootLine({ stats }: { stats: string }) {
-  const reduced = usePrefersReducedMotion()
+  const reduced = useReducedMotion()
   const [text, setText] = useState<string | null>(null)
 
   useEffect(() => {

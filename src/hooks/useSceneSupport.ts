@@ -44,7 +44,6 @@ export function useSceneSupport() {
   return useSyncExternalStore(noSubscribe, clientSupport, () => SERVER)
 }
 
-export const usePrefersReducedMotion = () => useMediaQuery('(prefers-reduced-motion: reduce)')
 
 /** Touch-first devices (phones, tablets), where there is no hover. */
 export const useCoarsePointer = () => useMediaQuery('(pointer: coarse)')

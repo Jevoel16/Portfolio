@@ -630,10 +630,8 @@
 
 /* Scroll-linked motion (parallax, reveals, page transitions) stays on: it follows the reader's own
    scrolling and clicks. Only the hyperspace flash is dropped. */
-@media (prefers-reduced-motion: reduce) {
-  .warp {
-    display: none;
-  }
+:root[data-motion='reduced'] .warp {
+  display: none;
 }
 
 /* On phones, blurring what's behind each card means re-blurring the 3D sky every frame it redraws,

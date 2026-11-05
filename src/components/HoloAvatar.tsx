@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { DIALOGUE } from '../data/dialogue'
 import { AVATAR } from '../data/profile'
-import { usePrefersReducedMotion } from '../hooks/useSceneSupport'
+import { useReducedMotion } from '../hooks/useMotion'
 import { useTypewriter } from '../hud/useTypewriter'
 
 const BARS = 7
@@ -11,7 +11,7 @@ const BARS = 7
  * into view; "Next" (or a click on the bubble) skips to the end of the line, then to the next line.
  */
 export function HoloAvatar() {
-  const reduced = usePrefersReducedMotion()
+  const reduced = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
   // `idle` is the prerendered state (fully visible); `standby` waits off-screen to boot up.
   const [phase, setPhase] = useState<'idle' | 'standby' | 'online'>('idle')

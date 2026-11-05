@@ -10,7 +10,8 @@ import { constellations } from '../data/constellations'
 import { GITHUB, LICENSE_URL } from '../data/profile'
 import { projects, techStack } from '../data/projects'
 import { PORTRAIT_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
-import { usePrefersReducedMotion, useSceneSupport } from '../hooks/useSceneSupport'
+import { useSceneSupport } from '../hooks/useSceneSupport'
+import { useReducedMotion } from '../hooks/useMotion'
 import { BootLine, HudFrame, Telemetry } from '../hud/Hud'
 import { hrefForSection, SECTIONS, SECTION_LABELS, type SectionId } from '../scroll/sections'
 import { useSectionSync } from '../scroll/useSectionSync'
@@ -71,7 +72,7 @@ const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
  */
 export function ScrollPage() {
   const { webgl, lite } = useSceneSupport()
-  const reducedMotion = usePrefersReducedMotion()
+  const reducedMotion = useReducedMotion()
   const portrait = useMediaQuery(PORTRAIT_QUERY)
   const [warping, warp] = useWarp()
   const active = useSectionSync({ reduced: reducedMotion, onWarp: warp })

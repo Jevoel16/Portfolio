@@ -20,7 +20,7 @@
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.0.4-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.1.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -48,7 +48,7 @@
 
 ## Features
 
-- **Observatory HUD** — corner brackets, a faint scanline veil, a one-time `> establishing uplink… ok` boot line, a blinking caret, a live telemetry readout (pointer RA/Dec, locked target, uptime), target-lock reticles and a short "decrypt" scramble on star names, and data packets travelling along constellation lines like traffic on a network map. All motion switches off with *reduce motion*.
+- **Observatory HUD** — corner brackets, a faint scanline veil, a one-time `> establishing uplink… ok` boot line, a blinking caret, a live telemetry readout (pointer RA/Dec, locked target, uptime), target-lock reticles and a short "decrypt" scramble on star names, and data packets travelling along constellation lines like traffic on a network map. All of it stops with the header's pause-motion chip.
 - **⌘K command terminal** — press `⌘K` / `Ctrl+K` or `/` anywhere (or the `>_` button) for a small shell: `whoami`, `ls projects`, `open <slug>` with Tab completion, `cat about`, `blog`, `contact`, `theme redteam`, `sudo hire-me`, `help`. Every command maps to a page, so it doubles as keyboard navigation; on phones it is a bottom sheet with tappable quick commands.
 - **Red team mode** — `theme redteam` or the Konami code (↑↑↓↓←→←→BA) swaps the HUD to crimson; the choice is remembered in the browser.
 - **One scrolling flight through space (v2)** — the home page is a single long page over a fixed 3D night sky. As you scroll, the camera flies between waypoints: the whole sky for the hero, the home planet for About, each constellation in turn for Projects, the ringed planet for Toolkit, the security nebula for Write-ups and the signal beacon for Contact. Long hops pull the camera back mid-flight so they read as flights, not pans.
@@ -60,14 +60,14 @@
 - **Celestial bodies for everything else** — a home planet (**About**), a ringed planet (**Toolkit** / tech stack) and a pulsing signal beacon (**Contact**).
 - **Deep links that scroll** — `/about`, `/toolkit` and `/contact` open the page scrolled to that section, `/#projects` and `/#writeups` to theirs, and the URL, title and canonical follow along as you scroll. Each project has its own page at `/projects/<slug>`; unknown URLs show a 404 page.
 - **Phone-first** — native scrolling, a swipeable header chip row, cards in one column, the avatar stacked above its speech bubble, and safe-area padding for notched phones.
-- **Ambient motion** — twinkling stars, nebula clouds, a slow sway and occasional shooting stars (all switched off with *reduce motion*).
+- **Ambient motion** — twinkling stars, nebula clouds, a slow sway and occasional shooting stars (on by default on every device, including desktops with the OS *reduce motion* setting on; the header's pause-motion chip stops it).
 - **Prerendered for search engines** — every page (each section URL with every section in its HTML, projects, blog posts, 404) is rendered to static HTML at build time with its own title, description, canonical URL, Open Graph/Twitter card and JSON-LD, then hydrated in the browser. Crawlers and no-JS visitors get real content and real links.
 - **SEO files** — `sitemap.xml` and `llms.txt` are generated from the data; `robots.txt`, favicon, touch icon, web manifest and a 1200×630 share image live in `public/`.
 - **Security headers** — `vercel.json` sends HSTS, a strict Content-Security-Policy, `nosniff`, `X-Frame-Options: DENY`, a referrer policy and a permissions policy. Fonts are self-hosted, so nothing loads from third-party origins.
 - **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, page assets, security headers, SEO files). `main` is the only branch and is protected against force pushes and deletion.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets stays behind the page, with a light CSS parallax.
-- **Accessible** — every project, section and post is a real link in the page; one `<h1>`, then `<h2>` sections and `<h3>`/`<h4>` cards; the 3D canvas is decorative and hidden from assistive tech; *reduce motion* turns off ambient motion, the warp flash and typing; scroll-driven motion (camera flight, parallax, reveals, page transitions) follows the reader's own scrolling and stays on, so desktop and phone look the same.
-- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and only for camera flights with *reduce motion* on. Textures are drawn in code, and data saver or slow connections get fewer background stars.
+- **Accessible** — every project, section and post is a real link in the page; one `<h1>`, then `<h2>` sections and `<h3>`/`<h4>` cards; the 3D canvas is decorative and hidden from assistive tech; motion is on by default everywhere, and a pause-motion chip in the header (remembered per browser) turns off ambient motion, the warp flash and typing; scroll-driven motion (camera flight, parallax, reveals, page transitions) follows the reader's own scrolling and stays on, so desktop and phone look the same.
+- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and only for camera flights while motion is paused. Textures are drawn in code, and data saver or slow connections get fewer background stars.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -355,7 +355,8 @@ Portfolio/
     │   └── RouteHead.tsx      # Keeps <head> in sync during client-side navigation
     ├── hooks/
     │   ├── useMediaQuery.ts   # Hydration-safe media queries; PORTRAIT_QUERY rotates the sky
-    │   └── useSceneSupport.ts # WebGL / data-saver detection, reduced motion, coarse pointer
+    │   ├── useMotion.ts       # Site motion setting (full by default) behind the pause-motion chip
+    │   └── useSceneSupport.ts # WebGL / data-saver detection, coarse pointer
     ├── scene/                 # Lazy-loaded three.js chunk
     │   ├── ScrollSky.tsx      # Fixed canvas, on-demand frameloop, scroll-driven camera rig
     │   ├── skyLayout.ts       # Star, edge and label positions for one orientation

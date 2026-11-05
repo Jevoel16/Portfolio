@@ -75,19 +75,18 @@ button {
 }
 
 /* ---------- Reduced motion ----------
-   Stops ambient and looping motion. Scroll reveals ([data-reveal]) still play: they only move when
-   the reader scrolls, and keep desktop and phone looking the same. */
-@media (prefers-reduced-motion: reduce) {
-  *:not([data-reveal]),
-  *:not([data-reveal])::before,
-  *:not([data-reveal])::after {
-    animation: none !important;
-    transition-duration: 0.01ms !important;
-  }
-  .edge {
-    stroke-dashoffset: 0;
-  }
-  .body .pulse {
-    opacity: 0.4;
-  }
+   Set by the header's motion chip (src/hooks/useMotion.ts), not the OS setting, so every device
+   animates by default. Stops ambient and looping motion. Scroll reveals ([data-reveal]) still play:
+   they only move when the reader scrolls. */
+:root[data-motion='reduced'] *:not([data-reveal]),
+:root[data-motion='reduced'] *:not([data-reveal])::before,
+:root[data-motion='reduced'] *:not([data-reveal])::after {
+  animation: none !important;
+  transition-duration: 0.01ms !important;
+}
+:root[data-motion='reduced'] .edge {
+  stroke-dashoffset: 0;
+}
+:root[data-motion='reduced'] .body .pulse {
+  opacity: 0.4;
 }

@@ -288,10 +288,8 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .holo.standby .holo-frame,
-  .holo.standby .holo-beam {
-    opacity: 1;
-    transform: none;
-  }
+:root[data-motion='reduced'] .holo.standby .holo-frame,
+:root[data-motion='reduced'] .holo.standby .holo-beam {
+  opacity: 1;
+  transform: none;
 }

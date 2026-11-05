@@ -129,6 +129,15 @@
   border-radius: 4px;
   color: var(--text-faint);
 }
+/* Motion toggle: an icon-only chip, so it costs little width on phones. */
+.motion-chip {
+  --accent: var(--signal);
+  padding-inline: 10px;
+  color: var(--signal);
+}
+.motion-chip svg {
+  display: block;
+}
 .blog-icon {
   width: 9px;
   height: 9px;
@@ -165,10 +174,8 @@
     display: none;
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .caret {
-    animation: none;
-  }
+:root[data-motion='reduced'] .caret {
+  animation: none;
 }
 
 /* Small phones: the header chips scroll sideways, so drop the extras that cost width. */
