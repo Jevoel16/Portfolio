@@ -21,7 +21,7 @@
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 ![Vercel Analytics](https://img.shields.io/badge/Vercel%20Analytics-2.0.1-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.4.1-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.4.2-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -38,6 +38,7 @@
 - [Installation](#installation)
 - [Configuration and environment variables](#configuration-and-environment-variables)
 - [Usage](#usage)
+- [Documentation](#documentation)
 - [Project structure](#project-structure)
 - [Scripts](#scripts)
 - [Deployment](#deployment)
@@ -289,6 +290,41 @@ Backlink ideas (do these yourself; nothing here is posted automatically):
 
 ---
 
+## Documentation
+
+Screenshots captured from the running dev server. They live in [`docs/images/`](docs/images) as compressed WebP and are retaken whenever their screen changes.
+
+<table>
+<tr>
+<td align="center" valign="top" width="50%"><img src="docs/images/home-sky.webp" alt="Home section: the Sprucetrap title over the 3D night sky with constellations, planets and the section rail" /><br /><sub><b>Home</b> — the full sky, with every constellation, planet and the section rail</sub></td>
+<td align="center" valign="top" width="50%"><img src="docs/images/about.webp" alt="About section card next to the orange About planet" /><br /><sub><b>About</b> — the camera parks beside the home planet</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%"><img src="docs/images/projects.webp" alt="Projects section with Full-Stack Web project cards over their constellation" /><br /><sub><b>Projects</b> — each constellation is a skill area, each star a project</sub></td>
+<td align="center" valign="top" width="50%"><img src="docs/images/toolkit.webp" alt="Toolkit section listing languages, frameworks and tools next to the ringed Toolkit planet" /><br /><sub><b>Toolkit</b> — the tech stack orbiting its ringed planet</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%"><img src="docs/images/contact-spruce.webp" alt="Contact section with Spruce, the holographic avatar, speaking in a dialogue bubble" /><br /><sub><b>Contact</b> — Spruce boots up and opens the channel</sub></td>
+<td align="center" valign="top" width="50%"><img src="docs/images/terminal.webp" alt="Command terminal overlay showing whoami and ls projects output" /><br /><sub><b>Terminal</b> — <code>Ctrl+K</code> opens it; <code>whoami</code> and <code>ls projects</code></sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%"><img src="docs/images/project-page.webp" alt="RankIT project page with description, tech tags, GitHub link and related projects" /><br /><sub><b>Project page</b> — <code>/projects/rankit</code> with its constellation siblings</sub></td>
+<td align="center" valign="top" width="50%"><img src="docs/images/blog-index.webp" alt="Blog index listing the security headers write-up" /><br /><sub><b>Blog</b> — <code>/blog</code>, the list of write-ups</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%"><img src="docs/images/blog-post.webp" alt="Blog post page with title, tags, star map link and an On this page table of contents" /><br /><sub><b>Blog post</b> — long posts get an <i>On this page</i> table of contents</sub></td>
+<td align="center" valign="top" width="50%"><img src="docs/images/static-fallback.webp" alt="Static SVG star map shown when WebGL is unavailable" /><br /><sub><b>Static fallback</b> — the SVG sky used without WebGL (<code>?mode=static</code>)</sub></td>
+</tr>
+<tr>
+<td align="center" valign="top" width="50%"><img src="docs/images/mobile-home.webp" alt="Home section on a 375 by 812 phone screen with the swipeable header chips" width="260" /><br /><sub><b>Phone · Home</b> — portrait sky and swipeable header chips</sub></td>
+<td align="center" valign="top" width="50%"><img src="docs/images/mobile-contact.webp" alt="Contact section on a phone with Spruce above the speech bubble" width="260" /><br /><sub><b>Phone · Contact</b> — Spruce sits above the speech bubble</sub></td>
+</tr>
+</table>
+
+<p align="right"><a href="#top">back to top ↑</a></p>
+
+---
+
 ## Project structure
 
 <details>
@@ -296,7 +332,9 @@ Backlink ideas (do these yourself; nothing here is posted automatically):
 
 ```text
 Portfolio/
-├── docs/logo.svg              # README logo
+├── docs/
+│   ├── logo.svg               # README logo
+│   └── images/                # README screenshots (WebP)
 ├── index.html                 # Fonts, meta tags, viewport-fit=cover for notched phones
 ├── vite.config.ts
 ├── .nvmrc                     # Node version used locally and in CI
@@ -431,7 +469,7 @@ npm run smoke
 1. Create a branch with a matching prefix: `feat/short-description`, `fix/short-description`, `docs/…`, `refactor/…`.
 2. Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `chore:`, `style:`, `perf:`, `test:` — an imperative subject of 72 characters or less, a blank line, then one bullet per change.
 3. End every commit subject with the bumped [SemVer](https://semver.org/) version, e.g. `feat: add CSV export (v1.4.0)` (breaking → major, `feat` → minor, anything else → patch), and keep `package.json` and the README version badge in sync. `.claude/` (local Claude settings and worktrees) and `CLAUDE.md` (personal instructions for Claude) are git-ignored.
-4. Run `npm test` and `npm run build`, and check the change on desktop and a phone-sized viewport.
+4. Run `npm test` and `npm run build`, and check the change on desktop and a phone-sized viewport. If a screen in [Documentation](#documentation) changed, retake its screenshot in `docs/images/` (lowercase, hyphenated `.webp`).
 5. **Update this README with every change**, including the version badges when dependencies change.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
