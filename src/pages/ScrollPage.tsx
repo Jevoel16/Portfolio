@@ -10,6 +10,7 @@ import { constellations } from '../data/constellations'
 import { GITHUB, LICENSE_URL } from '../data/profile'
 import { projects, techStack } from '../data/projects'
 import { PORTRAIT_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
+import { useBootGate } from '../hooks/useBootGate'
 import { useSceneSupport } from '../hooks/useSceneSupport'
 import { useReducedMotion } from '../hooks/useMotion'
 import { BootLine, HudFrame, Telemetry } from '../hud/Hud'
@@ -31,23 +32,6 @@ class SceneBoundary extends Component<{ onError: () => void; children: ReactNode
   render() {
     return this.state.failed ? null : this.props.children
   }
-}
-
-/**
- * True once the browser is idle after first paint. The prerendered page is the fast first paint;
- * the ~250 KB three.js chunk downloads only after that.
- */
-function useIdle() {
-  const [idle, setIdle] = useState(false)
-  useEffect(() => {
-    if ('requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(() => setIdle(true), { timeout: 1200 })
-      return () => window.cancelIdleCallback(id)
-    }
-    const id = setTimeout(() => setIdle(true), 300)
-    return () => clearTimeout(id)
-  }, [])
-  return idle
 }
 
 /** Hyperspace overlay for long jumps: on for one streak animation, then off. */
@@ -78,13 +62,30 @@ export function ScrollPage() {
   const active = useSectionSync({ reduced: reducedMotion, onWarp: warp })
   const [sceneReady, setSceneReady] = useState(false)
   const [sceneFailed, setSceneFailed] = useState(false)
-  const idle = useIdle()
-  const show3d = webgl && !sceneFailed && idle
+  // The sky starts loading right after hydration; the prerendered hero is already the first paint.
+  const show3d = webgl && !sceneFailed
   const onReady = useCallback(() => setSceneReady(true), [])
+  const boot = useBootGate(sceneReady || sceneFailed)
+  const skyOn = show3d && sceneReady && boot.ready
+  const main = useRef<HTMLElement>(null)
 
   useEffect(() => {
     if (!show3d) setSceneReady(false)
   }, [show3d])
+
+  // Hold scrolling until everything is loaded. Set on the DOM, not in markup, so the prerendered
+  // page (crawlers, no-JS visitors) is never locked. Programmatic scrolls (deep links, nav) still work.
+  useEffect(() => {
+    if (boot.ready) return
+    const root = document.documentElement
+    const el = main.current
+    root.classList.add('booting')
+    el?.setAttribute('aria-busy', 'true')
+    return () => {
+      root.classList.remove('booting')
+      el?.removeAttribute('aria-busy')
+    }
+  }, [boot.ready])
 
   const lit = constellations.filter((c) => projects.some((p) => p.constellation === c.id))
   const security = constellations.find((c) => c.id === 'security')
@@ -93,10 +94,10 @@ export function ScrollPage() {
   const contact = bodyById.get('contact')!
 
   return (
-    <div className={`v2${sceneReady ? ' three-ready' : ''}${warping ? ' is-warping' : ''}`} data-active={active}>
+    <div className={`v2${skyOn ? ' three-ready' : ''}${warping ? ' is-warping' : ''}`} data-active={active}>
       <div className="backdrop" aria-hidden="true" data-scroll-var>
         <div className="backdrop-map">
-          <StaticSky covered={show3d && sceneReady} />
+          <StaticSky covered={skyOn} />
         </div>
         {show3d && (
           <SceneBoundary onError={() => setSceneFailed(true)}>
@@ -118,9 +119,9 @@ export function ScrollPage() {
       <Header active={active} />
       <ScrollRail active={active} />
 
-      <main className="v2-main">
+      <main ref={main} className="v2-main">
         <section id="home" className="v2-section hero-section" data-cam="home" aria-labelledby="home-title">
-          <BootLine stats={`// ${plural(projects.length, 'project')} · ${plural(posts.length, 'write-up')} · ${constellations.length} constellations`} />
+          <BootLine ready={boot.ready} done={boot.done} total={boot.total} stats={`// ${plural(projects.length, 'project')} · ${plural(posts.length, 'write-up')} · ${constellations.length} constellations`} />
           <h1 id="home-title" className="hero-title">
             Sprucetrap
           </h1>
@@ -139,7 +140,8 @@ export function ScrollPage() {
             </Link>
           </div>
           <p className="scroll-cue mono" aria-hidden="true">
-            <span>scroll to fly</span>
+            <span className="cue-wait">calibrating…</span>
+            <span className="cue-go">scroll to fly</span>
             <span className="scroll-cue-line" />
           </p>
         </section>

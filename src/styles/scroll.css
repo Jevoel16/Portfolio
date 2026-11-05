@@ -75,7 +75,8 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 1.2s ease;
+  /* Shaders are compiled before this fades in, so it only has to look smooth, not hide a stall. */
+  transition: opacity 0.8s ease;
 }
 .three-ready .space-canvas {
   opacity: 1;
@@ -196,6 +197,17 @@
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--text-faint);
+  transition: opacity 0.4s ease;
+}
+.cue-wait,
+.booting .cue-go {
+  display: none;
+}
+.booting .cue-wait {
+  display: inline;
+}
+.booting .scroll-cue {
+  opacity: 0.55;
 }
 .scroll-cue-line {
   width: 1px;

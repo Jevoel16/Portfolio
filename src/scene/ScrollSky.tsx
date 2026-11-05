@@ -67,13 +67,38 @@ interface ContentProps {
 
 function SceneContent({ layout, portrait, activeBody, animate, starCount, onReady }: ContentProps) {
   const group = useRef<THREE.Group>(null)
-  const readySent = useRef(false)
+  const { gl, scene, camera, invalidate } = useThree()
+
+  // Upload every texture and compile every shader before the sky is shown, so neither stalls a
+  // frame of the first camera flight. The scene graph is complete here: children commit first.
+  useEffect(() => {
+    let cancelled = false
+    const warm = async () => {
+      try {
+        scene.traverse((obj) => {
+          const material = (obj as THREE.Mesh).material as THREE.Material | THREE.Material[] | undefined
+          for (const m of [material ?? []].flat()) {
+            const map = (m as THREE.MeshBasicMaterial).map
+            if (map) gl.initTexture(map)
+          }
+        })
+        await gl.compileAsync(scene, camera)
+      } catch {
+        // Not fatal: the first frame compiles whatever is left.
+      }
+      if (cancelled) return
+      invalidate()
+      requestAnimationFrame(() => !cancelled && onReady())
+    }
+    void warm()
+    return () => {
+      cancelled = true
+    }
+    // One warm-up per canvas; later prop changes only reuse compiled programs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gl, scene, camera])
 
   useFrame(({ clock }) => {
-    if (!readySent.current) {
-      readySent.current = true
-      requestAnimationFrame(onReady)
-    }
     // A slow sway gives a sense of depth on top of the scroll flight.
     if (animate && group.current) {
       const t = clock.elapsedTime

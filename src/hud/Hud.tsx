@@ -16,15 +16,27 @@ export function HudFrame() {
 
 const BOOT_KEY = 'sprucetrap-booted'
 
+interface BootLineProps {
+  stats: string
+  /** False while the page is still loading the sky; the kicker shows the load progress. */
+  ready: boolean
+  done: number
+  total: number
+}
+
 /**
- * Hero kicker: a one-line "boot" typed once per session, then the sky's stats. Prerendered HTML
- * and returning visitors see the stats straight away; reduced motion skips the typing.
+ * Hero kicker: load progress while the page boots, then a one-line "uplink" typed once per session,
+ * then the sky's stats. Prerendered HTML shows the stats; reduced motion skips the typing.
  */
-export function BootLine({ stats }: { stats: string }) {
+export function BootLine({ stats, ready, done, total }: BootLineProps) {
   const reduced = useReducedMotion()
   const [text, setText] = useState<string | null>(null)
+  // Set after mount, so prerendered HTML (and no-JS visitors) keep the stats.
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
 
   useEffect(() => {
+    if (!ready) return
     let booted = true
     try {
       booted = sessionStorage.getItem(BOOT_KEY) === '1'
@@ -44,11 +56,12 @@ export function BootLine({ stats }: { stats: string }) {
       }
     }, 600 / line.length)
     return () => clearInterval(id)
-  }, [reduced])
+  }, [ready, reduced])
 
+  const loading = mounted && !ready ? `> calibrating sky… ${done}/${total}` : null
   return (
     <p className="hero-kicker mono">
-      <span className="signal">{text ?? stats}</span>
+      <span className="signal">{loading ?? text ?? stats}</span>
     </p>
   )
 }

@@ -28,7 +28,7 @@ function isLite(): boolean {
 
 // Probed once per page load; a stable object keeps useSyncExternalStore from re-rendering.
 let support: SceneSupport | undefined
-const clientSupport = () =>
+export const clientSceneSupport = () =>
   (support ??= {
     webgl: new URLSearchParams(window.location.search).get('mode') !== 'static' && hasWebGL(),
     lite: isLite(),
@@ -41,7 +41,7 @@ const noSubscribe = () => () => {}
  * The prerendered page always starts with the static map; the scene mounts after hydration.
  */
 export function useSceneSupport() {
-  return useSyncExternalStore(noSubscribe, clientSupport, () => SERVER)
+  return useSyncExternalStore(noSubscribe, clientSceneSupport, () => SERVER)
 }
 
 

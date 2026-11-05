@@ -8,6 +8,14 @@
 html {
   scroll-padding-top: 64px;
   overscroll-behavior-y: none;
+  /* Keeps the layout still when the boot lock hides the scrollbar. */
+  scrollbar-gutter: stable;
+}
+
+/* While the scroll page boots (see useBootGate), the visitor can't scroll; code still can. */
+html.booting,
+html.booting body {
+  overflow: hidden;
 }
 
 body {

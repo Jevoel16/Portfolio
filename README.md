@@ -21,7 +21,7 @@
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 ![Vercel Analytics](https://img.shields.io/badge/Vercel%20Analytics-2.0.1-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.2.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.3.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -68,7 +68,8 @@
 - **CI/CD** — every push and pull request to `main` runs `npm audit`, the tests and the full prerender build on GitHub Actions; Vercel deploys on push, and each successful production deploy triggers a smoke test of the live domain (status codes, redirect loops, page assets, security headers, SEO files). `main` is the only branch and is protected against force pushes and deletion.
 - **Hidden fallback** — if WebGL is missing or the 3D scene fails, a lightweight SVG star map with the same stars and planets stays behind the page, with a light CSS parallax.
 - **Accessible** — every project, section and post is a real link in the page; one `<h1>`, then `<h2>` sections and `<h3>`/`<h4>` cards; the 3D canvas is decorative and hidden from assistive tech; motion is on by default everywhere, and a pause-motion chip in the header (remembered per browser) turns off ambient motion, the warp flash and typing; scroll-driven motion (camera flight, parallax, reveals, page transitions) follows the reader's own scrolling and stays on, so desktop and phone look the same.
-- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js downloads only once the browser is idle, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and only for camera flights while motion is paused. Textures are drawn in code, and data saver or slow connections get fewer background stars.
+- **Load first, then fly** — the hero text shows at once, but scrolling waits behind a short `> calibrating sky… n/3` readout until the fonts, the Spruce avatar and the 3D sky are ready, with every shader compiled and texture uploaded up front, so nothing loads or compiles in the middle of a camera flight. The wait is capped at 4 seconds, deep links and nav clicks still scroll during it, it runs once per page load, and the prerendered HTML is never locked.
+- **Light and fast** — first paint is the prerendered SVG sky plus ~70 KB of gzipped JavaScript; three.js starts downloading right after hydration, in long-cached vendor chunks. Every constellation star is one GPU point buffer (one draw call, twinkle in the shader), edges are two draw calls, and all labels live in a single DOM layer. The canvas renders on demand: full rate while the camera is flying, ~30 fps for ambient motion, and only for camera flights while motion is paused. Textures are drawn in code, and data saver or slow connections get fewer background stars.
 
 <p align="right"><a href="#top">back to top ↑</a></p>
 
@@ -356,6 +357,7 @@ Portfolio/
     │   ├── meta.ts            # Per-route title, description, canonical, Open Graph, JSON-LD
     │   └── RouteHead.tsx      # Keeps <head> in sync during client-side navigation
     ├── hooks/
+    │   ├── useBootGate.ts     # Holds scrolling until fonts, avatar and sky are ready (4 s cap)
     │   ├── useMediaQuery.ts   # Hydration-safe media queries; PORTRAIT_QUERY rotates the sky
     │   ├── useMotion.ts       # Site motion setting (full by default) behind the pause-motion chip
     │   └── useSceneSupport.ts # WebGL / data-saver detection, coarse pointer
