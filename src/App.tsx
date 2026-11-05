@@ -1,5 +1,7 @@
 import { useCallback } from 'react'
 import { Route, Routes, useLocation } from 'react-router'
+// The Vite/React entry: the '/next' build needs Next.js. Renders nothing; pageviews follow history changes.
+import { Analytics } from '@vercel/analytics/react'
 import { BlogIndex } from './pages/blog/BlogIndex'
 import { BlogPost } from './pages/blog/BlogPost'
 import { NotFound } from './pages/NotFound'
@@ -23,6 +25,7 @@ export default function App() {
     <>
       <RouteHead />
       <CommandTerminal />
+      <Analytics />
       <Routes>
         {/* One layout route for every section URL keeps the page and its canvas mounted between them. */}
         <Route element={<ScrollRoute />}>

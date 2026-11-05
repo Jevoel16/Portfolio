@@ -19,8 +19,9 @@
 ![marked](https://img.shields.io/badge/marked-15.0.12-blue?style=flat)
 ![Shiki](https://img.shields.io/badge/Shiki-3.23.0-blue?style=flat)
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
+![Vercel Analytics](https://img.shields.io/badge/Vercel%20Analytics-2.0.1-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.1.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.2.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -87,6 +88,7 @@
 | Fonts | Space Grotesk and JetBrains Mono variable fonts, self-hosted via Fontsource |
 | Prerender / SEO | `vite build --ssr` + `scripts/prerender.mjs` (`renderToString` per route), `src/seo/meta.ts` |
 | Hosting | Vercel (`vercel.json`: clean URLs, headers, caching), deployed by the Vercel Git integration |
+| Analytics | Vercel Web Analytics (`@vercel/analytics/react`, mounted once in `src/App.tsx`) |
 | CI/CD | GitHub Actions (`ci.yml`: audit, test, build; `smoke.yml`: post-deploy smoke test) |
 
 <p align="right"><a href="#top">back to top ↑</a></p>
@@ -407,6 +409,10 @@ npm ci && npm audit --audit-level=high && npm test && npm run build
 ### Vercel and smoke test
 
 Vercel builds and deploys through its Git integration: pushes to `main` go to production, other branches get preview URLs. When Vercel marks a commit on `main` as deployed (its "Vercel" commit status turns green), [`.github/workflows/smoke.yml`](.github/workflows/smoke.yml) runs `scripts/smoke.mjs` against https://www.jevoelorbilla.dev: every key route, redirect loops, the 404 page, that the home page's scripts, styles and icons load, security headers and the SEO files. It also runs every Monday and can be started by hand from the Actions tab. No secrets are needed.
+
+### Analytics
+
+`<Analytics />` from `@vercel/analytics/react` is mounted once in `src/App.tsx` and records a page view on every route change, including the URL changes as you scroll between sections. It is cookie-free and loads its script from the same origin (`/_vercel/insights/script.js`), so the existing CSP needs no changes. Turn on **Web Analytics** for the project in the Vercel dashboard; data appears after the next deploy. Locally it runs in debug mode and logs page views to the console instead of sending them.
 
 ```bash
 npm run smoke
