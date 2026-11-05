@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { bodies } from '../data/bodies'
-import { SECTIONS, hrefForSection, locationForSection, sectionForLocation, sectionProgress } from './sections'
+import { SECTIONS, brakeTarget, hrefForSection, isTooFast, locationForSection, scrollVelocity, sectionForLocation, sectionIndexAt, sectionProgress } from './sections'
 
 describe('scroll sections', () => {
   it('round-trips every section through its location', () => {
@@ -62,5 +62,38 @@ describe('sectionProgress', () => {
     expect(sectionProgress([0], 100, 1000)).toBe(0)
     expect(sectionProgress([0, 300, 300, 900], 300, 900)).toBeCloseTo(2 / 3)
     expect(sectionProgress(anchors, Number.NaN, 4000)).toBe(0)
+  })
+})
+
+describe('fast-scroll brake helpers', () => {
+  it('measures signed speed across the samples', () => {
+    expect(scrollVelocity([])).toBe(0)
+    expect(scrollVelocity([{ y: 0, t: 0 }])).toBe(0)
+    expect(scrollVelocity([{ y: 0, t: 10 }, { y: 0, t: 10 }])).toBe(0)
+    expect(scrollVelocity([{ y: 0, t: 0 }, { y: 150, t: 50 }, { y: 300, t: 100 }])).toBe(3)
+    expect(scrollVelocity([{ y: 300, t: 0 }, { y: 0, t: 100 }])).toBe(-3)
+  })
+
+  it('only brakes clearly fast scrolling', () => {
+    expect(isTooFast(1, 800)).toBe(false)
+    expect(isTooFast(3, 800)).toBe(false)
+    expect(isTooFast(3.3, 800)).toBe(true)
+    expect(isTooFast(-3.3, 800)).toBe(true)
+    expect(isTooFast(2.6, 400)).toBe(true)
+  })
+
+  it('finds the active section at a scroll offset', () => {
+    const anchors = [-300, 400, 2400, Number.NaN, 3600]
+    expect(sectionIndexAt(anchors, 0)).toBe(0)
+    expect(sectionIndexAt(anchors, 400)).toBe(1)
+    expect(sectionIndexAt(anchors, 3000)).toBe(2)
+    expect(sectionIndexAt(anchors, 9000)).toBe(4)
+  })
+
+  it('stops at the neighbouring section, never off the page', () => {
+    expect(brakeTarget(2, 1)).toBe(3)
+    expect(brakeTarget(2, -1)).toBe(1)
+    expect(brakeTarget(0, -1)).toBe(0)
+    expect(brakeTarget(SECTIONS.length - 1, 1)).toBe(SECTIONS.length - 1)
   })
 })

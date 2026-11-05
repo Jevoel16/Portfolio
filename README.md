@@ -21,7 +21,7 @@
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 ![Vercel Analytics](https://img.shields.io/badge/Vercel%20Analytics-2.0.1-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.3.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.4.0-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 [![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
@@ -53,6 +53,7 @@
 - **⌘K command terminal** — press `⌘K` / `Ctrl+K` or `/` anywhere (or the `>_` button) for a small shell: `whoami`, `ls projects`, `open <slug>` with Tab completion, `cat about`, `blog`, `contact`, `theme redteam`, `sudo hire-me`, `help`. Every command maps to a page, so it doubles as keyboard navigation; on phones it is a bottom sheet with tappable quick commands.
 - **Red team mode** — `theme redteam` or the Konami code (↑↑↓↓←→←→BA) swaps the HUD to crimson; the choice is remembered in the browser.
 - **One scrolling flight through space (v2)** — the home page is a single long page over a fixed 3D night sky. As you scroll, the camera flies between waypoints: the whole sky for the hero, the home planet for About, each constellation in turn for Projects, the ringed planet for Toolkit, the security nebula for Write-ups and the signal beacon for Contact. Long hops pull the camera back mid-flight so they read as flights, not pans.
+- **Fast-scroll brake** — fling the page (a hard trackpad swipe, a phone flick, a fast wheel spin) faster than about four viewports a second and scrolling locks, glides to the next section in that direction and plays its camera flight, instead of whipping past several sections at once. Slow scrolling is never touched, trailing trackpad inertia is swallowed so it doesn't carry on past the stop, and nav clicks and deep links are left alone.
 - **Constellations as skills, stars as projects** — Full-Stack Web, Data & ML, Networking, Databases and Cybersecurity, each with a block of project cards that the camera frames as you reach it.
 - **Spruce, the holographic guide** — in Contact, the avatar (`public/avatar/spruce.webp`) boots up as a hologram over the beacon (scanlines, projector cone, float) when the section scrolls in, then talks: a speech bubble types out his lines while voice bars bounce. **Next** skips to the end of a line, then moves on; a short glitch plays between lines. Screen readers get each full line from a live region.
 - **Themed transitions** — sections resolve with a "signal acquired" scan-line wipe and blur-to-focus, section titles decrypt, orbit dividers carry travelling data packets, long jumps from the header play a hyperspace star-streak, a left-hand altitude rail and the header's progress line track the flight (paced by section, so the rail fill meets each tick as that section becomes active), and moving to the blog or a project page scans the new page in with the View Transitions API (plain swap where unsupported).
@@ -179,7 +180,7 @@ Open <http://localhost:5173>. The server also listens on your LAN (`host: true`)
 
 ### Visitors on desktop
 
-1. Scroll: the camera flies from the full sky to each section's planet or constellation while the text scrolls over it.
+1. Scroll: the camera flies from the full sky to each section's planet or constellation while the text scrolls over it. Fling it hard and it stops at the next section, so every flight plays.
 2. Use the header chips (**About**, **Projects**, **Toolkit**, **Contact**) or the altitude rail on the left to jump; long jumps play the hyperspace streak.
 3. In **Projects**, open **details →** for a project's own page or **source ↗** for its repository.
 4. In **Contact**, Spruce boots up and starts talking; press **Next** to hear the rest.
@@ -351,6 +352,7 @@ Portfolio/
     ├── scroll/
     │   ├── sections.ts        # Section order, URL ⇄ section mapping
     │   ├── useSectionSync.ts  # Scroll to the URL's section; keep the URL on the section in view
+    │   ├── useScrollBrake.ts  # Fast-scroll brake: lock, glide to the next section, swallow inertia
     │   ├── useReveal.ts       # One-shot IntersectionObserver reveal state
     │   └── cameraPath.ts      # Pure camera maths: waypoints, tracking, eased flight poses
     ├── seo/

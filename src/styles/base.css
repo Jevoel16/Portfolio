@@ -13,8 +13,9 @@ html {
 }
 
 /* While the scroll page boots (see useBootGate), the visitor can't scroll; code still can. */
-html.booting,
-html.booting body {
+/* .scroll-braking: the fast-scroll brake also kills touch momentum while it glides. */
+html:is(.booting, .scroll-braking),
+html:is(.booting, .scroll-braking) body {
   overflow: hidden;
 }
 

@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { SECTIONS, locationForSection, sectionForLocation, sectionProgress, type SectionId } from './sections'
+import { useScrollBrake } from './useScrollBrake'
 
 /** The section under this line (fraction of the viewport height from the top) is the active one. */
 const FOCUS = 0.42
@@ -34,9 +35,9 @@ function sectionAnchors(): number[] {
  * - navigating to `/about`, `/#projects`, … scrolls to that section (instantly on first load);
  * - scrolling replaces the URL with the section in view, so the title, canonical and Back stay right.
  * Also writes `--scroll` (0–1 progress, paced by section so it meets the rail ticks) on the
- * elements marked `data-scroll-var`.
+ * elements marked `data-scroll-var`. Once `brake` is on, flinging the page stops at the next section.
  */
-export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: () => void }) {
+export function useSectionSync({ reduced, onWarp, brake = false }: { reduced: boolean; onWarp: () => void; brake?: boolean }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [active, setActive] = useState<SectionId>(() => sectionForLocation(location.pathname, location.hash) ?? 'home')
@@ -121,6 +122,17 @@ export function useSectionSync({ reduced, onWarp }: { reduced: boolean; onWarp: 
       for (const el of targets) el.style.removeProperty('--scroll')
     }
   }, [navigate])
+
+  const onBrake = useCallback(
+    (id: SectionId) => {
+      setActive(id)
+      const loc = current.current
+      if (sectionForLocation(loc.pathname, loc.hash) === id) return
+      navigate(locationForSection(id), { replace: true, preventScrollReset: true, state: { fromScroll: true } })
+    },
+    [navigate],
+  )
+  useScrollBrake({ enabled: brake, reduced, autoScrolling, anchors: sectionAnchors, onBrake })
 
   return active
 }

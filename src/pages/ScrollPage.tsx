@@ -59,13 +59,13 @@ export function ScrollPage() {
   const reducedMotion = useReducedMotion()
   const portrait = useMediaQuery(PORTRAIT_QUERY)
   const [warping, warp] = useWarp()
-  const active = useSectionSync({ reduced: reducedMotion, onWarp: warp })
   const [sceneReady, setSceneReady] = useState(false)
   const [sceneFailed, setSceneFailed] = useState(false)
   // The sky starts loading right after hydration; the prerendered hero is already the first paint.
   const show3d = webgl && !sceneFailed
   const onReady = useCallback(() => setSceneReady(true), [])
   const boot = useBootGate(sceneReady || sceneFailed)
+  const active = useSectionSync({ reduced: reducedMotion, onWarp: warp, brake: boot.ready })
   const skyOn = show3d && sceneReady && boot.ready
   const main = useRef<HTMLElement>(null)
 
