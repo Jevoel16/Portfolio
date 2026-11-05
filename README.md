@@ -21,10 +21,10 @@
 ![Fontsource](https://img.shields.io/badge/Fontsource-5.3.0-blue?style=flat)
 ![Vercel Analytics](https://img.shields.io/badge/Vercel%20Analytics-2.0.1-blue?style=flat)
 
-![Version](https://img.shields.io/badge/version-2.4.0-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.4.1-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
-[![CI](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
+[![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
 
 </div>
 
