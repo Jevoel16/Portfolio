@@ -8,24 +8,22 @@
 
 **A cybersecurity × full-stack portfolio you scroll through like a flight across the night sky.**
 
-![Version](https://img.shields.io/badge/version-2.4.4-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.4.5-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 [![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 
-[About](#about) · [Screenshots](#screenshots) · [Features](#features) · [Tech Stack](#tech-stack) · [Getting Started](#getting-started) · [Usage](#usage) · [More](#more) · [Contributing](#contributing) · [License](#license) · [Author](#author)
-
 </div>
+
+<p align="center">
+  <a href="#about">About</a> · <a href="#screenshots">Screenshots</a> · <a href="#features">Features</a> · <a href="#tech-stack">Tech Stack</a> · <a href="#getting-started">Getting Started</a> · <a href="#usage">Usage</a> · <a href="#more">More</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a> · <a href="#author">Author</a>
+</p>
 
 ---
 
 ## About
 
 My personal portfolio and blog, built as an interactive 3D night sky: every skill is a constellation, every project is a star, and Spruce, a holographic guide, answers in the Contact section. It shows recruiters and collaborators my cybersecurity and full-stack work in one place. Live at **[jevoelorbilla.dev](https://www.jevoelorbilla.dev)**.
-
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
 
 ## Screenshots
 
@@ -61,10 +59,6 @@ My personal portfolio and blog, built as an interactive 3D night sky: every skil
 
 </details>
 
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
-
 ## Features
 
 - Scroll to fly the camera from the full sky to each section's planet or constellation.
@@ -76,10 +70,6 @@ My personal portfolio and blog, built as an interactive 3D night sky: every skil
 
 Full details: [docs/features.md](docs/features.md).
 
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
-
 ## Tech Stack
 
 | Layer | Tools |
@@ -89,10 +79,6 @@ Full details: [docs/features.md](docs/features.md).
 | Build and blog | Vite 6.4.5, marked 15.0.12, Shiki 3.23.0, prerendered with `renderToString` |
 | Testing | Vitest 5.1.0 |
 | Hosting | Vercel with Vercel Web Analytics 2.0.1, GitHub Actions CI |
-
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
 
 ## Getting Started
 
@@ -105,10 +91,6 @@ npm install
 npm run dev        # http://localhost:5173
 ```
 
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
-
 ## Usage
 
 1. Scroll, or use the header chips and the left-hand rail, to fly between About, Projects, Toolkit and Contact.
@@ -117,10 +99,6 @@ npm run dev        # http://localhost:5173
 4. Add a blog post by creating `content/posts/<slug>.md`.
 
 Guides: [using the site](docs/usage.md) · [editing content and writing posts](docs/content.md) · [deployment, SEO and analytics](docs/deployment.md).
-
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
 
 ## More
 
@@ -155,28 +133,16 @@ Portfolio/
 
 </details>
 
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
-
 ## Contributing
 
 Branch as `feat/…` or `fix/…` and use [Conventional Commits](https://www.conventionalcommits.org/) ending with the bumped SemVer version, e.g. `feat: add CSV export (v1.4.0)`. Run `npm test` and `npm run build` first, and update this README (and its screenshots in `docs/images/`) with every change.
-
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
 
 ## License
 
 Released under the [Sprucetrap Source-Available License 1.0](LICENSE): free for non-commercial use with visible credit.
 
-<p align="right"><a href="#top">back to top ↑</a></p>
-
----
-
 ## Author
 
 **Sprucetrap** ([@Jevoel16](https://github.com/Jevoel16)), personal portfolio.
 
-<p align="right"><a href="#top">back to top ↑</a></p>
+<p align="right"><a href="#top">Back to top</a></p>
