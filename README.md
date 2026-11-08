@@ -8,7 +8,7 @@
 
 **A cybersecurity × full-stack portfolio you scroll through like a flight across the night sky.**
 
-![Version](https://img.shields.io/badge/version-2.4.3-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.4.4-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 [![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
@@ -96,7 +96,7 @@ Full details: [docs/features.md](docs/features.md).
 
 ## Getting Started
 
-Requires Node.js 22.12 or newer (see `.nvmrc`) and npm.
+Requires Node.js 22.14.0 (pinned in `.nvmrc`) and npm.
 
 ```bash
 git clone https://github.com/Jevoel16/Portfolio.git
