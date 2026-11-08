@@ -8,7 +8,7 @@
 
 **A cybersecurity × full-stack portfolio you scroll through like a flight across the night sky.**
 
-![Version](https://img.shields.io/badge/version-2.4.6-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.4.7-informational?style=flat)
 ![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 [![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
@@ -101,6 +101,8 @@ npm run dev        # http://localhost:5173
 Guides: [using the site](docs/usage.md) · [editing content and writing posts](docs/content.md) · [deployment, SEO and analytics](docs/deployment.md).
 
 ## More
+
+How the scroll, camera, loading and motion code fits together: [docs/architecture.md](docs/architecture.md).
 
 <details>
 <summary><b>Project structure</b></summary>

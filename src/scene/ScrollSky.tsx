@@ -27,10 +27,7 @@ const AMBIENT_FPS = 30
 const FOCUS = 0.5
 const noop = () => {}
 
-/**
- * The night sky as a fixed backdrop behind the scrolling page. It takes no input: the page scroll
- * drives the camera between the waypoints marked with `data-cam` on the page's sections.
- */
+/** Fixed sky backdrop; page scroll drives the camera between `data-cam` waypoints. */
 export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, onReady }: Props) {
   // Phones have dense screens and weak GPUs: fewer pixels and no MSAA keep the flight at frame rate.
   const narrow = useMemo(() => window.innerWidth < 760, [])
@@ -69,8 +66,7 @@ function SceneContent({ layout, portrait, activeBody, animate, starCount, onRead
   const group = useRef<THREE.Group>(null)
   const { gl, scene, camera, invalidate } = useThree()
 
-  // Upload every texture and compile every shader before the sky is shown, so neither stalls a
-  // frame of the first camera flight. The scene graph is complete here: children commit first.
+  // Precompile shaders and upload textures so the first camera flight never stalls.
   useEffect(() => {
     let cancelled = false
     const warm = async () => {
@@ -145,10 +141,7 @@ function AmbientTicker({ animate }: { animate: boolean }) {
   return null
 }
 
-/**
- * Maps the scroll position to a camera pose and eases the camera towards it. The flight follows the
- * reader's own scrolling, so it runs under reduced motion too; only the ambient effects stop.
- */
+/** The flight follows the reader's scrolling, so it keeps running with motion paused. */
 function ScrollRig({ portrait }: { portrait: boolean }) {
   const { camera, size, invalidate } = useThree()
   const goal = useRef<Pose | null>(null)

@@ -1,5 +1,4 @@
-// Turns the client build into one static HTML file per route, plus sitemap.xml and llms.txt.
-// Runs after `vite build` and `vite build --ssr src/entry-server.tsx --outDir dist-ssr`.
+// One HTML file per route plus sitemap.xml and llms.txt; runs after both vite builds.
 import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'

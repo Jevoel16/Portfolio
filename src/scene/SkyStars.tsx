@@ -49,10 +49,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-/**
- * Every constellation star in one draw call. Twinkle runs on the GPU; hover and selection only
- * touch a one-float attribute. Clicks use the Points raycaster and pick the star nearest the ray.
- */
+/** All stars in one draw call; hover and selection only touch a one-float attribute. */
 export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, animate }: Props) {
   const points = useRef<THREE.Points>(null)
   const { gl, camera, invalidate } = useThree()

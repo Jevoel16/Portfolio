@@ -1,10 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-/**
- * Types `text` out one character at a time once `running` is on. Returns what is shown so far,
- * whether it is still typing, and `finish()` to show the whole line at once. `instant` (reduced
- * motion) skips the typing. Prerendered HTML shows the full line, so no-JS visitors can read it.
- */
+/** Prerendered HTML shows the full line, so no-JS visitors can still read it. */
 export function useTypewriter(text: string, { running, instant, cps = 38 }: { running: boolean; instant: boolean; cps?: number }) {
   const [count, setCount] = useState(text.length)
   const timer = useRef<ReturnType<typeof setInterval>>()

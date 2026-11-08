@@ -3,10 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 're
 /** useLayoutEffect on the client, a no-op-safe useEffect during prerendering. */
 export const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
-/**
- * `idle`: prerendered or already on screen at mount, so it is shown as is (no flash, no shift).
- * `armed`: below the fold, hidden until it scrolls in. `in`: revealed, and the CSS transition plays.
- */
+/** `idle` is already on screen at mount, so it never flashes or shifts. */
 export type RevealState = 'idle' | 'armed' | 'in'
 
 /** One-shot "signal acquired" reveal for an element, driven by an IntersectionObserver. */

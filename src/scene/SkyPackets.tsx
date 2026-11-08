@@ -36,10 +36,7 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-/**
- * Data packets travelling along constellation edges, like traffic on a network map.
- * One draw call; positions are computed on the GPU from time, so the CPU does nothing per frame.
- */
+/** One draw call; packet positions come from time on the GPU, so the CPU idles. */
 export function SkyPackets({ edges }: { edges: Edge[] }) {
   const live = useMemo(() => edges.filter((e) => !e.dashed), [edges])
 

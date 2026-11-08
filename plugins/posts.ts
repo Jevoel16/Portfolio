@@ -129,11 +129,7 @@ export async function renderMarkdown(body: string): Promise<{ html: string; toc:
   return { html, toc }
 }
 
-/**
- * Turns content/posts/*.md into JS modules at build time:
- * `post.md?meta` → PostMeta (cheap, bundled eagerly for lists and sky stars),
- * `post.md` → full Post with pre-rendered HTML (lazy-loaded per page).
- */
+/** `post.md?meta` gives eager PostMeta; `post.md` gives the lazy full Post with HTML. */
 export function posts(): Plugin {
   return {
     name: 'sprucetrap-posts',

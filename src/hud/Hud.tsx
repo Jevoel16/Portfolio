@@ -24,10 +24,7 @@ interface BootLineProps {
   total: number
 }
 
-/**
- * Hero kicker: load progress while the page boots, then a one-line "uplink" typed once per session,
- * then the sky's stats. Prerendered HTML shows the stats; reduced motion skips the typing.
- */
+/** Hero kicker: boot progress, then a once-per-session uplink line, then sky stats. */
 export function BootLine({ stats, ready, done, total }: BootLineProps) {
   const reduced = useReducedMotion()
   const [text, setText] = useState<string | null>(null)
@@ -68,10 +65,7 @@ export function BootLine({ stats, ready, done, total }: BootLineProps) {
 
 const pad = (n: number) => String(Math.floor(n)).padStart(2, '0')
 
-/**
- * Bottom-left readout: pointer position as right ascension / declination, the locked target and
- * session uptime. Values are written straight to the DOM so pointer moves never re-render React.
- */
+/** Writes straight to the DOM so pointer moves never re-render React. */
 export function Telemetry({ target }: { target: string | null }) {
   const coords = useRef<HTMLSpanElement>(null)
   const uptime = useRef<HTMLSpanElement>(null)

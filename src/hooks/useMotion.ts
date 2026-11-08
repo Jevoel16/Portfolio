@@ -4,10 +4,7 @@ export type Motion = 'full' | 'reduced'
 
 const KEY = 'sprucetrap-motion'
 
-/**
- * The site's own motion setting. Full motion is the default on every device, so desktops with the
- * OS "reduce motion" setting on look the same as phones; the header chip lets anyone pause it.
- */
+/** Site motion setting: full by default on every device, paused by the header chip, not the OS. */
 function readStored(): Motion {
   try {
     return localStorage.getItem(KEY) === 'reduced' ? 'reduced' : 'full'

@@ -36,10 +36,7 @@ export const clientSceneSupport = () =>
 const SERVER: SceneSupport = { webgl: false, lite: false }
 const noSubscribe = () => () => {}
 
-/**
- * Whether the 3D sky can run here. `?mode=static` forces the SVG fallback, for testing it.
- * The prerendered page always starts with the static map; the scene mounts after hydration.
- */
+/** Whether the 3D sky can run; `?mode=static` forces the SVG fallback. */
 export function useSceneSupport() {
   return useSyncExternalStore(noSubscribe, clientSceneSupport, () => SERVER)
 }

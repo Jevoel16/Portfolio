@@ -50,10 +50,7 @@ function useWarp() {
 const accent = (color: string) => ({ '--accent': color }) as CSSProperties
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 
-/**
- * The v2 home: one long page flying through the night sky. `/`, `/about`, `/toolkit` and `/contact`
- * all render it (each prerendered with every section) and open scrolled to their section.
- */
+/** `/`, `/about`, `/toolkit` and `/contact` all render this page, scrolled to their section. */
 export function ScrollPage() {
   const { webgl, lite } = useSceneSupport()
   const reducedMotion = useReducedMotion()
@@ -73,8 +70,7 @@ export function ScrollPage() {
     if (!show3d) setSceneReady(false)
   }, [show3d])
 
-  // Hold scrolling until everything is loaded. Set on the DOM, not in markup, so the prerendered
-  // page (crawlers, no-JS visitors) is never locked. Programmatic scrolls (deep links, nav) still work.
+  // Set on the DOM, not in markup, so prerendered pages are never scroll-locked.
   useEffect(() => {
     if (boot.ready) return
     const root = document.documentElement

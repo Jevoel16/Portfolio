@@ -1,5 +1,4 @@
-// Post-deploy smoke test: checks the live site answers every key route without redirect loops,
-// sends its security headers and serves the SEO files. Usage: node scripts/smoke.mjs [baseUrl]
+// Post-deploy smoke test; usage: node scripts/smoke.mjs [baseUrl]
 const base = (process.argv[2] ?? 'https://www.jevoelorbilla.dev').replace(/\/$/, '')
 const MAX_HOPS = 5
 const failures = []

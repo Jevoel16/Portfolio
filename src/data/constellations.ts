@@ -2,8 +2,7 @@ import { posts } from '../content/posts'
 import { projectById, projects, type ConstellationId } from './projects'
 import { bodies, bodyById, type Body, type BodyId } from './bodies'
 
-// Sky coordinates: x right, y up, z toward the viewer. Roughly x ∈ [-9, 9], y ∈ [-6, 6].
-// The 3D scene uses them directly; the static SVG map flips y.
+// Sky coordinates (x right, y up, z out; see docs/architecture.md); the SVG map flips y.
 
 export interface Star {
   key: string
@@ -111,10 +110,7 @@ export const constellations: Constellation[] = [
   securityConstellation(),
 ]
 
-/**
- * The Cybersecurity figure grows from blog write-ups: each post with `constellation: security`
- * claims one of the five base stars (oldest first), and later posts orbit around them.
- */
+/** Security posts claim the five base stars oldest first; later ones orbit them. */
 function securityConstellation(): Constellation {
   const base: Star[] = [
     { key: 's1', x: -0.9, y: 0.7, z: 0.3 },
@@ -194,10 +190,7 @@ export function orient(x: number, y: number, portrait: boolean): [number, number
   return portrait ? [-y * 0.85, x * 1.05] : [x, y]
 }
 
-/**
- * Oriented position of a constellation's name. Landscape uses the hand-placed spot; in portrait
- * the figures are rotated, so the name goes centred above its stars (star names hang below them).
- */
+/** Portrait rotates the figures, so the name moves above its stars instead of its hand-placed spot. */
 export function labelPosition(c: Constellation, portrait: boolean): [number, number] {
   if (!portrait) return [c.label.x, c.label.y]
   const pts = c.stars.map((s) => orient(s.x, s.y, portrait))

@@ -22,10 +22,7 @@ export function openTerminal() {
   window.dispatchEvent(new Event('open-terminal'))
 }
 
-/**
- * A small command line over the site: every command maps to a route, so it doubles as fast,
- * keyboard-only navigation. On phones it is a bottom sheet with tappable quick commands.
- */
+/** Command line whose commands map to routes, so it doubles as keyboard navigation. */
 export function CommandTerminal() {
   const [open, setOpen] = useState(false)
   const [input, setInput] = useState('')

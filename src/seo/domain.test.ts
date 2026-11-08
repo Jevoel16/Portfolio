@@ -3,8 +3,7 @@ import robots from '../../public/robots.txt?raw'
 import vercelJson from '../../vercel.json?raw'
 import { SITE_URL } from './meta'
 
-// Vercel's domain settings make www the primary host and 308 the apex to it.
-// A vercel.json redirect back to the apex caused an infinite redirect loop on every page but "/".
+// Vercel 308s the apex to www, so an apex redirect in vercel.json would loop.
 describe('canonical domain', () => {
   it('uses the www host that Vercel serves', () => {
     expect(SITE_URL).toBe('https://www.jevoelorbilla.dev')

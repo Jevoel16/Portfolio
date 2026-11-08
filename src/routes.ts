@@ -9,10 +9,7 @@ export function pathFor(id: string) {
   return `/projects/${id}`
 }
 
-/**
- * The sky selection a pathname points at: `null` for the home view, an id for a body or project,
- * or `undefined` when the path doesn't match anything in the sky.
- */
+/** `null` is the home view and `undefined` matches nothing in the sky. */
 export function selectionFromPath(pathname: string): string | null | undefined {
   const path = pathname.replace(/\/+$/, '') || '/'
   if (path === '/') return null

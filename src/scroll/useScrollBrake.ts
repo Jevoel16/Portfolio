@@ -24,11 +24,7 @@ interface Options {
   onBrake: (id: SectionId) => void
 }
 
-/**
- * Fast-scroll brake: when the page is flung faster than about four viewports a second, lock input,
- * glide to the neighbouring section in that direction and let the camera fly its normal transition.
- * Slow scrolling is never touched.
- */
+/** Flings over ~4 viewports/s glide to the next section so its camera flight still plays. */
 export function useScrollBrake({ enabled, reduced, autoScrolling, anchors, onBrake }: Options) {
   const opts = useRef({ reduced, anchors, onBrake })
   opts.current = { reduced, anchors, onBrake }

@@ -34,10 +34,7 @@ function shiftForText(distance: number, view: View) {
   return distance * tanHalf(view.fov) * view.aspect * 0.42
 }
 
-/**
- * Camera waypoint for a `data-cam` key: `home` (the whole sky), `body:<id>` (a planet or the beacon)
- * or `const:<id>` (a constellation). Undefined for unknown keys.
- */
+/** Keys: `home`, `body:<id>` or `const:<id>`; undefined for unknown keys. */
 export function waypointFor(key: string, view: View): Waypoint | undefined {
   const { portrait } = view
   const t = tanHalf(view.fov)
@@ -74,10 +71,7 @@ export function waypointFor(key: string, view: View): Waypoint | undefined {
   return undefined
 }
 
-/**
- * Which pair of waypoints the viewport focus line sits between. `centers` are the waypoint
- * elements' vertical centres (in the same coordinates as `focus`), top to bottom.
- */
+/** `centers` must be in the same coordinates as `focus`, top to bottom. */
 export function track(centers: number[], focus: number): { i: number; t: number } {
   const last = centers.length - 1
   if (last <= 0 || focus <= centers[0]) return { i: 0, t: 0 }
@@ -97,10 +91,7 @@ function poseOf(target: Vec3, distance: number, [tx, ty]: [number, number]): Pos
   return { target, pos: [target[0] + (tx / len) * distance, target[1] + (ty / len) * distance, target[2] + distance / len] }
 }
 
-/**
- * Camera pose between waypoint `i` and `i + 1` at progress `t`. Long hops pull the camera back
- * mid-flight, so moving between distant subjects reads as a flight rather than a pan.
- */
+/** Long hops pull back mid-flight so they read as flights, not pans. */
 export function poseAt(waypoints: Waypoint[], i: number, t: number): Pose {
   const a = waypoints[Math.min(Math.max(i, 0), waypoints.length - 1)]
   const b = waypoints[Math.min(Math.max(i + 1, 0), waypoints.length - 1)]

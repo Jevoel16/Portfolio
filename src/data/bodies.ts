@@ -1,5 +1,4 @@
-// Celestial bodies that hold the non-project content (About, tech stack, Contact).
-// Same sky coordinates as constellations.ts. Ids must not clash with project ids.
+// About / Toolkit / Contact bodies; ids must not clash with project ids.
 
 export type BodyId = 'about' | 'toolkit' | 'contact'
 

@@ -6,10 +6,7 @@ import { useTypewriter } from '../hud/useTypewriter'
 
 const BARS = 7
 
-/**
- * Spruce, projected as a hologram over the contact beacon. He starts talking when the section scrolls
- * into view; "Next" (or a click on the bubble) skips to the end of the line, then to the next line.
- */
+/** Spruce, the hologram in Contact; "Next" finishes the line, then moves to the next one. */
 export function HoloAvatar() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)

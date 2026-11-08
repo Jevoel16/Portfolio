@@ -12,10 +12,7 @@ function setMeta(attr: 'name' | 'property', key: string, content: string) {
   el.content = content
 }
 
-/**
- * Keeps <head> in step with client-side navigation. Prerendered pages already ship the right
- * tags; this matters for tabs, history entries and link previews after in-app navigation.
- */
+/** Prerendered pages ship the right tags; this fixes them after in-app navigation. */
 export function RouteHead() {
   const { pathname } = useLocation()
   useEffect(() => {

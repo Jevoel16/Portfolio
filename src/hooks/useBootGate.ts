@@ -9,10 +9,7 @@ export const BOOT_TASKS = 3
 
 const noop = () => {}
 
-/**
- * Settles when every task has settled (a rejection counts as done) or after `ms`, whichever comes first.
- * `onSettle` gets the running count of finished tasks, for a progress readout.
- */
+/** Settles when all tasks settle (rejections count) or after `ms`, reporting progress. */
 export function settleWithin(tasks: Promise<unknown>[], ms: number, onSettle?: (done: number) => void): Promise<'all' | 'timeout'> {
   let done = 0
   let timer: ReturnType<typeof setTimeout> | undefined
@@ -40,11 +37,7 @@ const fontsLoaded = (): Promise<unknown> => document.fonts?.ready ?? Promise.res
 // Once open, the gate stays open for this page lifetime (e.g. coming back from a project page).
 let booted = false
 
-/**
- * Holds the scroll page in a short "boot" until the fonts, the avatar and the 3D sky are ready, so
- * none of them load in the middle of a camera flight. `sceneSettled` is true once the sky has
- * compiled or failed; without WebGL the sky isn't waited for.
- */
+/** Holds scrolling until fonts, avatar and sky are ready, so nothing loads mid-flight. */
 export function useBootGate(sceneSettled: boolean) {
   const [ready, setReady] = useState(() => booted)
   const [done, setDone] = useState(0)

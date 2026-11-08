@@ -1,5 +1,4 @@
-// Single source of truth for every project shown on the site.
-// Adding a project: add it here, then give it a star in constellations.ts.
+// Every project on the site; each also needs a star in constellations.ts.
 
 export type ConstellationId = 'fullstack' | 'ml' | 'network' | 'databases' | 'security'
 

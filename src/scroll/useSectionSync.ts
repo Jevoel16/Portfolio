@@ -30,13 +30,7 @@ function sectionAnchors(): number[] {
   })
 }
 
-/**
- * Keeps the URL and the scroll position in step, both ways:
- * - navigating to `/about`, `/#projects`, … scrolls to that section (instantly on first load);
- * - scrolling replaces the URL with the section in view, so the title, canonical and Back stay right.
- * Also writes `--scroll` (0–1 progress, paced by section so it meets the rail ticks) on the
- * elements marked `data-scroll-var`. Once `brake` is on, flinging the page stops at the next section.
- */
+/** Keeps the URL and scroll position in step both ways (see docs/architecture.md). */
 export function useSectionSync({ reduced, onWarp, brake = false }: { reduced: boolean; onWarp: () => void; brake?: boolean }) {
   const location = useLocation()
   const navigate = useNavigate()
@@ -87,8 +81,7 @@ export function useSectionSync({ reduced, onWarp, brake = false }: { reduced: bo
   useEffect(() => {
     let frame = 0
     let lastProgress = ''
-    // Only the few elements that draw progress get the variable: setting it on <html> would restyle
-    // the whole page on every scroll frame, which is what made fast scrolling stutter on phones.
+    // Setting it on <html> restyled the whole page every frame and stuttered on phones.
     const targets = [...document.querySelectorAll<HTMLElement>('[data-scroll-var]')]
     const update = () => {
       frame = 0

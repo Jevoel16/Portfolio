@@ -101,10 +101,7 @@ time,
   cursor: pointer;
 }
 
-/* ---------- Reduced motion ----------
-   Set by the header's motion chip (src/hooks/useMotion.ts), not the OS setting, so every device
-   animates by default. Stops ambient and looping motion. Scroll reveals ([data-reveal]) still play:
-   they only move when the reader scrolls. */
+/* Motion chip pause (not the OS setting); scroll reveals still play. */
 :root[data-motion='reduced'] *:not([data-reveal]),
 :root[data-motion='reduced'] *:not([data-reveal])::before,
 :root[data-motion='reduced'] *:not([data-reveal])::after {

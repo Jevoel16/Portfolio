@@ -7,12 +7,7 @@ interface Props {
   covered?: boolean
 }
 
-/**
- * Lightweight star map: plain SVG + CSS, no WebGL and no extra download. It is the prerendered
- * first paint behind the page, the loading placeholder and the no-WebGL fallback. Both orientations
- * are rendered and CSS picks one with the same media query the 3D scene uses. It is decorative:
- * every project and section it shows has a real link in the page content.
- */
+/** Decorative SVG sky: first paint, loading placeholder and no-WebGL fallback. */
 export function StaticSky(props: Props) {
   return (
     <>

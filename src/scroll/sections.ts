@@ -16,10 +16,7 @@ export const SECTION_LABELS: Record<SectionId, string> = {
 
 const isSection = (id: string): id is SectionId => (SECTIONS as readonly string[]).includes(id)
 
-/**
- * The section a URL points at: `/about`, `/toolkit` and `/contact` keep their own (indexable) paths,
- * the other sections live on `/` with a hash. Undefined for paths that aren't on the scroll page.
- */
+/** About, Toolkit and Contact keep indexable paths; the other sections use a hash on `/`. */
 export function sectionForLocation(pathname: string, hash = ''): SectionId | undefined {
   const selection = selectionFromPath(pathname)
   if (selection === null) {
@@ -42,11 +39,7 @@ export const hrefForSection = (id: SectionId) => {
   return pathname + hash
 }
 
-/**
- * Page progress (0–1) paced by section, so section `k` of `n` sits at exactly `k / (n - 1)` and the
- * rail's evenly spaced ticks light up as the fill reaches them. `anchors[i]` is the scroll offset at
- * which section `i` becomes active; `max` is the largest scroll offset.
- */
+/** Paced by section so the rail's evenly spaced ticks light up as the fill reaches them. */
 export function sectionProgress(anchors: number[], scrollY: number, max: number): number {
   const last = anchors.length - 1
   if (last <= 0 || !(max > 0)) return 0
