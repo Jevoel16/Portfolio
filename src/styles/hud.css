@@ -69,19 +69,6 @@
     opacity: 0;
   }
 }
-.status-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0 0;
-  padding: 3px 10px;
-  border: 1px solid color-mix(in srgb, var(--signal) 35%, transparent);
-  border-radius: 4px;
-  background: color-mix(in srgb, var(--signal) 6%, transparent);
-  font-size: 11px;
-  letter-spacing: 0.04em;
-  color: var(--signal);
-}
 .pulse-dot {
   width: 6px;
   height: 6px;
@@ -163,13 +150,8 @@
   .nav .hud-chip .blog-icon {
     display: none;
   }
-  .status-chip {
-    margin-top: 6px;
-    font-size: 10px;
-  }
 }
 @media (max-height: 500px) and (orientation: landscape) {
-  .status-chip,
   .telemetry {
     display: none;
   }

@@ -128,9 +128,6 @@ export function ScrollPage() {
           <p className="hero-sub">
             Cybersecurity <span className="signal">×</span> Full-Stack Development<span className="caret" aria-hidden="true" />
           </p>
-          <p className="status-chip mono">
-            <span className="pulse-dot" aria-hidden="true" /> learning security · building the web
-          </p>
           <div className="hero-actions">
             <Link className="btn" to={hrefForSection('projects')}>
               Explore the constellations <span aria-hidden="true">↓</span>

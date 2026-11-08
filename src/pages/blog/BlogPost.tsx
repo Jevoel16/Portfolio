@@ -69,9 +69,9 @@ export function BlogPost() {
           // HTML is generated at build time from the site's own Markdown files (plugins/posts.ts), not user input.
           <div className="prose" dangerouslySetInnerHTML={{ __html: post.html }} />
         ) : failed ? (
-          <p className="empty">This post failed to load. Check your connection and refresh.</p>
+          <p className="empty post-placeholder">This post failed to load. Check your connection and refresh.</p>
         ) : (
-          <p className="empty mono" aria-live="polite">
+          <p className="empty mono post-placeholder" aria-live="polite">
             &gt; decrypting transmission…
           </p>
         )}

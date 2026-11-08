@@ -170,6 +170,11 @@
 }
 
 /* Long-form text: comfortable measure and rhythm. */
+/* Holds the post's space while it loads, so the pager below doesn't jump. */
+.post-placeholder {
+  min-height: 60vh;
+}
+
 .prose {
   max-width: 68ch;
   font-size: 1.05rem;

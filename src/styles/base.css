@@ -48,6 +48,24 @@ button {
   outline-offset: 3px;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+p,
+li {
+  text-wrap: pretty;
+}
+
+/* Dates, counters and readouts keep their width as digits change. */
+time,
+.post-meta,
+.hero-kicker {
+  font-variant-numeric: tabular-nums;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
