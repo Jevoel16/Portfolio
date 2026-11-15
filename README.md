@@ -82,7 +82,7 @@ Full details: [docs/features.md](docs/features.md).
 
 ## Getting Started
 
-Requires Node.js 22.14.0 (pinned in `.nvmrc`) and npm.
+Requires Node.js 26.13.1 (pinned in `.nvmrc`) and npm.
 
 ```bash
 git clone https://github.com/Jevoel16/Portfolio.git
