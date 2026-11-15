@@ -8,22 +8,24 @@
 
 **A cybersecurity × full-stack portfolio you scroll through like a flight across the night sky.**
 
-![Version](https://img.shields.io/badge/version-2.4.7-informational?style=flat)
-![License](https://img.shields.io/badge/license-Sprucetrap%20Source--Available-orange?style=flat)
 [![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-2.4.7-informational?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
+![React](https://img.shields.io/badge/React-18-blue?style=flat)
 
 </div>
 
+<img src="docs/images/home-sky.webp" width="100%" alt="Home section: the Sprucetrap title over the 3D night sky with constellations, planets and the section rail">
+
 <p align="center">
-  <a href="#about">About</a> · <a href="#screenshots">Screenshots</a> · <a href="#features">Features</a> · <a href="#tech-stack">Tech Stack</a> · <a href="#getting-started">Getting Started</a> · <a href="#usage">Usage</a> · <a href="#more">More</a> · <a href="#contributing">Contributing</a> · <a href="#license">License</a> · <a href="#author">Author</a>
+  <a href="#about">About</a> · <a href="#screenshots">Screenshots</a> · <a href="#features">Features</a> · <a href="#tech-stack">Tech Stack</a> · <a href="#architecture">Architecture</a> · <a href="#getting-started">Getting Started</a> · <a href="#usage">Usage</a> · <a href="#more">More</a>
 </p>
 
 ---
 
 ## About
 
-My personal portfolio and blog, built as an interactive 3D night sky: every skill is a constellation, every project is a star, and Spruce, a holographic guide, answers in the Contact section. It shows recruiters and collaborators my cybersecurity and full-stack work in one place. Live at **[jevoelorbilla.dev](https://www.jevoelorbilla.dev)**.
+My personal portfolio and blog, built as an interactive 3D night sky: every skill is a constellation, every project is a star, and Spruce, a holographic guide, answers in the Contact section. It shows recruiters and collaborators my cybersecurity and full-stack work in one place. The choices behind it are in [docs/decisions.md](docs/decisions.md).
 
 ## Screenshots
 
@@ -72,13 +74,26 @@ Full details: [docs/features.md](docs/features.md).
 
 ## Tech Stack
 
-| Layer          | Tools                                                                       |
-| -------------- | --------------------------------------------------------------------------- |
-| UI             | React 18.3.1, TypeScript 5.6.3, React Router 7.18.5                         |
-| 3D             | three.js 0.170.0, React Three Fiber 8.18.0, drei 9.122.0                    |
-| Build and blog | Vite 6.4.5, marked 15.0.12, Shiki 3.23.0, prerendered with `renderToString` |
-| Testing        | Vitest 5.1.0                                                                |
-| Hosting        | Vercel with Vercel Web Analytics 2.0.1, GitHub Actions CI                   |
+| Layer               | Tools                                                                       |
+| ------------------- | --------------------------------------------------------------------------- |
+| UI                  | React 18.3.1, TypeScript 5.6.3, React Router 7.18.5                         |
+| 3D                  | three.js 0.170.0, React Three Fiber 8.18.0, drei 9.122.0                    |
+| Build and blog      | Vite 6.4.5, marked 15.0.12, Shiki 3.23.0, prerendered with `renderToString` |
+| Testing and quality | Vitest 5.1.0, ESLint 10.15.0, Prettier 3.10.1                               |
+| Hosting             | Vercel with Vercel Web Analytics 2.0.1, GitHub Actions CI                   |
+
+## Architecture
+
+```mermaid
+flowchart LR
+  Browser --> Vercel[Vercel: prerendered HTML + assets]
+  Vercel --> App[React app]
+  App --> Sky[3D sky, lazy-loaded]
+  App --> Blog[Blog posts compiled at build time]
+  App --> Static[Static SVG map fallback]
+```
+
+How the scroll, camera, loading and motion code fits together: [docs/architecture.md](docs/architecture.md). State machines: [docs/state-machines.md](docs/state-machines.md). Performance: [docs/performance.md](docs/performance.md).
 
 ## Getting Started
 
@@ -101,8 +116,6 @@ npm run dev        # http://localhost:5173
 Guides: [using the site](docs/usage.md) · [editing content and writing posts](docs/content.md) · [deployment, SEO and analytics](docs/deployment.md).
 
 ## More
-
-How the scroll, camera, loading and motion code fits together: [docs/architecture.md](docs/architecture.md).
 
 <details>
 <summary><b>Project structure</b></summary>
@@ -128,23 +141,14 @@ Portfolio/
 | -------------------- | -------------------------------------------------------------------------------------------- |
 | `npm run dev`        | Start the Vite dev server on port 5173 (also on your LAN)                                    |
 | `npm run build`      | Type-check, build, then prerender every route plus `sitemap.xml` and `llms.txt` into `dist/` |
-| `npm run preview`    | Serve the production build locally                                                           |
+| `npm start`          | Serve the production build locally (`npm run preview` does the same)                         |
 | `npm test`           | Run the Vitest suite once                                                                    |
 | `npm run test:watch` | Run Vitest in watch mode                                                                     |
+| `npm run lint`       | Lint with ESLint                                                                             |
+| `npm run format`     | Format with Prettier                                                                         |
+| `npm run typecheck`  | Type-check without building                                                                  |
 | `npm run smoke`      | Smoke-test the live site (`npm run smoke -- <url>` for another deploy)                       |
 
 </details>
-
-## Contributing
-
-Branch as `feat/…` or `fix/…` and use [Conventional Commits](https://www.conventionalcommits.org/) ending with the bumped SemVer version, e.g. `feat: add CSV export (v1.4.0)`. Run `npm test` and `npm run build` first, and update this README (and its screenshots in `docs/images/`) with every change.
-
-## License
-
-Released under the [Sprucetrap Source-Available License 1.0](LICENSE): free for non-commercial use with visible credit.
-
-## Author
-
-**Sprucetrap** ([@Jevoel16](https://github.com/Jevoel16)), personal portfolio.
 
 <p align="right"><a href="#top">Back to top</a></p>
