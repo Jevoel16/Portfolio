@@ -4,10 +4,10 @@
 
 ## Continuous integration
 
-[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on every push and pull request to `main`: `npm ci`, `npm audit --audit-level=high`, `npm test`, `npm run build`, then checks that `dist/` has the HTML, sitemap, robots and llms files and no links to the apex domain. The built `dist/` is kept as a run artifact for 7 days. Run the same checks locally before pushing:
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on every push and pull request to `main`: `npm ci`, `npm audit --audit-level=high`, `npm run lint`, a Prettier check, `npm run typecheck`, `npm test`, `npm run build`, then checks that `dist/` has the HTML, sitemap, robots and llms files and no links to the apex domain. The built `dist/` is kept as a run artifact for 7 days. Run the same checks locally before pushing:
 
 ```bash
-npm ci && npm audit --audit-level=high && npm test && npm run build
+npm ci && npm audit --audit-level=high && npm run lint && npx prettier --check . && npm run typecheck && npm test && npm run build
 ```
 
 ## Vercel and smoke test
