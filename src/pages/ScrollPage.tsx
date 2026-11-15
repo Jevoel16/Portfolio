@@ -1,4 +1,4 @@
-import { Component, Suspense, lazy, useCallback, useEffect, useReducer, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { Component, Suspense, lazy, startTransition, useCallback, useEffect, useReducer, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { Header } from '../components/Header'
 import { HoloAvatar } from '../components/HoloAvatar'
@@ -17,7 +17,7 @@ import { useReducedMotion } from '../hooks/useMotion'
 import { BootLine, HudFrame, Telemetry } from '../hud/Hud'
 import { hrefForSection, SECTIONS, SECTION_LABELS, type SectionId } from '../scroll/sections'
 import { useSectionSync } from '../scroll/useSectionSync'
-import { sceneTransition } from '../scene/sceneStatus'
+import { sceneTransition, whenPageSettled } from '../scene/sceneStatus'
 import { StaticSky } from '../static/StaticSky'
 
 const ScrollSky = lazy(() => import('../scene/ScrollSky'))
@@ -58,14 +58,18 @@ export function ScrollPage() {
   const reducedMotion = useReducedMotion()
   const portrait = useMediaQuery(PORTRAIT_QUERY)
   const [warping, warp] = useWarp()
-  const [scene, sendScene] = useReducer(sceneTransition, 'loading')
-  // The sky starts loading right after hydration; the prerendered hero is already the first paint.
-  const show3d = webgl && scene !== 'failed'
-  const onReady = useCallback(() => sendScene('READY'), [])
-  const boot = useBootGate(scene !== 'loading')
+  const [scene, sendScene] = useReducer(sceneTransition, 'waiting')
+  const show3d = webgl && (scene === 'loading' || scene === 'ready')
+  // Transitions, so re-rendering the whole page for the sky yields to input instead of blocking in one task.
+  const onReady = useCallback(() => startTransition(() => sendScene('READY')), [])
+  const boot = useBootGate(scene === 'ready' || scene === 'failed')
   const active = useSectionSync({ reduced: reducedMotion, onWarp: warp, brake: boot.ready })
   const skyOn = show3d && scene === 'ready' && boot.ready
   const main = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (webgl) return whenPageSettled(() => startTransition(() => sendScene('START')))
+  }, [webgl])
 
   // Set on the DOM, not in markup, so prerendered pages are never scroll-locked.
   useEffect(() => {

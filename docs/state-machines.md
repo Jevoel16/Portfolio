@@ -6,13 +6,14 @@ Every piece of UI that moves through steps has one status field and one place th
 
 Owner: `src/scene/sceneStatus.ts` (`sceneTransition`), used by `src/pages/ScrollPage.tsx` through `useReducer`.
 
-| From      | Event   | To       |
-| --------- | ------- | -------- |
-| `loading` | `READY` | `ready`  |
-| `loading` | `FAIL`  | `failed` |
-| `ready`   | `FAIL`  | `failed` |
+| From      | Event   | To        |
+| --------- | ------- | --------- |
+| `waiting` | `START` | `loading` |
+| `loading` | `READY` | `ready`   |
+| `loading` | `FAIL`  | `failed`  |
+| `ready`   | `FAIL`  | `failed`  |
 
-Anything else keeps the current status. `failed` is final: the static SVG map stays for the rest of the visit. The boot gate opens once the status leaves `loading`.
+Anything else keeps the current status. `START` comes from `whenPageSettled` (after the load event and an idle callback), so the prerendered page paints before three.js runs. `failed` is final: the static SVG map stays for the rest of the visit. The boot gate opens once the status reaches `ready` or `failed`.
 
 ## Blog post body
 
