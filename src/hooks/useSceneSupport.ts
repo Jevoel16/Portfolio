@@ -12,14 +12,8 @@ interface SceneSupport {
   lite: boolean
 }
 
-function hasWebGL(): boolean {
-  try {
-    const canvas = document.createElement('canvas')
-    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl'))
-  } catch {
-    return false
-  }
-}
+// An API check, not a test context: the first context starts the GPU process and blocks hydration. If the sky's own context fails, SceneBoundary falls back.
+const hasWebGL = () => typeof WebGLRenderingContext !== 'undefined'
 
 function isLite(): boolean {
   const conn = (navigator as Navigator & { connection?: NetworkInformation }).connection
