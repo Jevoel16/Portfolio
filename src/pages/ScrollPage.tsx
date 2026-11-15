@@ -1,4 +1,4 @@
-import { Component, Suspense, lazy, useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { Component, Suspense, lazy, useCallback, useEffect, useReducer, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { Link } from 'react-router'
 import { Header } from '../components/Header'
 import { HoloAvatar } from '../components/HoloAvatar'
@@ -16,6 +16,7 @@ import { useReducedMotion } from '../hooks/useMotion'
 import { BootLine, HudFrame, Telemetry } from '../hud/Hud'
 import { hrefForSection, SECTIONS, SECTION_LABELS, type SectionId } from '../scroll/sections'
 import { useSectionSync } from '../scroll/useSectionSync'
+import { sceneTransition } from '../scene/sceneStatus'
 import { StaticSky } from '../static/StaticSky'
 
 const ScrollSky = lazy(() => import('../scene/ScrollSky'))
@@ -56,19 +57,14 @@ export function ScrollPage() {
   const reducedMotion = useReducedMotion()
   const portrait = useMediaQuery(PORTRAIT_QUERY)
   const [warping, warp] = useWarp()
-  const [sceneReady, setSceneReady] = useState(false)
-  const [sceneFailed, setSceneFailed] = useState(false)
+  const [scene, sendScene] = useReducer(sceneTransition, 'loading')
   // The sky starts loading right after hydration; the prerendered hero is already the first paint.
-  const show3d = webgl && !sceneFailed
-  const onReady = useCallback(() => setSceneReady(true), [])
-  const boot = useBootGate(sceneReady || sceneFailed)
+  const show3d = webgl && scene !== 'failed'
+  const onReady = useCallback(() => sendScene('READY'), [])
+  const boot = useBootGate(scene !== 'loading')
   const active = useSectionSync({ reduced: reducedMotion, onWarp: warp, brake: boot.ready })
-  const skyOn = show3d && sceneReady && boot.ready
+  const skyOn = show3d && scene === 'ready' && boot.ready
   const main = useRef<HTMLElement>(null)
-
-  useEffect(() => {
-    if (!show3d) setSceneReady(false)
-  }, [show3d])
 
   // Set on the DOM, not in markup, so prerendered pages are never scroll-locked.
   useEffect(() => {
@@ -96,7 +92,7 @@ export function ScrollPage() {
           <StaticSky covered={skyOn} />
         </div>
         {show3d && (
-          <SceneBoundary onError={() => setSceneFailed(true)}>
+          <SceneBoundary onError={() => sendScene('FAIL')}>
             <Suspense fallback={null}>
               <ScrollSky
                 portrait={portrait}
