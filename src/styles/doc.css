@@ -66,13 +66,6 @@
   margin: 0 auto;
   padding: 40px var(--hud-x) 64px;
 }
-.doc-footer {
-  padding: 20px var(--hud-x) max(20px, env(safe-area-inset-bottom));
-  border-top: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-faint);
-  text-align: center;
-}
 .doc-hero {
   margin-bottom: 32px;
 }

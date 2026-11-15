@@ -4,10 +4,11 @@ import { Header } from '../components/Header'
 import { HoloAvatar } from '../components/HoloAvatar'
 import { Reveal } from '../components/Reveal'
 import { SectionHeading } from '../components/SectionHeading'
+import { SiteFooter } from '../components/SiteFooter'
 import { formatDate, posts } from '../content/posts'
 import { bodyById, type BodyId } from '../data/bodies'
 import { constellations } from '../data/constellations'
-import { GITHUB, LICENSE_URL } from '../data/profile'
+import { GITHUB } from '../data/profile'
 import { projects, techStack } from '../data/projects'
 import { PORTRAIT_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
 import { useBootGate } from '../hooks/useBootGate'
@@ -106,12 +107,23 @@ export function ScrollPage() {
         )}
         <div className="backdrop-veil" />
       </div>
+      {/* Focus moves without a hash, so section sync never sees an unknown #main. */}
+      <a
+        className="skip-link"
+        href="#main"
+        onClick={(e) => {
+          e.preventDefault()
+          main.current?.focus()
+        }}
+      >
+        Skip to content
+      </a>
       <div className="warp" aria-hidden="true" />
       <HudFrame />
       <Header active={active} />
       <ScrollRail active={active} />
 
-      <main ref={main} className="v2-main">
+      <main ref={main} id="main" className="v2-main" tabIndex={-1}>
         <section id="home" className="v2-section hero-section" data-cam="home" aria-labelledby="home-title">
           <BootLine
             ready={boot.ready}
@@ -291,15 +303,9 @@ export function ScrollPage() {
         </section>
       </main>
 
-      <footer className="v2-footer mono">
+      <SiteFooter>
         <Telemetry target={active} />
-        <p>
-          © {new Date().getFullYear()} Sprucetrap · source-available under the{' '}
-          <a href={LICENSE_URL} target="_blank" rel="noreferrer">
-            Sprucetrap license
-          </a>
-        </p>
-      </footer>
+      </SiteFooter>
     </div>
   )
 }

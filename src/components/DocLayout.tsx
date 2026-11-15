@@ -1,11 +1,15 @@
 import type { ReactNode } from 'react'
 import { Link, NavLink } from 'react-router'
 import { openTerminal } from '../hud/CommandTerminal'
+import { SiteFooter } from './SiteFooter'
 
 /** Scrolling page shell for the blog and 404: same identity as the sky, without WebGL. */
 export function DocLayout({ children }: { children: ReactNode }) {
   return (
     <div className="doc">
+      <a className="skip-link" href="#main">
+        Skip to content
+      </a>
       <div className="doc-stars" aria-hidden="true" />
       <header className="doc-header">
         <Link to="/" className="brand" viewTransition>
@@ -28,13 +32,10 @@ export function DocLayout({ children }: { children: ReactNode }) {
           </button>
         </nav>
       </header>
-      <main className="doc-main">{children}</main>
-      <footer className="doc-footer mono">
-        © {new Date().getFullYear()} Sprucetrap ·{' '}
-        <a href="https://github.com/Jevoel16" target="_blank" rel="noreferrer">
-          github.com/Jevoel16
-        </a>
-      </footer>
+      <main id="main" className="doc-main" tabIndex={-1}>
+        {children}
+      </main>
+      <SiteFooter />
     </div>
   )
 }

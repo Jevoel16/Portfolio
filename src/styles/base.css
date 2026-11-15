@@ -47,6 +47,62 @@ button {
   outline: 2px solid var(--gold);
   outline-offset: 3px;
 }
+/* <main> only takes focus from the skip link; ringing the whole page helps no one. */
+main[tabindex='-1']:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: 10px;
+  left: var(--hud-x);
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: var(--surface-solid);
+  color: var(--gold);
+  font-weight: 600;
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+.site-footer {
+  position: relative;
+  padding: 12px var(--hud-x) max(20px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--border);
+  background: rgba(4, 6, 13, 0.6);
+  font-size: 12px;
+  color: var(--text-faint);
+}
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 20px;
+}
+.site-footer nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--text);
+  font-size: 16px;
+  text-decoration: none;
+}
+.site-footer nav a:hover,
+.site-footer nav a[aria-current='page'] {
+  color: var(--gold);
+}
+.site-footer-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+}
+.site-footer-meta p {
+  margin: 0;
+}
 
 h1,
 h2,

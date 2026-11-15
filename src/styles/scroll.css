@@ -360,28 +360,13 @@
   color: var(--text-dim);
 }
 
-/* ---------- Contact and footer ---------- */
+/* ---------- Contact ---------- */
 .contact-section {
   max-width: 760px;
   min-height: 100svh;
 }
 .contact-links .quote {
   margin-top: 26px;
-}
-.v2-footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 20px;
-  padding: 18px var(--hud-x) max(22px, env(safe-area-inset-bottom));
-  border-top: 1px solid var(--border);
-  background: rgba(4, 6, 13, 0.6);
-  font-size: 11px;
-  color: var(--text-faint);
-}
-.v2-footer p {
-  margin: 0;
 }
 
 /* ---------- Orbit divider: a line with a data packet travelling along it ---------- */
