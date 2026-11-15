@@ -1,24 +1,39 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer } from 'react'
 import { Link, useParams } from 'react-router'
 import { DocLayout } from '../../components/DocLayout'
+import { postLoadTransition, startPostLoad, type PostLoad } from '../../content/postLoad'
 import { cachedPost, formatDate, loadPost, postBySlug, posts } from '../../content/posts'
-import type { Post } from '../../content/types'
 import { NotFound } from '../NotFound'
+
+function PostBody({ load }: { load: PostLoad }) {
+  switch (load.status) {
+    case 'loaded':
+      // HTML is generated at build time from the site's own Markdown files (plugins/posts.ts), not user input.
+      return <div className="prose" dangerouslySetInnerHTML={{ __html: load.post.html }} />
+    case 'failed':
+      return <p className="empty post-placeholder">This post failed to load. Check your connection and refresh.</p>
+    case 'loading':
+      return (
+        <p className="empty mono post-placeholder" aria-live="polite">
+          &gt; decrypting transmission…
+        </p>
+      )
+  }
+}
 
 export function BlogPost() {
   const { slug = '' } = useParams()
   const meta = postBySlug.get(slug)
-  const [post, setPost] = useState<Post | undefined>(() => cachedPost(slug))
-  const [failed, setFailed] = useState(false)
+  const [load, send] = useReducer(postLoadTransition, cachedPost(slug), startPostLoad)
+  const post = load.status === 'loaded' ? load.post : undefined
 
   useEffect(() => {
     if (!meta) return
     let live = true
-    setFailed(false)
-    setPost(cachedPost(slug))
+    send({ type: 'START', cached: cachedPost(slug) })
     loadPost(slug)
-      .then((p) => live && setPost(p))
-      .catch(() => live && setFailed(true))
+      .then((p) => live && send({ type: 'RESOLVE', post: p }))
+      .catch(() => live && send({ type: 'FAIL' }))
     return () => {
       live = false
     }
@@ -64,16 +79,7 @@ export function BlogPost() {
           </nav>
         )}
 
-        {post ? (
-          // HTML is generated at build time from the site's own Markdown files (plugins/posts.ts), not user input.
-          <div className="prose" dangerouslySetInnerHTML={{ __html: post.html }} />
-        ) : failed ? (
-          <p className="empty post-placeholder">This post failed to load. Check your connection and refresh.</p>
-        ) : (
-          <p className="empty mono post-placeholder" aria-live="polite">
-            &gt; decrypting transmission…
-          </p>
-        )}
+        <PostBody load={load} />
 
         <nav className="post-pager" aria-label="More posts">
           {older ? (
