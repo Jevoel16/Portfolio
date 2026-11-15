@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   verify:
-    name: Audit, test and build
+    name: Audit, lint, test and build
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,6 +33,15 @@ jobs:
 
       - name: Audit dependencies
         run: npm audit --audit-level=high
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npx prettier --check .
+
+      - name: Type-check
+        run: npm run typecheck
 
       - name: Run tests
         run: npm test
