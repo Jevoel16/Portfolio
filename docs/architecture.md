@@ -25,7 +25,10 @@ The why behind the less obvious parts of the code. Comments in the source are on
 ## Loading and hydration
 
 - The boot gate (`src/hooks/useBootGate.ts`) holds scrolling until the fonts, the Spruce avatar and the 3D sky are ready, capped at 4 seconds. The lock is set on the DOM after hydration, never in the prerendered markup, so crawlers and no-JS visitors are never locked. Deep links and nav clicks still scroll during it.
-- Before the sky is shown, every shader is compiled and every texture uploaded, so the first camera flight never stalls a frame.
+- The sky starts only after the load event and an idle moment (`whenPageSettled`), so the prerendered hero is the first paint and the Largest Contentful Paint.
+- Support is an API check (`WebGLRenderingContext`), not a test context: the first WebGL context starts the GPU process and used to block hydration. If the sky's own context fails, `SceneBoundary` falls back to the static map.
+- The canvas starts with `frameloop="never"` while `compileAsync` compiles every shader in the background, then switches to `demand`. Rendering earlier made the first frame compile them all in one long task. Every texture is uploaded first too, so the first camera flight never stalls.
+- The sky's state updates run in `startTransition`, so re-rendering the page when it starts yields to input.
 - `src/main.tsx` hydrates only markup prerendered for the exact URL; the dev server's empty root and the shared `404.html` render from scratch.
 - `useMediaQuery` returns `serverValue` during prerender and hydration, then re-renders with the real value, so hydration never mismatches.
 - The static SVG sky is the prerendered first paint, the loading placeholder and the no-WebGL fallback. Both orientations are rendered and CSS picks one with the same media query as the 3D scene. It is decorative: everything it shows has a real link in the page.
