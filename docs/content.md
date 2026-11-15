@@ -4,16 +4,16 @@
 
 No environment variables are needed. Everything on the site comes from these files:
 
-| File | What it holds |
-| --- | --- |
-| `src/data/projects.ts` | Every project (name, description, stack, GitHub URL) and the Toolkit tech-stack groups |
-| `src/data/constellations.ts` | Constellation names, colours and star positions in sky coordinates |
-| `src/data/bodies.ts` | The About / Toolkit / Contact planets: kind, colours, position, size |
-| `src/pages/ScrollPage.tsx` | The About copy, section order and section text |
-| `src/data/profile.ts` | GitHub and license links, and the avatar image path, size and alt text |
-| `src/data/dialogue.ts` | What Spruce says in the Contact section |
-| `public/avatar/spruce.webp` | The avatar artwork (black background; the page blends it out) |
-| `content/posts/*.md` | Blog posts (see below) |
+| File                         | What it holds                                                                          |
+| ---------------------------- | -------------------------------------------------------------------------------------- |
+| `src/data/projects.ts`       | Every project (name, description, stack, GitHub URL) and the Toolkit tech-stack groups |
+| `src/data/constellations.ts` | Constellation names, colours and star positions in sky coordinates                     |
+| `src/data/bodies.ts`         | The About / Toolkit / Contact planets: kind, colours, position, size                   |
+| `src/pages/ScrollPage.tsx`   | The About copy, section order and section text                                         |
+| `src/data/profile.ts`        | GitHub and license links, and the avatar image path, size and alt text                 |
+| `src/data/dialogue.ts`       | What Spruce says in the Contact section                                                |
+| `public/avatar/spruce.webp`  | The avatar artwork (black background; the page blends it out)                          |
+| `content/posts/*.md`         | Blog posts (see below)                                                                 |
 
 ## Writing a post
 
@@ -22,13 +22,13 @@ Create `content/posts/<slug>.md` (the file name is the URL, lowercase and hyphen
 ````markdown
 ---
 title: Hardening a static portfolio with security headers
-short: Security headers          # optional, the star label in the sky
-date: 2026-11-04                 # YYYY-MM-DD
-updated: 2026-11-20              # optional
+short: Security headers # optional, the star label in the sky
+date: 2026-11-04 # YYYY-MM-DD
+updated: 2026-11-20 # optional
 summary: One or two sentences for the list, the Write-ups card and search results.
 tags: [web-security, headers]
-constellation: security          # optional: show it as a star in the Cybersecurity constellation
-draft: true                      # optional: visible only on the dev server
+constellation: security # optional: show it as a star in the Cybersecurity constellation
+draft: true # optional: visible only on the dev server
 ---
 
 ## First section

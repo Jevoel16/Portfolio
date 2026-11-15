@@ -23,13 +23,13 @@ npm run smoke -- https://other-url     # another deploy
 
 ## Hosting files
 
-| File | Purpose |
-| --- | --- |
-| `vercel.json` | Clean URLs, security headers (HSTS, CSP, …), one-year caching for hashed `/assets/*` |
-| `public/robots.txt` | Allows all crawlers and points to the sitemap |
-| `public/site.webmanifest`, `favicon.svg`, `apple-touch-icon.png`, `icon-512.png` | Icons for tabs, home screens and installs |
-| `public/og-default.png` | 1200×630 image used by link previews |
-| `src/seo/meta.ts` | Titles, descriptions, canonicals and JSON-LD for every route; `SITE_URL` is the production domain |
+| File                                                                             | Purpose                                                                                           |
+| -------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| `vercel.json`                                                                    | Clean URLs, security headers (HSTS, CSP, …), one-year caching for hashed `/assets/*`              |
+| `public/robots.txt`                                                              | Allows all crawlers and points to the sitemap                                                     |
+| `public/site.webmanifest`, `favicon.svg`, `apple-touch-icon.png`, `icon-512.png` | Icons for tabs, home screens and installs                                                         |
+| `public/og-default.png`                                                          | 1200×630 image used by link previews                                                              |
+| `src/seo/meta.ts`                                                                | Titles, descriptions, canonicals and JSON-LD for every route; `SITE_URL` is the production domain |
 
 ## Analytics
 
@@ -41,8 +41,8 @@ After deploying, submit `https://www.jevoelorbilla.dev/sitemap.xml` in [Google S
 
 Backlink ideas (do these yourself; nothing here is posted automatically):
 
-- Link the site from the GitHub profile README and from each project repository's *About → Website* field.
+- Link the site from the GitHub profile README and from each project repository's _About → Website_ field.
 - Cross-post blog write-ups to dev.to or Hashnode with the canonical URL set to the post on this site.
-- Add the site to your LinkedIn *Featured* section and to TryHackMe / Hack The Box profiles.
+- Add the site to your LinkedIn _Featured_ section and to TryHackMe / Hack The Box profiles.
 - Share security write-ups in communities that allow it (r/netsec rules permitting, Discord study groups), linking the post rather than the home page.
 - Ask your school organisation or course pages that list student projects to link to the relevant project page.

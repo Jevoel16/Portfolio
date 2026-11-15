@@ -90,11 +90,7 @@ function SkyMap({ portrait, ...props }: Props & { portrait: boolean }) {
         const [lox, loy] = labelPosition(c, portrait)
         const [lx, ly] = [lox, -loy]
         return (
-          <g
-            key={c.id}
-            className={`constellation${c.forming ? ' forming' : ''}`}
-            style={{ '--accent': c.color, '--delay': `${ci * 0.25}s` } as CSSProperties}
-          >
+          <g key={c.id} className={`constellation${c.forming ? ' forming' : ''}`} style={{ '--accent': c.color, '--delay': `${ci * 0.25}s` } as CSSProperties}>
             {c.id === 'security' &&
               (() => {
                 const [cx, cy] = pt(0.1, 0.2)
@@ -130,10 +126,7 @@ function SkyMap({ portrait, ...props }: Props & { portrait: boolean }) {
               const r = px(item.featured ? 5 : 3.6)
               const rightSide = x > b.minX + b.width - b.width * 0.22
               return (
-                <SkyMark
-                  key={s.key}
-                  className={`star${item.featured ? ' featured' : ''}`}
-                >
+                <SkyMark key={s.key} className={`star${item.featured ? ' featured' : ''}`}>
                   <circle className="hit" cx={x} cy={y} r={px(22)} />
                   <circle className="halo" cx={x} cy={y} r={r * 4.5} fill={`url(#${ns}-glow)`} style={twinkle} />
                   <circle className="core" cx={x} cy={y} r={r} />
@@ -169,11 +162,7 @@ function SkyMap({ portrait, ...props }: Props & { portrait: boolean }) {
         const [lox, loy] = bodyLabelPosition(body, portrait)
         const r = body.radius
         return (
-          <SkyMark
-            key={body.id}
-            className={`body ${body.kind}`}
-            style={{ '--accent': body.color, '--accent-2': body.color2 } as CSSProperties}
-          >
+          <SkyMark key={body.id} className={`body ${body.kind}`} style={{ '--accent': body.color, '--accent-2': body.color2 } as CSSProperties}>
             <circle className="hit" cx={x} cy={y} r={Math.max(r * 1.6, px(26))} />
             <circle cx={x} cy={y} r={r * 2.4} fill={`url(#${ns}-glow)`} opacity={0.7} />
             {body.kind === 'beacon' ? (

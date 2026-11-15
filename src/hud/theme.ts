@@ -29,7 +29,11 @@ const subscribe = (l: () => void) => {
 }
 
 export function useTheme() {
-  const theme = useSyncExternalStore(subscribe, () => (document.documentElement.dataset.theme as Theme) || 'default', () => 'default' as Theme)
+  const theme = useSyncExternalStore(
+    subscribe,
+    () => (document.documentElement.dataset.theme as Theme) || 'default',
+    () => 'default' as Theme,
+  )
   // Restore the saved theme after hydration, so prerendered HTML always matches the first render.
   useEffect(() => {
     if (read() !== 'default') setTheme(read())

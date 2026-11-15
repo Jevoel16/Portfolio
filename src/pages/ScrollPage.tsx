@@ -117,12 +117,18 @@ export function ScrollPage() {
 
       <main ref={main} className="v2-main">
         <section id="home" className="v2-section hero-section" data-cam="home" aria-labelledby="home-title">
-          <BootLine ready={boot.ready} done={boot.done} total={boot.total} stats={`// ${plural(projects.length, 'project')} · ${plural(posts.length, 'write-up')} · ${constellations.length} constellations`} />
+          <BootLine
+            ready={boot.ready}
+            done={boot.done}
+            total={boot.total}
+            stats={`// ${plural(projects.length, 'project')} · ${plural(posts.length, 'write-up')} · ${constellations.length} constellations`}
+          />
           <h1 id="home-title" className="hero-title">
             Sprucetrap
           </h1>
           <p className="hero-sub">
-            Cybersecurity <span className="signal">×</span> Full-Stack Development<span className="caret" aria-hidden="true" />
+            Cybersecurity <span className="signal">×</span> Full-Stack Development
+            <span className="caret" aria-hidden="true" />
           </p>
           <div className="hero-actions">
             <Link className="btn" to={hrefForSection('projects')}>
@@ -145,15 +151,22 @@ export function ScrollPage() {
           <SectionHeading id="about-title" kicker={`01 · ${about.caption}`} title="About me" />
           <Reveal className="glass">
             <p className="lede">
-              I'm early in my cybersecurity career and building my skills step by step. Along the way I've built full-stack web
-              apps, worked with several kinds of databases, put together machine learning pipelines, and written network servers
-              from scratch.
+              I'm early in my cybersecurity career and building my skills step by step. Along the way I've built full-stack web apps, worked with several kinds
+              of databases, put together machine learning pipelines, and written network servers from scratch.
             </p>
             <ul className="facts">
-              <li><span className="mono">focus</span> Learning cybersecurity, starting with the fundamentals</li>
-              <li><span className="mono">now</span> Building the core skills every cybersecurity professional needs</li>
-              <li><span className="mono">learning</span> New tools, techniques and threats in the field</li>
-              <li><span className="mono">open to</span> Working on ideas and projects that help me grow in cybersecurity</li>
+              <li>
+                <span className="mono">focus</span> Learning cybersecurity, starting with the fundamentals
+              </li>
+              <li>
+                <span className="mono">now</span> Building the core skills every cybersecurity professional needs
+              </li>
+              <li>
+                <span className="mono">learning</span> New tools, techniques and threats in the field
+              </li>
+              <li>
+                <span className="mono">open to</span> Working on ideas and projects that help me grow in cybersecurity
+              </li>
             </ul>
           </Reveal>
         </section>
@@ -164,8 +177,8 @@ export function ScrollPage() {
           <SectionHeading id="projects-title" kicker="02 · star map" title="Projects" />
           <Reveal className="section-intro">
             <p>
-              {plural(projects.length, 'project')} charted across {plural(lit.length, 'constellation')}. Each constellation is a
-              skill area; every star is something I built.
+              {plural(projects.length, 'project')} charted across {plural(lit.length, 'constellation')}. Each constellation is a skill area; every star is
+              something I built.
             </p>
           </Reveal>
           {lit.map((c) => (

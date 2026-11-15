@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { bodies } from '../data/bodies'
-import { SECTIONS, brakeTarget, hrefForSection, isTooFast, locationForSection, scrollVelocity, sectionForLocation, sectionIndexAt, sectionProgress } from './sections'
+import {
+  SECTIONS,
+  brakeTarget,
+  hrefForSection,
+  isTooFast,
+  locationForSection,
+  scrollVelocity,
+  sectionForLocation,
+  sectionIndexAt,
+  sectionProgress,
+} from './sections'
 
 describe('scroll sections', () => {
   it('round-trips every section through its location', () => {
@@ -69,9 +79,25 @@ describe('fast-scroll brake helpers', () => {
   it('measures signed speed across the samples', () => {
     expect(scrollVelocity([])).toBe(0)
     expect(scrollVelocity([{ y: 0, t: 0 }])).toBe(0)
-    expect(scrollVelocity([{ y: 0, t: 10 }, { y: 0, t: 10 }])).toBe(0)
-    expect(scrollVelocity([{ y: 0, t: 0 }, { y: 150, t: 50 }, { y: 300, t: 100 }])).toBe(3)
-    expect(scrollVelocity([{ y: 300, t: 0 }, { y: 0, t: 100 }])).toBe(-3)
+    expect(
+      scrollVelocity([
+        { y: 0, t: 10 },
+        { y: 0, t: 10 },
+      ]),
+    ).toBe(0)
+    expect(
+      scrollVelocity([
+        { y: 0, t: 0 },
+        { y: 150, t: 50 },
+        { y: 300, t: 100 },
+      ]),
+    ).toBe(3)
+    expect(
+      scrollVelocity([
+        { y: 300, t: 0 },
+        { y: 0, t: 100 },
+      ]),
+    ).toBe(-3)
   })
 
   it('only brakes clearly fast scrolling', () => {

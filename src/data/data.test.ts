@@ -25,8 +25,7 @@ describe('portfolio data', () => {
 
   it('only points stars at real projects', () => {
     const ids = new Set(projects.map((p) => p.id))
-    for (const c of constellations)
-      for (const s of c.stars) if (s.projectId) expect(ids.has(s.projectId), s.projectId).toBe(true)
+    for (const c of constellations) for (const s of c.stars) if (s.projectId) expect(ids.has(s.projectId), s.projectId).toBe(true)
   })
 
   it('only points write-up stars at published posts', () => {

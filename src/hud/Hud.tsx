@@ -95,7 +95,7 @@ export function Telemetry({ target }: { target: string | null }) {
 
   return (
     <p className="telemetry mono" aria-hidden="true">
-      <span ref={coords}>RA 00h00m  DEC +00°00′</span>
+      <span ref={coords}>RA 00h00m DEC +00°00′</span>
       <span>TGT {target ? target.replace(/^post:/, 'log/') : '——'}</span>
       <span ref={uptime}>UP 00:00</span>
     </p>

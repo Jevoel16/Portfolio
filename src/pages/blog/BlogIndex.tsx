@@ -9,8 +9,7 @@ export function BlogIndex() {
         <p className="mono kicker">// transmissions · {posts.length} logged</p>
         <h1>Blog</h1>
         <p className="lede">
-          Write-ups, labs and notes on cybersecurity and full-stack development. Security posts also appear as stars in
-          the Cybersecurity constellation.
+          Write-ups, labs and notes on cybersecurity and full-stack development. Security posts also appear as stars in the Cybersecurity constellation.
         </p>
       </header>
       {posts.length === 0 ? (

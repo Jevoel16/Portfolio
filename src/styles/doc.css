@@ -13,14 +13,18 @@
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(1px 1px at 20px 30px, #fff8, transparent),
-    radial-gradient(1px 1px at 140px 80px, #dfe8ff99, transparent),
-    radial-gradient(1.5px 1.5px at 90px 160px, #ffe9c4aa, transparent),
-    radial-gradient(1px 1px at 200px 220px, #b9cfff88, transparent),
+    radial-gradient(1px 1px at 20px 30px, #fff8, transparent), radial-gradient(1px 1px at 140px 80px, #dfe8ff99, transparent),
+    radial-gradient(1.5px 1.5px at 90px 160px, #ffe9c4aa, transparent), radial-gradient(1px 1px at 200px 220px, #b9cfff88, transparent),
     radial-gradient(ellipse 70% 50% at 80% 0%, rgba(138, 92, 255, 0.12), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(58, 91, 217, 0.1), transparent 70%),
-    var(--bg);
-  background-size: 240px 240px, 240px 240px, 240px 240px, 240px 240px, auto, auto, auto;
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(58, 91, 217, 0.1), transparent 70%), var(--bg);
+  background-size:
+    240px 240px,
+    240px 240px,
+    240px 240px,
+    240px 240px,
+    auto,
+    auto,
+    auto;
 }
 .doc-header {
   position: sticky;

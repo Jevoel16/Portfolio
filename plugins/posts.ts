@@ -27,7 +27,11 @@ export function parseFrontmatter(source: string, file: string): { data: Record<s
     const value = line.slice(sep + 1).trim()
     const unquote = (v: string) => v.replace(/^(['"])(.*)\1$/, '$2')
     if (value.startsWith('[') && value.endsWith(']')) {
-      data[key] = value.slice(1, -1).split(',').map((v) => unquote(v.trim())).filter(Boolean)
+      data[key] = value
+        .slice(1, -1)
+        .split(',')
+        .map((v) => unquote(v.trim()))
+        .filter(Boolean)
     } else if (value === 'true' || value === 'false') {
       data[key] = value === 'true'
     } else {
@@ -114,9 +118,7 @@ export async function renderMarkdown(body: string): Promise<{ html: string; toc:
         const text = this.parser.parseInline(tokens)
         const external = /^https?:\/\//.test(href)
         const t = title ? ` title="${title}"` : ''
-        return external
-          ? `<a href="${href}"${t} target="_blank" rel="noopener noreferrer">${text}</a>`
-          : `<a href="${href}"${t}>${text}</a>`
+        return external ? `<a href="${href}"${t} target="_blank" rel="noopener noreferrer">${text}</a>` : `<a href="${href}"${t}>${text}</a>`
       },
       image({ href, title, text }) {
         if (!text) throw new Error(`Image ${href} needs alt text: ![describe it](${href})`)

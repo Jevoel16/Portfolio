@@ -65,9 +65,27 @@ export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, anim
     })
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3))
     g.setAttribute('color', new THREE.BufferAttribute(col, 3))
-    g.setAttribute('size', new THREE.BufferAttribute(Float32Array.from(stars, (s) => s.size), 1))
-    g.setAttribute('alpha', new THREE.BufferAttribute(Float32Array.from(stars, (s) => s.alpha), 1))
-    g.setAttribute('phase', new THREE.BufferAttribute(Float32Array.from(stars, (s) => s.phase), 1))
+    g.setAttribute(
+      'size',
+      new THREE.BufferAttribute(
+        Float32Array.from(stars, (s) => s.size),
+        1,
+      ),
+    )
+    g.setAttribute(
+      'alpha',
+      new THREE.BufferAttribute(
+        Float32Array.from(stars, (s) => s.alpha),
+        1,
+      ),
+    )
+    g.setAttribute(
+      'phase',
+      new THREE.BufferAttribute(
+        Float32Array.from(stars, (s) => s.phase),
+        1,
+      ),
+    )
     g.setAttribute('highlight', new THREE.BufferAttribute(new Float32Array(n), 1))
     return g
   }, [stars])

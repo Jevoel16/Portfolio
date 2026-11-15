@@ -35,8 +35,7 @@ export function BlogPost() {
       <article className="post">
         <header className="doc-hero">
           <p className="post-meta mono">
-            <Link to="/blog">← blog</Link> · <time dateTime={meta.date}>{formatDate(meta.date)}</time> ·{' '}
-            {meta.readingMinutes} min read
+            <Link to="/blog">← blog</Link> · <time dateTime={meta.date}>{formatDate(meta.date)}</time> · {meta.readingMinutes} min read
           </p>
           <h1>{meta.title}</h1>
           <p className="lede">{meta.summary}</p>

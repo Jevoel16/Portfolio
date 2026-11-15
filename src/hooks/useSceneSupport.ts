@@ -41,6 +41,5 @@ export function useSceneSupport() {
   return useSyncExternalStore(noSubscribe, clientSceneSupport, () => SERVER)
 }
 
-
 /** Touch-first devices (phones, tablets), where there is no hover. */
 export const useCoarsePointer = () => useMediaQuery('(pointer: coarse)')

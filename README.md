@@ -72,13 +72,13 @@ Full details: [docs/features.md](docs/features.md).
 
 ## Tech Stack
 
-| Layer | Tools |
-| --- | --- |
-| UI | React 18.3.1, TypeScript 5.6.3, React Router 7.18.5 |
-| 3D | three.js 0.170.0, React Three Fiber 8.18.0, drei 9.122.0 |
+| Layer          | Tools                                                                       |
+| -------------- | --------------------------------------------------------------------------- |
+| UI             | React 18.3.1, TypeScript 5.6.3, React Router 7.18.5                         |
+| 3D             | three.js 0.170.0, React Three Fiber 8.18.0, drei 9.122.0                    |
 | Build and blog | Vite 6.4.5, marked 15.0.12, Shiki 3.23.0, prerendered with `renderToString` |
-| Testing | Vitest 5.1.0 |
-| Hosting | Vercel with Vercel Web Analytics 2.0.1, GitHub Actions CI |
+| Testing        | Vitest 5.1.0                                                                |
+| Hosting        | Vercel with Vercel Web Analytics 2.0.1, GitHub Actions CI                   |
 
 ## Getting Started
 
@@ -124,14 +124,14 @@ Portfolio/
 <details>
 <summary><b>Scripts</b></summary>
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start the Vite dev server on port 5173 (also on your LAN) |
-| `npm run build` | Type-check, build, then prerender every route plus `sitemap.xml` and `llms.txt` into `dist/` |
-| `npm run preview` | Serve the production build locally |
-| `npm test` | Run the Vitest suite once |
-| `npm run test:watch` | Run Vitest in watch mode |
-| `npm run smoke` | Smoke-test the live site (`npm run smoke -- <url>` for another deploy) |
+| Command              | Description                                                                                  |
+| -------------------- | -------------------------------------------------------------------------------------------- |
+| `npm run dev`        | Start the Vite dev server on port 5173 (also on your LAN)                                    |
+| `npm run build`      | Type-check, build, then prerender every route plus `sitemap.xml` and `llms.txt` into `dist/` |
+| `npm run preview`    | Serve the production build locally                                                           |
+| `npm test`           | Run the Vitest suite once                                                                    |
+| `npm run test:watch` | Run Vitest in watch mode                                                                     |
+| `npm run smoke`      | Smoke-test the live site (`npm run smoke -- <url>` for another deploy)                       |
 
 </details>
 

@@ -40,7 +40,13 @@ export function Header({ active }: { active: SectionId }) {
           Blog
         </Link>
         <MotionChip />
-        <button type="button" className="hud-chip terminal-chip mono" onClick={openTerminal} aria-label="Open command terminal" title="Command terminal (⌘K or /)">
+        <button
+          type="button"
+          className="hud-chip terminal-chip mono"
+          onClick={openTerminal}
+          aria-label="Open command terminal"
+          title="Command terminal (⌘K or /)"
+        >
           <span aria-hidden="true">&gt;_</span>
           <kbd>⌘K</kbd>
         </button>
@@ -54,13 +60,7 @@ function MotionChip() {
   const reduced = useReducedMotion()
   const label = reduced ? 'Play background motion' : 'Pause background motion'
   return (
-    <button
-      type="button"
-      className="hud-chip motion-chip"
-      onClick={() => setMotion(reduced ? 'full' : 'reduced')}
-      aria-label={label}
-      title={label}
-    >
+    <button type="button" className="hud-chip motion-chip" onClick={() => setMotion(reduced ? 'full' : 'reduced')} aria-label={label} title={label}>
       <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" fill="currentColor">
         {reduced ? <path d="M3 1.5v9l7.5-4.5z" /> : <path d="M2.5 1.5h2.5v9H2.5zM7 1.5h2.5v9H7z" />}
       </svg>

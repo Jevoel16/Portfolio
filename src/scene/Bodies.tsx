@@ -132,7 +132,7 @@ function Beacon({ body, animate }: { body: Body; animate: boolean }) {
     rings.current.forEach((m, i) => {
       if (!m) return
       // Each ring grows from the core and fades out, staggered so one is always visible.
-      const k = animate ? ((t * 0.45 + i / PULSES) % 1) : 0.35 + i * 0.2
+      const k = animate ? (t * 0.45 + i / PULSES) % 1 : 0.35 + i * 0.2
       m.scale.setScalar(0.4 + k * 2.6)
       ;(m.material as THREE.MeshBasicMaterial).opacity = (1 - k) * 0.7
     })

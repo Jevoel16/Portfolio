@@ -63,7 +63,7 @@ export function planetTexture(color: string, color2: string) {
   const b = new THREE.Color(color2)
   const c = new THREE.Color()
   let seed = key.length * 97
-  const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647)
+  const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647
   for (let y = 0; y < h; y++) {
     const t = 0.5 + 0.5 * Math.sin(y * 0.19 + Math.sin(y * 0.05) * 3) * Math.cos(y * 0.07)
     c.copy(a).lerp(b, t * 0.8 + rand() * 0.12)

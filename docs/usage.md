@@ -27,19 +27,19 @@ visitor@sprucetrap:~$ theme redteam
 > red team mode engaged. be nice.
 ```
 
-| Command | Does |
-| --- | --- |
-| `help` | List commands |
-| `whoami` | Who runs the site |
-| `ls [projects\|posts\|constellations]` | List what is in the sky |
-| `open <slug>` | Open a project page, or scroll to `about`, `toolkit` or `contact`; Tab completes |
-| `cat about` | Scroll to About |
-| `blog [slug]` | Open the blog or a post |
-| `contact` | Scroll to Contact |
-| `sky` | Back to the top of the page |
-| `theme default\|redteam` | Switch HUD colours |
-| `sudo hire-me` | Escalate privileges (opens Contact) |
-| `clear`, `exit` | Clear the screen, close the terminal |
+| Command                                | Does                                                                             |
+| -------------------------------------- | -------------------------------------------------------------------------------- |
+| `help`                                 | List commands                                                                    |
+| `whoami`                               | Who runs the site                                                                |
+| `ls [projects\|posts\|constellations]` | List what is in the sky                                                          |
+| `open <slug>`                          | Open a project page, or scroll to `about`, `toolkit` or `contact`; Tab completes |
+| `cat about`                            | Scroll to About                                                                  |
+| `blog [slug]`                          | Open the blog or a post                                                          |
+| `contact`                              | Scroll to Contact                                                                |
+| `sky`                                  | Back to the top of the page                                                      |
+| `theme default\|redteam`               | Switch HUD colours                                                               |
+| `sudo hire-me`                         | Escalate privileges (opens Contact)                                              |
+| `clear`, `exit`                        | Clear the screen, close the terminal                                             |
 
 ↑ / ↓ walk through command history; Esc closes the terminal.
 
@@ -57,24 +57,24 @@ Tab moves through the header, the section rail and every card link in reading or
 ## Readers of the blog
 
 1. Open **Blog** from the header or the Write-ups section, or go to `/blog`.
-2. Pick a post; long posts show an *On this page* table of contents.
+2. Pick a post; long posts show an _On this page_ table of contents.
 3. Security posts have **See it on the star map**, which goes back to the Write-ups section.
 
 ## Routes
 
-| Path | Opens |
-| --- | --- |
-| `/` | The scroll page from the top |
-| `/about`, `/toolkit`, `/contact` | The scroll page, scrolled to that section |
-| `/#projects`, `/#writeups` | The scroll page, scrolled to that section |
-| `/projects/<slug>` | A project's own page (`slug` = the project's `id` in `src/data/projects.ts`) |
-| `/writeups/<slug>` | v1 write-up star links; shows the post and canonicalises to `/blog/<slug>` |
-| `/blog` | List of posts, newest first |
-| `/blog/<slug>` | A full post (`slug` = the Markdown file name) |
-| anything else | 404 page |
+| Path                             | Opens                                                                        |
+| -------------------------------- | ---------------------------------------------------------------------------- |
+| `/`                              | The scroll page from the top                                                 |
+| `/about`, `/toolkit`, `/contact` | The scroll page, scrolled to that section                                    |
+| `/#projects`, `/#writeups`       | The scroll page, scrolled to that section                                    |
+| `/projects/<slug>`               | A project's own page (`slug` = the project's `id` in `src/data/projects.ts`) |
+| `/writeups/<slug>`               | v1 write-up star links; shows the post and canonicalises to `/blog/<slug>`   |
+| `/blog`                          | List of posts, newest first                                                  |
+| `/blog/<slug>`                   | A full post (`slug` = the Markdown file name)                                |
+| anything else                    | 404 page                                                                     |
 
-| Query | Effect |
-| --- | --- |
+| Query          | Effect                                                                 |
+| -------------- | ---------------------------------------------------------------------- |
 | `?mode=static` | Forces the SVG fallback map (useful for testing devices without WebGL) |
 
 Every route is prerendered to its own HTML file (`/about` → `dist/about.html`), and Vercel's `cleanUrls` serves it without the extension. Unknown paths get `dist/404.html` with a real 404 status.

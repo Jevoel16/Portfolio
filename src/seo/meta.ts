@@ -41,7 +41,8 @@ const breadcrumbs = (items: [string, string][]) => ({
 const BODY_COPY: Record<BodyId, { title: string; description: string }> = {
   about: {
     title: `About · ${SITE_NAME}`,
-    description: 'Sprucetrap is an early-career cybersecurity learner and full-stack developer building web apps, database projects, ML pipelines and network servers.',
+    description:
+      'Sprucetrap is an early-career cybersecurity learner and full-stack developer building web apps, database projects, ML pipelines and network servers.',
   },
   toolkit: {
     title: `Toolkit · ${SITE_NAME}`,
@@ -64,7 +65,14 @@ export function metaFor(pathname: string): PageMeta {
       canonical: '/',
       type: 'profile',
       jsonLd: [
-        { '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${SITE_URL}/#website`, url: SITE_URL, name: SITE_NAME, author: { '@id': person['@id'] } },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          url: SITE_URL,
+          name: SITE_NAME,
+          author: { '@id': person['@id'] },
+        },
         { '@context': 'https://schema.org', '@type': 'ProfilePage', url: SITE_URL, mainEntity: person },
       ],
     }
@@ -81,7 +89,10 @@ export function metaFor(pathname: string): PageMeta {
         body.id === 'about'
           ? { '@context': 'https://schema.org', '@type': 'AboutPage', url: `${SITE_URL}${path}`, mainEntity: person }
           : { '@context': 'https://schema.org', '@type': body.id === 'contact' ? 'ContactPage' : 'WebPage', url: `${SITE_URL}${path}`, name: copy.title },
-        breadcrumbs([['Sky', '/'], [body.name, path]]),
+        breadcrumbs([
+          ['Sky', '/'],
+          [body.name, path],
+        ]),
       ],
     }
   }
@@ -106,7 +117,10 @@ export function metaFor(pathname: string): PageMeta {
           keywords: p.stack.join(', '),
           author: person,
         },
-        breadcrumbs([['Sky', '/'], [p.name, path]]),
+        breadcrumbs([
+          ['Sky', '/'],
+          [p.name, path],
+        ]),
       ],
     }
   }
@@ -155,7 +169,10 @@ export function metaFor(pathname: string): PageMeta {
           image: OG_IMAGE,
           author: person,
         },
-        breadcrumbs([['Blog', '/blog'], [post.title, `/blog/${post.slug}`]]),
+        breadcrumbs([
+          ['Blog', '/blog'],
+          [post.title, `/blog/${post.slug}`],
+        ]),
       ],
     }
   }

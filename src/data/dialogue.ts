@@ -2,7 +2,7 @@
 
 export const DIALOGUE: string[] = [
   "Hey, traveller! You flew all the way to the edge of the map. I'm Spruce, Sprucetrap's guide out here.",
-  "Sprucetrap builds where cybersecurity meets full-stack: web apps, databases, ML pipelines and servers written from scratch.",
+  'Sprucetrap builds where cybersecurity meets full-stack: web apps, databases, ML pipelines and servers written from scratch.',
   'Got an idea, a project or a bug worth hunting together? Open an issue on any public repo on GitHub and the signal reaches us.',
   'Psst. Press ⌘K or / for the command terminal. And if you know a certain old cheat code… try it. Red team mode awaits.',
 ]

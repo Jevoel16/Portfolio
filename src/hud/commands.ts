@@ -43,7 +43,8 @@ const COMMANDS: Record<string, Command> = {
     run: ([what = '']) => {
       if (what.startsWith('proj')) return { lines: projects.map((p) => `${p.featured ? '★' : '·'} ${p.id.padEnd(20)} ${p.name}`) }
       if (what.startsWith('post') || what === 'blog') return { lines: posts.length ? posts.map((p) => `${p.date}  ${p.slug}`) : ['(no posts yet)'] }
-      if (what.startsWith('const')) return { lines: constellations.map((c) => `${c.name.padEnd(16)} ${c.stars.filter((s) => s.projectId || s.postSlug).length} stars`) }
+      if (what.startsWith('const'))
+        return { lines: constellations.map((c) => `${c.name.padEnd(16)} ${c.stars.filter((s) => s.projectId || s.postSlug).length} stars`) }
       if (what) return { lines: [`!ls: ${what}: no such directory`] }
       return { lines: ['about/  toolkit/  contact/  projects/  posts/  constellations/'] }
     },

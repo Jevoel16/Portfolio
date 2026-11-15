@@ -56,8 +56,7 @@ export const projects: Project[] = [
     name: 'Tourist Arrivals Forecasting Lab',
     constellation: 'ml',
     featured: true,
-    description:
-      '8-stage machine learning pipeline that forecasts Philippine tourist arrivals, with a step-by-step interface and SHAP explanations.',
+    description: '8-stage machine learning pipeline that forecasts Philippine tourist arrivals, with a step-by-step interface and SHAP explanations.',
     stack: ['FastAPI', 'Next.js', 'TensorFlow', 'scikit-learn'],
     url: 'https://github.com/Jevoel16/tourist-arrivals-app',
   },

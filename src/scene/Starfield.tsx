@@ -43,15 +43,7 @@ export function Starfield({ count, animate }: { count: number; animate: boolean 
 
   return (
     <points ref={ref} geometry={geometry}>
-      <pointsMaterial
-        size={0.55}
-        map={dotTexture()}
-        vertexColors
-        transparent
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-        sizeAttenuation
-      />
+      <pointsMaterial size={0.55} map={dotTexture()} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
     </points>
   )
 }
@@ -70,14 +62,7 @@ export function Nebula() {
     <group>
       {CLOUDS.map((c, i) => (
         <sprite key={i} position={c.pos} scale={[c.scale, c.scale, 1]}>
-          <spriteMaterial
-            map={cloudTexture()}
-            color={c.color}
-            opacity={c.opacity}
-            transparent
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-          />
+          <spriteMaterial map={cloudTexture()} color={c.color} opacity={c.opacity} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
         </sprite>
       ))}
     </group>

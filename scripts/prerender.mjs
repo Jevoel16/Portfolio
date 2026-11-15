@@ -30,9 +30,7 @@ const fileFor = (url) => (url === '/' ? path.join(dist, 'index.html') : path.joi
 async function writePage(url, file) {
   const { html, head } = await server.render(url)
   // data-path tells the client which URL this markup was rendered for (404.html is served for many URLs).
-  const page = template
-    .replace(HEAD, `${head}\n    ${fontPreloads}`)
-    .replace('<div id="root"><!--app-html-->', `<div id="root" data-path="${url}">${html}`)
+  const page = template.replace(HEAD, `${head}\n    ${fontPreloads}`).replace('<div id="root"><!--app-html-->', `<div id="root" data-path="${url}">${html}`)
   await mkdir(path.dirname(file), { recursive: true })
   await writeFile(file, page)
 }
@@ -45,7 +43,7 @@ await writePage('/404', path.join(dist, '404.html'))
 
 // sitemap.xml: indexable pages only; posts carry their last-modified date.
 const lastmod = new Map(server.posts.map((p) => [`/blog/${p.slug}`, p.updated ?? p.date]))
-const newest = server.posts[0] ? server.posts[0].updated ?? server.posts[0].date : undefined
+const newest = server.posts[0] ? (server.posts[0].updated ?? server.posts[0].date) : undefined
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${indexable
@@ -75,11 +73,19 @@ ${['/', '/about', '/toolkit', '/contact', '/blog'].map(line).join('\n')}
 
 ## Projects
 
-${indexable.filter((u) => u.startsWith('/projects/')).map(line).join('\n')}
+${indexable
+  .filter((u) => u.startsWith('/projects/'))
+  .map(line)
+  .join('\n')}
 
 ## Blog posts
 
-${indexable.filter((u) => u.startsWith('/blog/')).map(line).join('\n') || '- No posts yet.'}
+${
+  indexable
+    .filter((u) => u.startsWith('/blog/'))
+    .map(line)
+    .join('\n') || '- No posts yet.'
+}
 
 ## Elsewhere
 
