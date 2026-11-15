@@ -18,9 +18,9 @@ export default defineConfig({
           // or the entry would import (and preload) three.js just to reach a tiny helper.
           if (id.includes('vite/preload-helper') || id.includes('commonjsHelpers')) return 'react'
           if (!id.includes('node_modules')) return undefined
-          if (/[\/]node_modules[\/]three[\/]/.test(id)) return 'three'
-          if (/[\/]node_modules[\/](@react-three|three-stdlib|troika|maath|zustand|suspend-react|its-fine)/.test(id)) return 'r3f'
-          if (/[\/]node_modules[\/](react|react-dom|scheduler|react-router|cookie|set-cookie-parser)[\/]/.test(id)) return 'react'
+          if (/[\\/]node_modules[\\/]three[\\/]/.test(id)) return 'three'
+          if (/[\\/]node_modules[\\/](@react-three|three-stdlib|troika|maath|zustand|suspend-react|its-fine)/.test(id)) return 'r3f'
+          if (/[\\/]node_modules[\\/](react|react-dom|scheduler|react-router|cookie|set-cookie-parser)[\\/]/.test(id)) return 'react'
           return undefined
         },
       },
