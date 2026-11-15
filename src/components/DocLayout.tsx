@@ -12,7 +12,7 @@ export function DocLayout({ children }: { children: ReactNode }) {
       </a>
       <div className="doc-stars" aria-hidden="true" />
       <header className="doc-header">
-        <Link to="/" className="brand" viewTransition>
+        <Link to="/" className="brand" aria-label="Sprucetrap, back to the sky" viewTransition>
           <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true">
             <path d="M16 3l3 10 10 3-10 3-3 10-3-10-10-3 10-3z" fill="var(--gold)" />
           </svg>
