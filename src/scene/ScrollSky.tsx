@@ -1,5 +1,5 @@
 // Loaded on demand with React.lazy, so three.js only downloads when WebGL is available.
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { poseAt, track, waypointFor, type Pose, type Waypoint } from '../scroll/cameraPath'
@@ -34,12 +34,15 @@ export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, o
   const starCount = lite ? 1200 : narrow ? 2200 : 4500
   const layout = useMemo(() => skyLayout(portrait), [portrait])
   const animate = !reducedMotion
+  // No frame until shaders compile in the background; the first render would otherwise compile them all in one long task.
+  const [warm, setWarm] = useState(false)
+  const onWarm = useCallback(() => setWarm(true), [])
 
   return (
     <div className="space-canvas" aria-hidden="true">
       <Canvas
         dpr={narrow ? [1, 1.25] : [1, 1.5]}
-        frameloop="demand"
+        frameloop={warm ? 'demand' : 'never'}
         gl={{ antialias: !narrow, alpha: true, powerPreference: 'high-performance' }}
         camera={{ fov: 50, near: 0.1, far: 400, position: [0, 0, 16] }}
         // The canvas is a fixed backdrop, so scrolling never moves it; don't re-measure on every scroll.
@@ -47,7 +50,16 @@ export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, o
         // Purely decorative: the page above it owns every gesture, including scrolling.
         style={{ pointerEvents: 'none' }}
       >
-        <SceneContent layout={layout} portrait={portrait} activeBody={activeBody} animate={animate} starCount={starCount} onReady={onReady} />
+        <SceneContent
+          layout={layout}
+          portrait={portrait}
+          activeBody={activeBody}
+          animate={animate}
+          starCount={starCount}
+          warm={warm}
+          onWarm={onWarm}
+          onReady={onReady}
+        />
       </Canvas>
     </div>
   )
@@ -59,12 +71,23 @@ interface ContentProps {
   activeBody: string | null
   animate: boolean
   starCount: number
+  warm: boolean
+  onWarm: () => void
   onReady: () => void
 }
 
-function SceneContent({ layout, portrait, activeBody, animate, starCount, onReady }: ContentProps) {
+function SceneContent({ layout, portrait, activeBody, animate, starCount, warm, onWarm, onReady }: ContentProps) {
   const group = useRef<THREE.Group>(null)
   const { gl, scene, camera, invalidate } = useThree()
+
+  // The first frame, once the frameloop is on; the sky shows only after it has drawn.
+  useEffect(() => {
+    if (!warm) return
+    invalidate()
+    const id = requestAnimationFrame(() => requestAnimationFrame(onReady))
+    return () => cancelAnimationFrame(id)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [warm])
 
   // Precompile shaders and upload textures so the first camera flight never stalls.
   useEffect(() => {
@@ -82,9 +105,7 @@ function SceneContent({ layout, portrait, activeBody, animate, starCount, onRead
       } catch {
         // Not fatal: the first frame compiles whatever is left.
       }
-      if (cancelled) return
-      invalidate()
-      requestAnimationFrame(() => !cancelled && onReady())
+      if (!cancelled) onWarm()
     }
     void warm()
     return () => {
