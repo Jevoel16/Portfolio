@@ -10,6 +10,7 @@ import { SkyPackets } from './SkyPackets'
 import { skyLayout } from './skyLayout'
 import { SkyStars } from './SkyStars'
 import { Nebula, Starfield } from './Starfield'
+import { useResolvedScheme } from '../lib/theme'
 
 interface Props {
   portrait: boolean
@@ -32,7 +33,8 @@ export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, o
   // Phones have dense screens and weak GPUs: fewer pixels and no MSAA keep the flight at frame rate.
   const narrow = useMemo(() => window.innerWidth < 760, [])
   const starCount = lite ? 1200 : narrow ? 2200 : 4500
-  const layout = useMemo(() => skyLayout(portrait), [portrait])
+  const light = useResolvedScheme() === 'light'
+  const layout = useMemo(() => skyLayout(portrait, light), [portrait, light])
   const animate = !reducedMotion
   // No frame until shaders compile in the background; the first render would otherwise compile them all in one long task.
   const [warm, setWarm] = useState(false)
@@ -52,6 +54,7 @@ export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, o
       >
         <SceneContent
           layout={layout}
+          light={light}
           portrait={portrait}
           activeBody={activeBody}
           animate={animate}
@@ -67,6 +70,7 @@ export default function ScrollSky({ reducedMotion, lite, portrait, activeBody, o
 
 interface ContentProps {
   layout: ReturnType<typeof skyLayout>
+  light: boolean
   portrait: boolean
   activeBody: string | null
   animate: boolean
@@ -76,7 +80,7 @@ interface ContentProps {
   onReady: () => void
 }
 
-function SceneContent({ layout, portrait, activeBody, animate, starCount, warm, onWarm, onReady }: ContentProps) {
+function SceneContent({ layout, light, portrait, activeBody, animate, starCount, warm, onWarm, onReady }: ContentProps) {
   const group = useRef<THREE.Group>(null)
   const { gl, scene, camera, invalidate } = useThree()
 
@@ -115,6 +119,9 @@ function SceneContent({ layout, portrait, activeBody, animate, starCount, warm, 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl, scene, camera])
 
+  // A theme change swaps materials; draw it even while motion is paused.
+  useEffect(() => invalidate(), [light, invalidate])
+
   useFrame(({ clock }) => {
     // A slow sway gives a sense of depth on top of the scroll flight.
     if (animate && group.current) {
@@ -127,14 +134,15 @@ function SceneContent({ layout, portrait, activeBody, animate, starCount, warm, 
   return (
     <>
       <AmbientTicker animate={animate} />
-      <Starfield count={starCount} animate={animate} />
-      {animate && <ShootingStars />}
+      <Starfield count={starCount} animate={animate} light={light} />
+      {animate && <ShootingStars light={light} />}
       <group ref={group}>
-        <Nebula />
-        <SkyLines edges={layout.edges} />
-        {animate && <SkyPackets edges={layout.edges} />}
-        <SkyStars stars={layout.stars} selectedId={null} hoveredId={null} onHover={noop} onSelect={noop} animate={animate} />
-        <Bodies portrait={portrait} selectedId={activeBody} hoveredId={null} onHover={noop} onSelect={noop} animate={animate} touch={false} />
+        {/* Coloured clouds only read as nebulae against the night. */}
+        {!light && <Nebula />}
+        <SkyLines edges={layout.edges} light={light} />
+        {animate && <SkyPackets edges={layout.edges} light={light} />}
+        <SkyStars stars={layout.stars} selectedId={null} hoveredId={null} onHover={noop} onSelect={noop} animate={animate} light={light} />
+        <Bodies portrait={portrait} selectedId={activeBody} hoveredId={null} onHover={noop} onSelect={noop} animate={animate} touch={false} light={light} />
       </group>
       <ScrollRig portrait={portrait} />
     </>

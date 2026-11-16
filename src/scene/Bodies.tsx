@@ -6,6 +6,7 @@ import { bodies, type Body } from '../data/bodies'
 import { orient } from '../data/constellations'
 import { setPointerCursor } from './cursor'
 import { glowTexture, planetTexture, ringTexture } from './textures'
+import { inkFor } from '../lib/ink'
 
 interface Props {
   portrait: boolean
@@ -16,13 +17,15 @@ interface Props {
   animate: boolean
   /** Larger hit targets on touch screens. */
   touch: boolean
+  /** Light scheme: ink glows with normal blending. */
+  light?: boolean
 }
 
 export function Bodies(props: Props) {
   return (
     <group>
       {/* Only the planets are lit; stars and lines use unlit materials. */}
-      <ambientLight intensity={0.35} />
+      <ambientLight intensity={props.light ? 0.7 : 0.35} />
       <directionalLight position={[-6, 8, 10]} intensity={2.2} />
       {bodies.map((b) => (
         <BodyObject key={b.id} body={b} {...props} />
@@ -31,7 +34,7 @@ export function Bodies(props: Props) {
   )
 }
 
-function BodyObject({ body, portrait, selectedId, hoveredId, onHover, onSelect, animate, touch }: Props & { body: Body }) {
+function BodyObject({ body, portrait, selectedId, hoveredId, onHover, onSelect, animate, touch, light = false }: Props & { body: Body }) {
   const group = useRef<THREE.Group>(null)
   const hovered = hoveredId === body.id
   const selected = selectedId === body.id
@@ -58,8 +61,8 @@ function BodyObject({ body, portrait, selectedId, hoveredId, onHover, onSelect, 
   }
 
   let visual: ReactNode
-  if (body.kind === 'beacon') visual = <Beacon body={body} animate={animate} />
-  else visual = <Planet body={body} animate={animate} ringed={body.kind === 'ringed'} />
+  if (body.kind === 'beacon') visual = <Beacon body={body} animate={animate} light={light} />
+  else visual = <Planet body={body} animate={animate} ringed={body.kind === 'ringed'} light={light} />
 
   return (
     <group position={pos}>
@@ -83,7 +86,8 @@ function BodyObject({ body, portrait, selectedId, hoveredId, onHover, onSelect, 
   )
 }
 
-function Planet({ body, animate, ringed }: { body: Body; animate: boolean; ringed: boolean }) {
+function Planet({ body, animate, ringed, light }: { body: Body; animate: boolean; ringed: boolean; light: boolean }) {
+  const glow = light ? inkFor(body.color) : body.color
   const sphere = useRef<THREE.Mesh>(null)
   const ringGeo = useMemo(() => {
     const inner = body.radius * 1.35
@@ -106,7 +110,14 @@ function Planet({ body, animate, ringed }: { body: Body; animate: boolean; ringe
   return (
     <>
       <sprite scale={[body.radius * 5, body.radius * 5, 1]} position={[0, 0, -0.05]}>
-        <spriteMaterial map={glowTexture()} color={body.color} opacity={0.55} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+        <spriteMaterial
+          map={glowTexture()}
+          color={glow}
+          opacity={light ? 0.3 : 0.55}
+          transparent
+          depthWrite={false}
+          blending={light ? THREE.NormalBlending : THREE.AdditiveBlending}
+        />
       </sprite>
       <mesh ref={sphere} rotation={[0.25, 0, ringed ? -0.35 : 0.1]}>
         <sphereGeometry args={[body.radius, 48, 32]} />
@@ -114,7 +125,7 @@ function Planet({ body, animate, ringed }: { body: Body; animate: boolean; ringe
       </mesh>
       {ringed && (
         <mesh geometry={ringGeo} rotation={[1.2, 0.2, -0.35]}>
-          <meshBasicMaterial map={ringTexture()} color={body.color} transparent opacity={0.85} side={THREE.DoubleSide} depthWrite={false} />
+          <meshBasicMaterial map={ringTexture()} color={glow} transparent opacity={0.85} side={THREE.DoubleSide} depthWrite={false} />
         </mesh>
       )}
     </>
@@ -123,7 +134,9 @@ function Planet({ body, animate, ringed }: { body: Body; animate: boolean; ringe
 
 const PULSES = 3
 
-function Beacon({ body, animate }: { body: Body; animate: boolean }) {
+function Beacon({ body, animate, light }: { body: Body; animate: boolean; light: boolean }) {
+  const blending = light ? THREE.NormalBlending : THREE.AdditiveBlending
+  const tone = (hex: string) => (light ? inkFor(hex) : hex)
   const rings = useRef<(THREE.Mesh | null)[]>([])
   const core = useRef<THREE.Sprite>(null)
 
@@ -145,13 +158,13 @@ function Beacon({ body, animate }: { body: Body; animate: boolean }) {
   return (
     <>
       <sprite ref={core} scale={[body.radius * 5, body.radius * 5, 1]}>
-        <spriteMaterial map={glowTexture()} color="#e9fff8" transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+        <spriteMaterial map={glowTexture()} color={light ? '#0a6347' : '#e9fff8'} transparent depthWrite={false} blending={blending} />
       </sprite>
       <Billboard>
         {Array.from({ length: PULSES }, (_, i) => (
           <mesh key={i} ref={(m) => (rings.current[i] = m)}>
             <ringGeometry args={[body.radius * 0.92, body.radius, 64]} />
-            <meshBasicMaterial color={i % 2 ? body.color2 : body.color} transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+            <meshBasicMaterial color={tone(i % 2 ? body.color2 : body.color)} transparent depthWrite={false} blending={blending} />
           </mesh>
         ))}
       </Billboard>

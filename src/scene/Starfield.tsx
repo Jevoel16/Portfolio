@@ -4,6 +4,8 @@ import * as THREE from 'three'
 import { cloudTexture, dotTexture } from './textures'
 
 const PALETTE = ['#ffffff', '#dfe8ff', '#b9cfff', '#ffe9c4', '#ffd2a8']
+// Light: the same stars as ink dots, like a printed chart.
+const INK_PALETTE = ['#2a3358', '#3a4a7a', '#34508a', '#7a5422', '#8a4f2a']
 
 /** Deterministic pseudo-random numbers, so the sky looks the same on every visit. */
 function rng(seed: number) {
@@ -13,7 +15,7 @@ function rng(seed: number) {
   }
 }
 
-export function Starfield({ count, animate }: { count: number; animate: boolean }) {
+export function Starfield({ count, animate, light = false }: { count: number; animate: boolean; light?: boolean }) {
   const ref = useRef<THREE.Points>(null)
   const geometry = useMemo(() => {
     const rand = rng(16)
@@ -28,14 +30,14 @@ export function Starfield({ count, animate }: { count: number; animate: boolean 
       positions[i * 3] = r * Math.sin(phi) * Math.cos(theta)
       positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta)
       positions[i * 3 + 2] = r * Math.cos(phi)
-      c.set(PALETTE[Math.floor(rand() * PALETTE.length)]).multiplyScalar(0.55 + rand() * 0.45)
+      c.set((light ? INK_PALETTE : PALETTE)[Math.floor(rand() * PALETTE.length)]).multiplyScalar(0.55 + rand() * 0.45)
       colors.set([c.r, c.g, c.b], i * 3)
     }
     const g = new THREE.BufferGeometry()
     g.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     g.setAttribute('color', new THREE.BufferAttribute(colors, 3))
     return g
-  }, [count])
+  }, [count, light])
 
   useFrame((_, dt) => {
     if (animate && ref.current) ref.current.rotation.y += dt * 0.004
@@ -43,7 +45,15 @@ export function Starfield({ count, animate }: { count: number; animate: boolean 
 
   return (
     <points ref={ref} geometry={geometry}>
-      <pointsMaterial size={0.55} map={dotTexture()} vertexColors transparent depthWrite={false} blending={THREE.AdditiveBlending} sizeAttenuation />
+      <pointsMaterial
+        size={0.55}
+        map={dotTexture()}
+        vertexColors
+        transparent
+        depthWrite={false}
+        blending={light ? THREE.NormalBlending : THREE.AdditiveBlending}
+        sizeAttenuation
+      />
     </points>
   )
 }

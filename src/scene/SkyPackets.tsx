@@ -2,6 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { pointScale } from './pointScale'
+import { INK } from '../lib/ink'
 import type { Edge } from './skyLayout'
 
 const vertexShader = /* glsl */ `
@@ -26,18 +27,19 @@ const vertexShader = /* glsl */ `
 `
 
 const fragmentShader = /* glsl */ `
+  uniform vec3 uCore;
   varying vec3 vColor;
   varying float vFade;
   void main() {
     float d = length(gl_PointCoord - 0.5) * 2.0;
     if (d > 1.0) discard;
     float a = (1.0 - smoothstep(0.0, 1.0, d)) * vFade;
-    gl_FragColor = vec4(mix(vColor, vec3(1.0), 0.5), a * 0.9);
+    gl_FragColor = vec4(mix(vColor, uCore, 0.5), a * 0.9);
   }
 `
 
 /** One draw call; packet positions come from time on the GPU, so the CPU idles. */
-export function SkyPackets({ edges }: { edges: Edge[] }) {
+export function SkyPackets({ edges, light = false }: { edges: Edge[]; light?: boolean }) {
   const live = useMemo(() => edges.filter((e) => !e.dashed), [edges])
 
   const geometry = useMemo(() => {
@@ -71,12 +73,12 @@ export function SkyPackets({ edges }: { edges: Edge[] }) {
       new THREE.ShaderMaterial({
         vertexShader,
         fragmentShader,
-        uniforms: { uTime: { value: 0 }, uScale: { value: 600 } },
+        uniforms: { uTime: { value: 0 }, uScale: { value: 600 }, uCore: { value: new THREE.Color(light ? INK : '#ffffff') } },
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        blending: light ? THREE.NormalBlending : THREE.AdditiveBlending,
       }),
-    [],
+    [light],
   )
   useEffect(() => () => material.dispose(), [material])
 

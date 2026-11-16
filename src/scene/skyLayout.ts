@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { bodies } from '../data/bodies'
 import { bodyLabelPosition, constellations, labelPosition, orient, starItem } from '../data/constellations'
+import { inkFor } from '../lib/ink'
 
 /** One point in the constellation star buffer. */
 export interface StarPoint {
@@ -33,16 +34,19 @@ export interface SkyLabel {
   featured?: boolean
 }
 
-const FEATURED = new THREE.Color('#fff3d6')
+const FEATURED = '#fff3d6'
 
-/** Everything the 3D sky draws, in oriented sky coordinates, built once per orientation. */
-export function skyLayout(portrait: boolean) {
+/** Everything the 3D sky draws, in oriented sky coordinates, built once per orientation and scheme. */
+export function skyLayout(portrait: boolean, light = false) {
+  // Light draws the sky like a printed star chart, so stars and lines are in ink.
+  const tone = (hex: string) => new THREE.Color(light ? inkFor(hex) : hex)
+  const featured = tone(FEATURED)
   const stars: StarPoint[] = []
   const edges: Edge[] = []
   const labels: SkyLabel[] = []
 
   constellations.forEach((c) => {
-    const color = new THREE.Color(c.color)
+    const color = tone(c.color)
     const at = new Map(
       c.stars.map((s) => {
         const [x, y] = orient(s.x, s.y, portrait)
@@ -55,7 +59,7 @@ export function skyLayout(portrait: boolean) {
       stars.push({
         id: item?.id,
         pos,
-        color: item?.featured ? FEATURED : color,
+        color: item?.featured ? featured : color,
         size: item ? (item.featured ? 1.35 : 1) : c.forming ? 0.45 : 0.55,
         alpha: c.forming ? 0.55 : 1,
         phase: i * 1.7 + c.label.x,

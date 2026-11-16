@@ -1,7 +1,7 @@
 // The data colours (constellations, planets) are pastels tuned for the night sky.
 // In Light they are darkened toward the ink colour until they pass AA on the dawn sky.
 
-const INK = '#141a33'
+export const INK = '#141a33'
 /** The Light backgrounds text sits on: cream and the pale blue at the top of the sky. */
 const LIGHT_BACKGROUNDS = ['#f4ecdc', '#cfe1f0']
 const TARGET = 4.6

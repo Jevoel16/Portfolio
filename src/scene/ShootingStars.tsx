@@ -25,7 +25,7 @@ const randomStreak = (): Streak => {
 }
 
 /** Occasional meteors far behind the constellations. Purely decorative. */
-export function ShootingStars() {
+export function ShootingStars({ light = false }: { light?: boolean }) {
   const meshes = useRef<(THREE.Mesh | null)[]>([])
   const streaks = useRef<Streak[]>(Array.from({ length: COUNT }, randomStreak))
 
@@ -58,7 +58,13 @@ export function ShootingStars() {
         <mesh key={i} ref={(m) => (meshes.current[i] = m)} visible={false}>
           {/* The texture's bright end points along +x, which the rotation turns into the direction of travel. */}
           <planeGeometry args={[7, 0.12]} />
-          <meshBasicMaterial map={streakTexture()} color="#dfe8ff" transparent depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial
+            map={streakTexture()}
+            color={light ? '#3a4a7a' : '#dfe8ff'}
+            transparent
+            depthWrite={false}
+            blending={light ? THREE.NormalBlending : THREE.AdditiveBlending}
+          />
         </mesh>
       ))}
     </>

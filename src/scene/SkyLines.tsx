@@ -3,14 +3,24 @@ import { Line } from '@react-three/drei'
 import type { Edge } from './skyLayout'
 
 /** All constellation edges in two draw calls: solid lines, and dashed ones for a forming figure. */
-export function SkyLines({ edges }: { edges: Edge[] }) {
+export function SkyLines({ edges, light = false }: { edges: Edge[]; light?: boolean }) {
   const solid = useMemo(() => segments(edges.filter((e) => !e.dashed)), [edges])
   const dashed = useMemo(() => segments(edges.filter((e) => e.dashed)), [edges])
   return (
     <>
-      {solid && <Line segments points={solid.points} vertexColors={solid.colors} lineWidth={1.4} transparent opacity={0.55} />}
+      {solid && <Line segments points={solid.points} vertexColors={solid.colors} lineWidth={1.4} transparent opacity={light ? 0.75 : 0.55} />}
       {dashed && (
-        <Line segments points={dashed.points} vertexColors={dashed.colors} lineWidth={1} transparent opacity={0.35} dashed dashSize={0.18} gapSize={0.22} />
+        <Line
+          segments
+          points={dashed.points}
+          vertexColors={dashed.colors}
+          lineWidth={1}
+          transparent
+          opacity={light ? 0.55 : 0.35}
+          dashed
+          dashSize={0.18}
+          gapSize={0.22}
+        />
       )}
     </>
   )

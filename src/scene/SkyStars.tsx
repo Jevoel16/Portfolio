@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import type { StarPoint } from './skyLayout'
 import { setPointerCursor } from './cursor'
 import { pointScale } from './pointScale'
+import { INK } from '../lib/ink'
 
 interface Props {
   stars: StarPoint[]
@@ -12,6 +13,8 @@ interface Props {
   onHover: (id: string | null) => void
   onSelect: (id: string) => void
   animate: boolean
+  /** Light scheme: ink stars with normal blending, since additive light vanishes on a pale sky. */
+  light?: boolean
 }
 
 const vertexShader = /* glsl */ `
@@ -35,22 +38,24 @@ const vertexShader = /* glsl */ `
   }
 `
 
-// Same falloff as the old glow sprite texture: hot white core, coloured halo.
+// Same falloff as the old glow sprite texture: a hot core (white, or ink in Light), coloured halo.
 const fragmentShader = /* glsl */ `
+  uniform vec3 uCore;
+  uniform float uHalo;
   varying vec3 vColor;
   varying float vAlpha;
   void main() {
     float d = length(gl_PointCoord - 0.5) * 2.0;
     if (d > 1.0) discard;
     float core = 1.0 - smoothstep(0.0, 0.16, d);
-    float halo = 0.35 * (1.0 - smoothstep(0.1, 0.45, d)) + 0.08 * (1.0 - smoothstep(0.4, 1.0, d));
-    vec3 col = mix(vColor, vec3(1.0), core * 0.85);
+    float halo = uHalo * 0.35 * (1.0 - smoothstep(0.1, 0.45, d)) + uHalo * 0.08 * (1.0 - smoothstep(0.4, 1.0, d));
+    vec3 col = mix(vColor, uCore, core * 0.85);
     gl_FragColor = vec4(col, vAlpha * clamp(core + halo, 0.0, 1.0));
   }
 `
 
 /** All stars in one draw call; hover and selection only touch a one-float attribute. */
-export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, animate }: Props) {
+export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, animate, light = false }: Props) {
   const points = useRef<THREE.Points>(null)
   const { gl, camera, invalidate } = useThree()
 
@@ -96,12 +101,19 @@ export function SkyStars({ stars, selectedId, hoveredId, onHover, onSelect, anim
       new THREE.ShaderMaterial({
         vertexShader,
         fragmentShader,
-        uniforms: { uTime: { value: 0 }, uAnimate: { value: 1 }, uScale: { value: 600 } },
+        uniforms: {
+          uTime: { value: 0 },
+          uAnimate: { value: 1 },
+          uScale: { value: 600 },
+          uCore: { value: new THREE.Color(light ? INK : '#ffffff') },
+          // A wide halo reads as glow at night but as a smudge on paper.
+          uHalo: { value: light ? 0.4 : 1 },
+        },
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        blending: light ? THREE.NormalBlending : THREE.AdditiveBlending,
       }),
-    [],
+    [light],
   )
   useEffect(() => () => material.dispose(), [material])
 
