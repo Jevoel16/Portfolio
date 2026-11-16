@@ -4,6 +4,7 @@ import { constellationById } from '../data/constellations'
 import { projectById, projects } from '../data/projects'
 import { hrefForSection } from '../scroll/sections'
 import { NotFound } from './NotFound'
+import { themedAccent } from '../lib/ink'
 
 /** Full page for one project star: its own URL, title and description for search engines. */
 export function ProjectPage() {
@@ -16,7 +17,7 @@ export function ProjectPage() {
 
   return (
     <DocLayout>
-      <article className="project-page" style={{ '--accent': constellation.color } as React.CSSProperties}>
+      <article className="project-page" style={{ '--accent': themedAccent(constellation.color) } as React.CSSProperties}>
         <header className="doc-hero">
           <p className="post-meta mono">
             <Link to={hrefForSection('projects')} viewTransition>

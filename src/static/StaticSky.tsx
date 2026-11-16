@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import { bodies } from '../data/bodies'
 import { bodyLabelPosition, constellations, labelPosition, orient, skyBounds, starItem } from '../data/constellations'
+import { themedAccent } from '../lib/ink'
 
 interface Props {
   /** Covered by the 3D scene: faded out. */
@@ -90,7 +91,11 @@ function SkyMap({ portrait, ...props }: Props & { portrait: boolean }) {
         const [lox, loy] = labelPosition(c, portrait)
         const [lx, ly] = [lox, -loy]
         return (
-          <g key={c.id} className={`constellation${c.forming ? ' forming' : ''}`} style={{ '--accent': c.color, '--delay': `${ci * 0.25}s` } as CSSProperties}>
+          <g
+            key={c.id}
+            className={`constellation${c.forming ? ' forming' : ''}`}
+            style={{ '--accent': themedAccent(c.color), '--delay': `${ci * 0.25}s` } as CSSProperties}
+          >
             {c.id === 'security' &&
               (() => {
                 const [cx, cy] = pt(0.1, 0.2)
@@ -162,7 +167,11 @@ function SkyMap({ portrait, ...props }: Props & { portrait: boolean }) {
         const [lox, loy] = bodyLabelPosition(body, portrait)
         const r = body.radius
         return (
-          <SkyMark key={body.id} className={`body ${body.kind}`} style={{ '--accent': body.color, '--accent-2': body.color2 } as CSSProperties}>
+          <SkyMark
+            key={body.id}
+            className={`body ${body.kind}`}
+            style={{ '--accent': themedAccent(body.color), '--accent-2': themedAccent(body.color2) } as CSSProperties}
+          >
             <circle className="hit" cx={x} cy={y} r={Math.max(r * 1.6, px(26))} />
             <circle cx={x} cy={y} r={r * 2.4} fill={`url(#${ns}-glow)`} opacity={0.7} />
             {body.kind === 'beacon' ? (

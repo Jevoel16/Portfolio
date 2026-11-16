@@ -76,7 +76,7 @@
 }
 
 .star-minor {
-  fill: #d8e2ff;
+  fill: light-dark(#3a4a7a, #d8e2ff);
   opacity: 0.75;
   animation: twinkle 4.5s ease-in-out infinite;
 }
@@ -98,10 +98,10 @@
   animation: twinkle 3.6s ease-in-out infinite;
 }
 .star .core {
-  fill: #f2f5ff;
+  fill: light-dark(#2a3358, #f2f5ff);
 }
 .star.featured .core {
-  fill: #fff3d6;
+  fill: light-dark(#7a5422, #fff3d6);
 }
 .star .ring,
 .body .ring {
@@ -119,14 +119,14 @@
 .star:focus-visible .ring,
 .body:focus-visible .ring {
   opacity: 1;
-  stroke: #fff;
+  stroke: light-dark(#141a33, #fff);
 }
 
 .star-label,
 .const-label,
 .body-label {
   paint-order: stroke;
-  stroke: rgba(4, 6, 13, 0.85);
+  stroke: color-mix(in srgb, var(--bg) 85%, transparent);
   stroke-linejoin: round;
   pointer-events: none;
 }
@@ -160,7 +160,7 @@
 }
 
 .body .core {
-  fill: #e9fff8;
+  fill: light-dark(var(--signal), #e9fff8);
 }
 .body .ring-back,
 .body .ring-front {

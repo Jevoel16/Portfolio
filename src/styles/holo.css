@@ -23,6 +23,8 @@
   overflow: hidden;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 45%, rgba(127, 227, 196, 0.22), rgba(63, 184, 255, 0.08) 55%, transparent 72%);
+  /* A dark screen behind the figure in Light, so screen blending still drops the black. */
+  background-color: light-dark(#06101a, transparent);
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--holo) 45%, transparent),
     0 0 44px -6px var(--holo-2),
@@ -107,6 +109,8 @@
 /* ---------- Speech bubble ---------- */
 .holo-speech {
   position: relative;
+  color-scheme: dark;
+  color: var(--text);
   padding: 16px 20px 14px;
   border: 1px solid color-mix(in srgb, var(--holo) 40%, transparent);
   border-radius: var(--radius);

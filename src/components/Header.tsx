@@ -3,11 +3,15 @@ import { bodyById, type BodyId } from '../data/bodies'
 import { setMotion, useReducedMotion } from '../hooks/useMotion'
 import { openTerminal } from '../hud/CommandTerminal'
 import { hrefForSection, SECTION_LABELS, type SectionId } from '../scroll/sections'
+import { themedAccent } from '../lib/ink'
 
 /** Sections with a chip in the top bar; Home is the brand and Write-ups sit under Blog. */
 const NAV: SectionId[] = ['about', 'projects', 'toolkit', 'contact']
 
-const accentFor = (id: SectionId) => bodyById.get(id as BodyId)?.color ?? 'var(--gold)'
+const accentFor = (id: SectionId) => {
+  const color = bodyById.get(id as BodyId)?.color
+  return color ? themedAccent(color) : 'var(--gold)'
+}
 
 /** Sticky HUD bar: brand, the section chips (active one lit), the blog and the terminal. */
 export function Header({ active }: { active: SectionId }) {

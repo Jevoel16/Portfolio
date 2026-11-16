@@ -8,7 +8,7 @@
   justify-content: space-between;
   gap: 12px;
   padding: max(10px, env(safe-area-inset-top)) var(--hud-x) 10px;
-  background: linear-gradient(rgba(4, 6, 13, 0.82), rgba(4, 6, 13, 0.5));
+  background: linear-gradient(color-mix(in srgb, var(--bg) 82%, transparent), color-mix(in srgb, var(--bg) 50%, transparent));
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -89,9 +89,9 @@
   width: 6px;
   height: 6px;
   margin: 2px;
-  background: #e9fff8;
+  background: light-dark(var(--signal), #e9fff8);
   box-shadow:
-    0 0 0 2px rgba(4, 6, 13, 0.9),
+    0 0 0 2px color-mix(in srgb, var(--bg) 90%, transparent),
     0 0 0 3.5px var(--accent);
 }
 .body-icon.cluster {
@@ -109,11 +109,11 @@
   line-height: 0.95;
   letter-spacing: -0.03em;
   font-weight: 700;
-  background: linear-gradient(180deg, #fff 30%, #c8d3ff);
+  background: linear-gradient(180deg, var(--hero-ink) 30%, var(--hero-ink-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 32px rgba(160, 180, 255, 0.3));
+  filter: drop-shadow(0 0 32px var(--glow));
 }
 .hero-kicker {
   margin: 0;

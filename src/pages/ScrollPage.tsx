@@ -15,6 +15,7 @@ import { useBootGate } from '../hooks/useBootGate'
 import { useSceneSupport } from '../hooks/useSceneSupport'
 import { useReducedMotion } from '../hooks/useMotion'
 import { BootLine, HudFrame, Telemetry } from '../hud/Hud'
+import { themedAccent } from '../lib/ink'
 import { hrefForSection, SECTIONS, SECTION_LABELS, type SectionId } from '../scroll/sections'
 import { useSectionSync } from '../scroll/useSectionSync'
 import { sceneTransition, whenPageSettled } from '../scene/sceneStatus'
@@ -49,7 +50,7 @@ function useWarp() {
   return [on, trigger] as const
 }
 
-const accent = (color: string) => ({ '--accent': color }) as CSSProperties
+const accent = (color: string) => ({ '--accent': themedAccent(color) }) as CSSProperties
 const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`
 
 /** `/`, `/about`, `/toolkit` and `/contact` all render this page, scrolled to their section. */
