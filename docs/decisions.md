@@ -25,12 +25,14 @@ Short notes on the choices that aren't obvious from the code: the problem, what 
 - **Choice:** `plugins/posts.ts` turns `content/posts/*.md` into modules with ready HTML (marked + Shiki), with a light metadata module per post for lists and stars.
 - **Trade-off:** a new post needs a rebuild and deploy, which is fine for a personal blog.
 
-## Dark only, no theme picker
+## System, Light and Dark, with a dawn sky for Light
 
-- **Problem:** my usual rule is a System/Light/Dark picker on every UI.
-- **Options:** a full light theme, a picker on the blog only, or dark only.
-- **Choice:** dark only. The whole site is a night sky, and a light version of the 3D scene, HUD and cards would be a second design.
-- **Trade-off:** visitors who prefer light pages don't get one.
+Replaces "Dark only, no theme picker" (2026-11-17).
+
+- **Problem:** the site was dark only, so visitors who prefer light pages got nothing, and my rules now ask for a System/Light/Dark picker on every UI.
+- **Options:** a light UI over the dark 3D sky, a flat paper star chart instead of the 3D scene in Light, or the same 3D scene redrawn as a dawn sky.
+- **Choice:** the dawn sky. Colour tokens use `light-dark()`, so one `data-theme` attribute on `<html>` switches everything. The 3D scene redraws its stars and lines in ink with normal blending, because additive glow can only brighten and disappears on cream. The terminal, code blocks and Spruce stay dark in both themes. Red team mode moved to its own `data-hud` attribute so it stacks on either theme.
+- **Trade-off:** the pre-paint script is inline, so its hash has to stay in the CSP (`scripts/csp.test.ts` checks it), and data colours need an ink version (`src/lib/ink.ts`) to pass AA on cream.
 
 ## www as the canonical host
 

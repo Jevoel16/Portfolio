@@ -39,6 +39,15 @@ The why behind the less obvious parts of the code. Comments in the source are on
 - Paused motion stops ambient and looping effects, the warp flash and typing. Scroll-linked motion (camera flight, parallax, reveals, page transitions) keeps running because it only moves when the reader scrolls or clicks.
 - Reveals start `idle` when already on screen at mount (no flash or shift), `armed` below the fold, and `in` once revealed.
 
+## Themes
+
+- System, Light and Dark live in `src/lib/theme.ts`. Light and Dark set `data-theme` on `<html>` and save it; System removes both, so the page follows `prefers-color-scheme`.
+- An inline script in `index.html` applies the saved theme before first paint. The CSP allows it by its `sha256` hash, and `scripts/csp.test.ts` fails if the script changes without the hash. `.gitattributes` keeps LF endings so a Windows checkout hashes the same bytes.
+- Every colour token in `src/styles/tokens.css` is `light-dark(light, dark)`, and `:root` sets `color-scheme` from `data-theme`. The terminal, code blocks and Spruce's speech bubble set `color-scheme: dark` on themselves, so their tokens resolve dark in both themes.
+- Data colours (constellations, planets) are night-sky pastels. `themedAccent()` in `src/lib/ink.ts` wraps each in `light-dark()` with a darkened version that passes AA on cream and on the pale top of the sky.
+- The 3D scene can't read CSS, so `useResolvedScheme()` tells it the scheme. In Light it builds the layout in ink, switches additive materials to normal blending (added light is invisible on a pale sky), softens star halos and hides the nebula clouds.
+- Red team mode is a separate `data-hud` attribute with its own storage key, so it stacks on either theme.
+
 ## Rendering performance
 
 - All constellation stars are one GPU point buffer; hover and selection only touch a one-float attribute, and clicks pick the star nearest the ray.

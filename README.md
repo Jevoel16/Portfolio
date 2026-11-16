@@ -55,7 +55,7 @@ My personal portfolio and blog, built as an interactive 3D night sky: every skil
 </tr>
 <tr>
 <td width="50%" align="center"><b>Phone (home and Contact)</b><br><a href="docs/images/phone.webp"><img src="docs/images/phone.webp" width="100%" alt="Two phone screens side by side: the home sky with swipeable header chips, and Spruce above the speech bubble in Contact"></a></td>
-<td width="50%"></td>
+<td width="50%" align="center"><b>Light theme</b><br><a href="docs/images/light-theme.webp"><img src="docs/images/light-theme.webp" width="100%" alt="Home section in the Light theme: a cream dawn sky with the constellations drawn in ink"></a></td>
 </tr>
 </table>
 
@@ -68,6 +68,7 @@ My personal portfolio and blog, built as an interactive 3D night sky: every skil
 - Meet Spruce, a holographic guide who talks you through the Contact section.
 - Navigate by keyboard with a `Ctrl+K` command terminal (`whoami`, `ls projects`, `open <slug>`).
 - Read security write-ups and notes on a fast, prerendered blog.
+- Pick System, Light or Dark in the footer; Light redraws the sky as a dawn star chart.
 - Use it comfortably on phones, with screen readers, or without WebGL.
 
 Full details: [docs/features.md](docs/features.md).

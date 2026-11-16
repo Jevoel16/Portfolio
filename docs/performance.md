@@ -2,14 +2,16 @@
 
 [← back to the README](../README.md)
 
-Lighthouse 12, mobile preset, run on 2026-11-15 against `npm start` (the production build on `vite preview`, without Vercel's compression or CDN).
+Lighthouse 12, mobile preset, run on 2026-11-17 against `npm start` (the production build on `vite preview`, without Vercel's compression or CDN), after adding the Light theme. Headless Chrome follows this PC's dark preference, so these runs are in Dark.
 
 | Page    | Performance | Accessibility | Best Practices | SEO | LCP   | CLS   | TBT    |
 | ------- | ----------- | ------------- | -------------- | --- | ----- | ----- | ------ |
-| `/`     | 97          | 100           | 96             | 100 | 2.3 s | 0.003 | 120 ms |
+| `/`     | 96          | 100           | 96             | 100 | 2.3 s | 0.003 | 170 ms |
 | `/blog` | 99          | 100           | 96             | 100 | 2.1 s | 0     | 0 ms   |
 
-Over seven runs the home page scored 96 to 98 (median 98, LCP 2.2 s, TBT 65 ms). Best Practices loses points locally only: `/_vercel/insights/script.js` (Vercel Web Analytics) returns 404 outside Vercel.
+Over eight runs the home page scored 93 to 98 (median 96, TBT 60 to 250 ms). The build before the theme work scored 97 to 98 in three runs on the same day, so the theme code may cost a point or two of TBT, or it may be noise; it is worth a profile if the median drops further. Best Practices loses points locally only: `/_vercel/insights/script.js` (Vercel Web Analytics) returns 404 outside Vercel.
+
+Accessibility is 100 on `/`, `/contact`, `/projects/rankit`, `/blog`, the post and `/accessibility` in both Light and Dark.
 
 ## Home page: 72 → 98
 
@@ -32,13 +34,13 @@ Median of three to seven runs per step.
 
 | Chunk       | Gzipped | Loads         |
 | ----------- | ------- | ------------- |
-| `index`     | 21.5 KB | on first load |
-| `react`     | 61.8 KB | on first load |
-| `ScrollSky` | 7.0 KB  | after load    |
-| `r3f`       | 47.2 KB | after load    |
-| `three`     | 177 KB  | after load    |
+| `index`     | 23.1 KB | on first load |
+| `react`     | 60.4 KB | on first load |
+| `ScrollSky` | 7.2 KB  | after load    |
+| `r3f`       | 46.1 KB | after load    |
+| `three`     | 173 KB  | after load    |
 
-Initial JS is about 83 KB gzipped, under the 170 KB budget. Fonts are two self-hosted variable families (Space Grotesk, JetBrains Mono).
+Initial JS is about 84 KB gzipped, under the 170 KB budget. Fonts are two self-hosted variable families (Space Grotesk, JetBrains Mono).
 
 ## How to measure
 

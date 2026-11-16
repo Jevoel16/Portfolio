@@ -37,7 +37,7 @@ visitor@sprucetrap:~$ theme redteam
 | `blog [slug]`                          | Open the blog or a post                                                          |
 | `contact`                              | Scroll to Contact                                                                |
 | `sky`                                  | Back to the top of the page                                                      |
-| `theme default\|redteam`               | Switch HUD colours                                                               |
+| `theme default\|redteam`               | Switch HUD colours (Light and Dark are in the footer)                            |
 | `sudo hire-me`                         | Escalate privileges (opens Contact)                                              |
 | `clear`, `exit`                        | Clear the screen, close the terminal                                             |
 
