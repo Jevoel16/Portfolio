@@ -69,7 +69,7 @@ const llms = `# Sprucetrap
 
 ## Pages
 
-${['/', '/about', '/toolkit', '/contact', '/blog'].map(line).join('\n')}
+${['/', '/about', '/toolkit', '/contact', '/blog', '/accessibility'].map(line).join('\n')}
 
 ## Projects
 

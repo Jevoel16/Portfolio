@@ -8,6 +8,7 @@ const LINKS = [
   { to: '/toolkit', label: 'Toolkit' },
   { to: '/contact', label: 'Contact' },
   { to: '/blog', label: 'Blog' },
+  { to: '/accessibility', label: 'Accessibility' },
 ]
 
 /** The same footer on every page; `children` is the scroll page's telemetry readout. */

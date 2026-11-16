@@ -4,6 +4,7 @@ import { Route, Routes, useLocation } from 'react-router'
 import { Analytics } from '@vercel/analytics/react'
 import { BlogIndex } from './pages/blog/BlogIndex'
 import { BlogPost } from './pages/blog/BlogPost'
+import { AccessibilityPage } from './pages/AccessibilityPage'
 import { NotFound } from './pages/NotFound'
 import { ProjectPage } from './pages/ProjectPage'
 import { ScrollPage } from './pages/ScrollPage'
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="writeups/:slug" element={<BlogPost />} />
         <Route path="blog" element={<BlogIndex />} />
         <Route path="blog/:slug" element={<BlogPost />} />
+        <Route path="accessibility" element={<AccessibilityPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>

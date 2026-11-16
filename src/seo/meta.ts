@@ -125,6 +125,16 @@ export function metaFor(pathname: string): PageMeta {
     }
   }
 
+  if (path === '/accessibility') {
+    return {
+      title: `Accessibility · ${SITE_NAME}`,
+      description: 'How this portfolio meets WCAG 2.2 AA, what still falls short, and how to report an accessibility problem.',
+      canonical: '/accessibility',
+      type: 'website',
+      jsonLd: [{ '@context': 'https://schema.org', '@type': 'WebPage', url: `${SITE_URL}/accessibility`, name: 'Accessibility' }],
+    }
+  }
+
   if (path === '/blog') {
     return {
       title: `Blog — cybersecurity write-ups and dev notes · ${SITE_NAME}`,
@@ -189,7 +199,7 @@ export function metaFor(pathname: string): PageMeta {
 
 /** Every indexable URL, for the prerender script and sitemap. Write-up panels are left out: they canonicalise to /blog. */
 export function indexablePaths(): string[] {
-  return ['/', ...bodies.map((b) => `/${b.id}`), ...projects.map((p) => `/projects/${p.id}`), '/blog', ...posts.map((p) => `/blog/${p.slug}`)]
+  return ['/', ...bodies.map((b) => `/${b.id}`), ...projects.map((p) => `/projects/${p.id}`), '/blog', ...posts.map((p) => `/blog/${p.slug}`), '/accessibility']
 }
 
 /** Paths that are prerendered but not listed in the sitemap. */
