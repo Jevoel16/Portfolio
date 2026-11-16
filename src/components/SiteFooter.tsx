@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { NavLink } from 'react-router'
 import { GITHUB, LICENSE_URL } from '../data/profile'
+import { ThemePicker } from './ThemePicker'
 
 const LINKS = [
   { to: '/about', label: 'About' },
@@ -25,6 +26,7 @@ export function SiteFooter({ children }: { children?: ReactNode }) {
         <p>
           Built by <a href={GITHUB}>Sprucetrap</a>. <a href={LICENSE_URL}>Source-available license</a>.
         </p>
+        <ThemePicker />
       </div>
     </footer>
   )

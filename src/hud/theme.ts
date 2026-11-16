@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useSyncExternalStore } from 'react'
-import type { Theme } from './commands'
+import type { HudTheme } from './commands'
 
-const KEY = 'sprucetrap-theme'
+// Red team mode recolours the HUD on top of either Light or Dark, so it has its own attribute and key.
+const KEY = 'sprucetrap-hud'
 const listeners = new Set<() => void>()
 
-function read(): Theme {
+function read(): HudTheme {
   try {
     return localStorage.getItem(KEY) === 'redteam' ? 'redteam' : 'default'
   } catch {
@@ -13,8 +14,8 @@ function read(): Theme {
 }
 
 /** Applies the HUD theme to <html>; it is a per-visitor nicety, so storage failures are ignored. */
-export function setTheme(theme: Theme) {
-  document.documentElement.dataset.theme = theme
+export function setTheme(theme: HudTheme) {
+  document.documentElement.dataset.hud = theme
   try {
     localStorage.setItem(KEY, theme)
   } catch {
@@ -31,14 +32,14 @@ const subscribe = (l: () => void) => {
 export function useTheme() {
   const theme = useSyncExternalStore(
     subscribe,
-    () => (document.documentElement.dataset.theme as Theme) || 'default',
-    () => 'default' as Theme,
+    () => (document.documentElement.dataset.hud as HudTheme) || 'default',
+    () => 'default' as HudTheme,
   )
   // Restore the saved theme after hydration, so prerendered HTML always matches the first render.
   useEffect(() => {
     if (read() !== 'default') setTheme(read())
   }, [])
-  return [theme, useCallback((t: Theme) => setTheme(t), [])] as const
+  return [theme, useCallback((t: HudTheme) => setTheme(t), [])] as const
 }
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']

@@ -22,7 +22,7 @@
 }
 
 /* Red team mode (`theme redteam` in the terminal, or the Konami code). */
-:root[data-theme='redteam'] {
+:root[data-hud='redteam'] {
   --signal: #ff5c7a;
   --gold: #ff9a6b;
   --border: rgba(255, 120, 140, 0.2);

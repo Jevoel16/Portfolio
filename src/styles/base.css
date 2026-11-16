@@ -104,6 +104,38 @@ main[tabindex='-1']:focus {
   margin: 0;
 }
 
+.theme-picker {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1px;
+}
+.theme-picker button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--text-faint);
+  cursor: pointer;
+}
+.theme-picker button:hover {
+  color: var(--text);
+}
+.theme-picker button[aria-pressed='true'] {
+  background: color-mix(in oklch, var(--gold) 16%, transparent);
+  color: var(--gold);
+}
+.theme-picker svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 h1,
 h2,
 h3,

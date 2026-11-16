@@ -5,13 +5,13 @@ import { constellations } from '../data/constellations'
 import { projects } from '../data/projects'
 import { pathFor } from '../routes'
 
-export type Theme = 'default' | 'redteam'
+export type HudTheme = 'default' | 'redteam'
 
 export interface CommandResult {
   /** Lines to print. A line starting with "!" is printed as an error. */
   lines: string[]
   navigate?: string
-  theme?: Theme
+  theme?: HudTheme
   clear?: boolean
   close?: boolean
 }
