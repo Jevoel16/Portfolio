@@ -9,7 +9,7 @@
 **A cybersecurity × full-stack portfolio you scroll through like a flight across the night sky.**
 
 [![CI](https://img.shields.io/github/actions/workflow/status/Jevoel16/Portfolio/ci.yml?branch=main&label=CI&style=flat)](https://github.com/Jevoel16/Portfolio/actions/workflows/ci.yml)
-![Version](https://img.shields.io/badge/version-2.4.7-informational?style=flat)
+![Version](https://img.shields.io/badge/version-2.5.0-informational?style=flat)
 ![Platform](https://img.shields.io/badge/platform-web%20%7C%20mobile-success?style=flat)
 ![React](https://img.shields.io/badge/React-18-blue?style=flat)
 
