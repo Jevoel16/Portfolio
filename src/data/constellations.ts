@@ -57,7 +57,7 @@ export const constellations: Constellation[] = [
     label: { x: 6.2, y: 5.4 },
     stars: [
       { key: 'tourist', projectId: 'tourist-arrivals', x: 4.6, y: 3.9, z: 0.5 },
-      { key: 'soil', projectId: 'soil-weather', x: 7.3, y: 2.5, z: -0.4 },
+      { key: 'soil', x: 7.3, y: 2.5, z: -0.4 },
       { key: 'm1', x: 8.3, y: 4.5, z: -1 },
       { key: 'm2', x: 5.5, y: 1.5, z: 0.8 },
     ],
@@ -89,15 +89,16 @@ export const constellations: Constellation[] = [
   {
     id: 'databases',
     name: 'Databases',
-    blurb: 'Document, relational, graph, key-value and wide-column stores: MongoDB, MySQL, Neo4j, Redis and Cassandra.',
+    blurb: 'Still forming. Stars appear here as I publish my database projects.',
     color: '#7fe3c4',
     label: { x: 6, y: -5.9 },
+    forming: true,
     stars: [
-      { key: 'neo4j', projectId: 'itd110-neo4j', x: 3.1, y: -2.1, z: 0.3 },
-      { key: 'redis', projectId: 'itd110-redis', x: 4.8, y: -3.3, z: -0.6 },
-      { key: 'cassandra', projectId: 'itd110-cassandra', x: 6.7, y: -2.4, z: 0.7 },
-      { key: 'mongo', projectId: 'itd110', x: 7.9, y: -4.1, z: -0.2 },
-      { key: 'school', projectId: 'school-enrollment', x: 5.4, y: -4.9, z: 0.4 },
+      { key: 'neo4j', x: 3.1, y: -2.1, z: 0.3 },
+      { key: 'redis', x: 4.8, y: -3.3, z: -0.6 },
+      { key: 'cassandra', x: 6.7, y: -2.4, z: 0.7 },
+      { key: 'mongo', x: 7.9, y: -4.1, z: -0.2 },
+      { key: 'school', x: 5.4, y: -4.9, z: 0.4 },
     ],
     edges: [
       ['neo4j', 'redis'],

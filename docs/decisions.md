@@ -54,3 +54,10 @@ Replaces "Dark only, no theme picker" (2026-11-17).
 - **Options:** keep the flags and add guards, or one status per machine with a transition function.
 - **Choice:** a status union and a small reducer for each, listed in [state-machines.md](state-machines.md).
 - **Trade-off:** a few more lines per machine, in exchange for impossible states that can't be written.
+
+## Only public repos on the map
+
+- **Problem:** six projects linked to repos I had made private, so their "source" links gave visitors a 404.
+- **Options:** keep them without a source link, make the repos public again, or take them off the map.
+- **Choice:** take them off. The Databases constellation stays in the sky as a forming figure with no clickable stars, the same way Cybersecurity started.
+- **Trade-off:** the map shows less of my database work until I publish projects for it, and the old `/projects/<id>` URLs now hit the 404 page.

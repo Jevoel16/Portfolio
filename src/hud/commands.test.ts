@@ -27,6 +27,6 @@ describe('terminal commands', () => {
   it('tab-completes commands and slugs', () => {
     expect(complete('who')).toBe('whoami ')
     expect(complete('open ran')).toBe('open rankit')
-    expect(complete('open itd110')).toBe('open itd110')
+    expect(complete('open t')).toBe('open t')
   })
 })
