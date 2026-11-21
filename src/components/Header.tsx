@@ -48,7 +48,7 @@ export function Header({ active }: { active: SectionId }) {
           type="button"
           className="hud-chip terminal-chip mono"
           onClick={openTerminal}
-          aria-label="Open command terminal"
+          aria-label="Open command terminal ⌘K"
           title="Command terminal (⌘K or /)"
         >
           <span aria-hidden="true">&gt;_</span>

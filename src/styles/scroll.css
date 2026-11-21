@@ -202,7 +202,8 @@
 .booting .cue-wait {
   display: inline;
 }
-.booting .scroll-cue {
+/* Dim only the line while booting; faded text would fail contrast. */
+.booting .scroll-cue-line {
   opacity: 0.55;
 }
 .scroll-cue-line {
