@@ -3,6 +3,7 @@ import { posts } from '../content/posts'
 import { bodies } from '../data/bodies'
 import { constellations } from '../data/constellations'
 import { projects } from '../data/projects'
+import type { ThemeChoice } from '../lib/theme'
 import { pathFor } from '../routes'
 
 export type HudTheme = 'default' | 'redteam'
@@ -12,6 +13,8 @@ export interface CommandResult {
   lines: string[]
   navigate?: string
   theme?: HudTheme
+  /** Light, Dark or System, the same choice as the footer picker. */
+  scheme?: ThemeChoice
   clear?: boolean
   close?: boolean
 }
@@ -23,6 +26,13 @@ interface Command {
 }
 
 const targets = () => [...bodies.map((b) => b.id), ...projects.map((p) => p.id)]
+
+const SCHEME_LINES: Record<ThemeChoice, string> = {
+  light: '> dawn breaks. switching to the light sky.',
+  dark: '> night falls. switching to the dark sky.',
+  system: "> following your device's light or dark setting.",
+}
+const THEME_ARGS = ['light', 'dark', 'system', 'redteam', 'default']
 
 const COMMANDS: Record<string, Command> = {
   help: { usage: 'help', help: 'list commands', run: () => ({ lines: helpLines() }) },
@@ -78,12 +88,15 @@ const COMMANDS: Record<string, Command> = {
   contact: { usage: 'contact', help: 'open a channel', run: () => ({ lines: ['> opening channel…'], navigate: '/contact', close: true }) },
   sky: { usage: 'sky', help: 'back to the full sky', run: () => ({ lines: ['> recentering…'], navigate: '/', close: true }) },
   theme: {
-    usage: 'theme [default|redteam]',
-    help: 'switch HUD colours',
-    run: ([name]) =>
-      name === 'redteam' || name === 'default'
-        ? { lines: [name === 'redteam' ? '> red team mode engaged. be nice.' : '> blue skies restored.'], theme: name }
-        : { lines: ['!usage: theme default | theme redteam'] },
+    usage: 'theme [light|dark|system|redteam|default]',
+    help: 'switch the sky to light or dark, or the HUD colours',
+    run: ([name = '']) => {
+      const scheme = SCHEME_LINES[name as ThemeChoice]
+      if (scheme) return { lines: [scheme], scheme: name as ThemeChoice }
+      if (name === 'redteam' || name === 'default')
+        return { lines: [name === 'redteam' ? '> red team mode engaged. be nice.' : '> blue skies restored.'], theme: name }
+      return { lines: [`!usage: theme ${THEME_ARGS.join(' | ')}`] }
+    },
   },
   sudo: {
     usage: 'sudo hire-me',
@@ -115,7 +128,7 @@ export function runCommand(input: string): CommandResult {
   return cmd.run(args)
 }
 
-/** Tab completion for the command name, or for `open` / `blog` arguments. */
+/** Tab completion for the command name, or for `open` / `blog` / `theme` arguments. */
 export function complete(input: string): string {
   const parts = input.trimStart().split(/\s+/)
   if (parts.length === 1) {
@@ -123,7 +136,7 @@ export function complete(input: string): string {
     return hits.length === 1 ? `${hits[0]} ` : input
   }
   const [cmd, partial = ''] = parts
-  const pool = cmd === 'open' ? targets() : cmd === 'blog' ? posts.map((p) => p.slug) : []
+  const pool = cmd === 'open' ? targets() : cmd === 'blog' ? posts.map((p) => p.slug) : cmd === 'theme' ? THEME_ARGS : []
   const hits = pool.filter((t) => t.startsWith(partial))
   return hits.length === 1 ? `${cmd} ${hits[0]}` : input
 }

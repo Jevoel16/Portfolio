@@ -15,6 +15,27 @@ describe('terminal commands', () => {
     expect(runCommand('sudo rm -rf /').navigate).toBeUndefined()
   })
 
+  it('switches the sky between light, dark and system', () => {
+    expect(runCommand('theme light').scheme).toBe('light')
+    expect(runCommand('theme dark').scheme).toBe('dark')
+    expect(runCommand('theme system').scheme).toBe('system')
+    expect(runCommand('theme light').theme).toBeUndefined()
+    expect(runCommand('theme redteam').scheme).toBeUndefined()
+  })
+
+  it('rejects unknown themes with the usage line', () => {
+    const result = runCommand('theme purple')
+    expect(result.lines[0]).toMatch(/^!usage: theme light \| dark/)
+    expect(result.scheme).toBeUndefined()
+    expect(result.theme).toBeUndefined()
+    expect(runCommand('theme').lines[0]).toMatch(/^!usage/)
+  })
+
+  it('tab-completes theme names', () => {
+    expect(complete('theme li')).toBe('theme light')
+    expect(complete('theme d')).toBe('theme d')
+  })
+
   it('reports unknown commands and ignores blank input', () => {
     expect(runCommand('hack the planet').lines[0]).toMatch(/command not found: hack/)
     expect(runCommand('   ').lines).toEqual([])

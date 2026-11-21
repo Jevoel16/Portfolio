@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 're
 import { useNavigate } from 'react-router'
 import { complete, QUICK_COMMANDS, runCommand } from './commands'
 import { setTheme } from './theme'
+import { applyTheme } from '../lib/theme'
 
 interface Line {
   id: number
@@ -79,6 +80,7 @@ export function CommandTerminal() {
     setLines((prev) => (result.clear ? [] : [...prev, ...toLines([{ text: `visitor@sprucetrap:~$ ${text}`, kind: 'in' }, ...out])]))
     setInput('')
     if (result.theme) setTheme(result.theme)
+    if (result.scheme) applyTheme(result.scheme)
     if (result.navigate) navigate(result.navigate)
     if (result.close) setTimeout(hide, result.navigate ? 250 : 0)
   }
