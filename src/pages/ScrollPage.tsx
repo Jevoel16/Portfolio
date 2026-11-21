@@ -9,7 +9,7 @@ import { formatDate, posts } from '../content/posts'
 import { bodyById, type BodyId } from '../data/bodies'
 import { constellations } from '../data/constellations'
 import { GITHUB } from '../data/profile'
-import { projects, techStack } from '../data/projects'
+import { projectImage, projects, techStack } from '../data/projects'
 import { PORTRAIT_QUERY, useMediaQuery } from '../hooks/useMediaQuery'
 import { useBootGate } from '../hooks/useBootGate'
 import { useSceneSupport } from '../hooks/useSceneSupport'
@@ -208,6 +208,9 @@ export function ScrollPage() {
                   .map((p, i) => (
                     <li key={p.id}>
                       <Reveal className={`project-card${p.featured ? ' featured' : ''}`} delay={i * 70}>
+                        {p.image && (
+                          <img className="card-shot" src={projectImage(p.id).small} width={640} height={400} alt="" loading="lazy" decoding="async" />
+                        )}
                         <h4>
                           <Link to={`/projects/${p.id}`} viewTransition>
                             {p.featured ? '★' : '✦'} {p.name}
@@ -223,6 +226,11 @@ export function ScrollPage() {
                           <Link to={`/projects/${p.id}`} viewTransition>
                             details →
                           </Link>
+                          {p.live && (
+                            <a href={p.live} target="_blank" rel="noreferrer">
+                              live ↗
+                            </a>
+                          )}
                           <a href={p.url} target="_blank" rel="noreferrer">
                             source ↗
                           </a>

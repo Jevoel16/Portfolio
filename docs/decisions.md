@@ -60,4 +60,5 @@ Replaces "Dark only, no theme picker" (2026-11-17).
 - **Problem:** six projects linked to repos I had made private, so their "source" links gave visitors a 404.
 - **Options:** keep them without a source link, make the repos public again, or take them off the map.
 - **Choice:** take them off. The Databases constellation stays in the sky as a forming figure with no clickable stars, the same way Cybersecurity started.
-- **Trade-off:** the map shows less of my database work until I publish projects for it, and the old `/projects/<id>` URLs now hit the 404 page.
+- **Later:** I also took The Pulse, Tourist Arrivals, Jmeet and my-bsl-http-server off, so the map only shows the three projects I want reviewed first. Data & ML and Networking are now forming figures too.
+- **Trade-off:** the map shows less of my database, ML and networking work until I publish projects for it, and the old `/projects/<id>` URLs now hit the 404 page.

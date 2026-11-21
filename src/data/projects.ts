@@ -10,19 +10,13 @@ export interface Project {
   description: string
   stack: string[]
   url: string
+  /** Live demo, shown next to the source link. */
+  live?: string
+  /** Screenshot in public/projects/<id>-{640,1280}.webp and <id>-og.jpg. */
+  image?: { alt: string }
 }
 
 export const projects: Project[] = [
-  {
-    id: 'the-pulse',
-    name: 'The Pulse',
-    constellation: 'fullstack',
-    featured: true,
-    description:
-      'Emergency platform for Iligan City with a live infrastructure map, shortest-path routing for first responders, QR-based worker login, admin approvals and database backups.',
-    stack: ['React', 'Vite', 'Node.js', 'Neo4j', 'Leaflet', 'Docker'],
-    url: 'https://github.com/Jevoel16/The-Pulse',
-  },
   {
     id: 'rankit',
     name: 'RankIT',
@@ -32,6 +26,8 @@ export const projects: Project[] = [
       'Scoring platform for school events, with role-based access (superadmin, admin, tabulator, grievance), live public rankings, audit logs and PDF reports.',
     stack: ['React', 'Vite', 'Express', 'MongoDB', 'JWT'],
     url: 'https://github.com/Jevoel16/RankIT',
+    live: 'https://rankit.jevoelorbilla.dev',
+    image: { alt: 'RankIT live rankings page with a podium for the top three colleges and the event list on the left.' },
   },
   {
     id: 'gpa-calculator',
@@ -41,46 +37,31 @@ export const projects: Project[] = [
     description: 'App that tracks term and cumulative GPA, with Google sign-in and saved sessions.',
     stack: ['Node.js', 'Express', 'MySQL', 'Google OAuth'],
     url: 'https://github.com/Jevoel16/gpa-calculator',
+    live: 'https://gpa-calculator-ruddy-two.vercel.app',
+    image: { alt: 'GPA Calculator term view with five courses, their units and grades, and the term GPA card.' },
   },
   {
     id: 'cryp-cross',
     name: 'Cryp-Cross',
     constellation: 'fullstack',
     featured: false,
-    description: 'MERN app for managing project logs (create, view, update, delete).',
+    description:
+      'Daily crossword where every clue is encrypted with Caesar, Atbash or Vigenère, with a built-in decoder, server-timed solves and a leaderboard.',
     stack: ['MongoDB', 'Express', 'React', 'Node.js'],
     url: 'https://github.com/Jevoel16/Cryp-Cross',
-  },
-  {
-    id: 'tourist-arrivals',
-    name: 'Tourist Arrivals Forecasting Lab',
-    constellation: 'ml',
-    featured: true,
-    description: '8-stage machine learning pipeline that forecasts Philippine tourist arrivals, with a step-by-step interface and SHAP explanations.',
-    stack: ['FastAPI', 'Next.js', 'TensorFlow', 'scikit-learn'],
-    url: 'https://github.com/Jevoel16/tourist-arrivals-app',
-  },
-  {
-    id: 'jmeet',
-    name: 'Jmeet',
-    constellation: 'network',
-    featured: true,
-    description: 'Multi-user video call and chat app on a custom WebSocket server.',
-    stack: ['Bonezegei', 'WebSocket', 'WebRTC'],
-    url: 'https://github.com/Jevoel16/ITE183_Lab2_Websocket',
-  },
-  {
-    id: 'bsl-http-server',
-    name: 'my-bsl-http-server',
-    constellation: 'network',
-    featured: false,
-    description: 'HTTP server written from scratch in Bonezegei, with custom routing and 404 handling.',
-    stack: ['Bonezegei', 'HTTP'],
-    url: 'https://github.com/Jevoel16/my-bsl-http-server',
+    live: 'https://cryp-cross.jevoelorbilla.dev',
+    image: { alt: 'Cryp-Cross daily puzzle with an Atbash-encoded clue, the crossword grid and the decoder panel.' },
   },
 ]
 
 export const projectById = new Map(projects.map((p) => [p.id, p]))
+
+/** Public paths of a project's screenshot sizes. */
+export const projectImage = (id: string) => ({
+  small: `/projects/${id}-640.webp`,
+  large: `/projects/${id}-1280.webp`,
+  og: `/projects/${id}-og.jpg`,
+})
 
 export const techStack: { group: string; items: string[] }[] = [
   { group: 'Languages', items: ['JavaScript', 'TypeScript', 'Python', 'HTML5', 'CSS3', 'SQL'] },

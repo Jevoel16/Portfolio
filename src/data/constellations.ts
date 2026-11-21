@@ -33,11 +33,11 @@ export const constellations: Constellation[] = [
   {
     id: 'fullstack',
     name: 'Full-Stack Web',
-    blurb: 'REST APIs with Express and FastAPI behind React and Next.js frontends, with auth, roles and audit trails.',
+    blurb: 'REST APIs with Express behind React frontends, with auth, roles, audit trails and live leaderboards.',
     color: '#f5c86b',
     label: { x: -6, y: 5.4 },
     stars: [
-      { key: 'pulse', projectId: 'the-pulse', x: -7.6, y: 3.5, z: 0.4 },
+      { key: 'pulse', x: -7.6, y: 3.5, z: 0.4 },
       { key: 'rankit', projectId: 'rankit', x: -5.1, y: 4.4, z: -0.8 },
       { key: 'gpa', projectId: 'gpa-calculator', x: -3.9, y: 2.3, z: 0.6 },
       { key: 'cryp', projectId: 'cryp-cross', x: -6.5, y: 1.4, z: -0.3 },
@@ -52,11 +52,12 @@ export const constellations: Constellation[] = [
   {
     id: 'ml',
     name: 'Data & ML',
-    blurb: 'Machine learning pipelines from data cleaning to forecasting, explained with SHAP and shown in interactive charts.',
+    blurb: 'Still forming. Stars appear here as I publish my data and ML projects.',
     color: '#9ad1ff',
     label: { x: 6.2, y: 5.4 },
+    forming: true,
     stars: [
-      { key: 'tourist', projectId: 'tourist-arrivals', x: 4.6, y: 3.9, z: 0.5 },
+      { key: 'tourist', x: 4.6, y: 3.9, z: 0.5 },
       { key: 'soil', x: 7.3, y: 2.5, z: -0.4 },
       { key: 'm1', x: 8.3, y: 4.5, z: -1 },
       { key: 'm2', x: 5.5, y: 1.5, z: 0.8 },
@@ -70,12 +71,13 @@ export const constellations: Constellation[] = [
   {
     id: 'network',
     name: 'Networking',
-    blurb: 'HTTP and WebSocket servers written from scratch, real-time broadcasting and WebRTC video calls.',
+    blurb: 'Still forming. Stars appear here as I publish my networking projects.',
     color: '#c7a6ff',
     label: { x: -6, y: -5.6 },
+    forming: true,
     stars: [
-      { key: 'jmeet', projectId: 'jmeet', x: -4.5, y: -3.1, z: 0.5 },
-      { key: 'bsl', projectId: 'bsl-http-server', x: -7.3, y: -4.2, z: -0.5 },
+      { key: 'jmeet', x: -4.5, y: -3.1, z: 0.5 },
+      { key: 'bsl', x: -7.3, y: -4.2, z: -0.5 },
       { key: 'n1', x: -6.3, y: -1.9, z: 0.2 },
       { key: 'n2', x: -2.9, y: -4.5, z: -0.6 },
     ],

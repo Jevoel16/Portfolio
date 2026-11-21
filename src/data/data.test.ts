@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { bodies } from './bodies'
 import { constellationById, constellations, starForId, starItem } from './constellations'
 import { postBySlug } from '../content/posts'
-import { projects } from './projects'
+import { projectImage, projects } from './projects'
+
+const publicFiles = new Set(Object.keys(import.meta.glob('/public/projects/*')).map((f) => f.replace('/public', '')))
 
 // Guards the hand-edited data files: a typo here breaks a star, a panel or a URL silently.
 describe('portfolio data', () => {
@@ -55,5 +57,12 @@ describe('portfolio data', () => {
 
   it('references known constellations', () => {
     for (const p of projects) expect(constellationById.has(p.constellation)).toBe(true)
+  })
+  it('links live demos over https', () => {
+    for (const p of projects) if (p.live) expect(new URL(p.live).protocol, p.id).toBe('https:')
+  })
+
+  it('ships every screenshot size a project points at', () => {
+    for (const p of projects) if (p.image) for (const file of Object.values(projectImage(p.id))) expect(publicFiles.has(file), file).toBe(true)
   })
 })

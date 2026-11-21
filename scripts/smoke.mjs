@@ -31,7 +31,7 @@ const expectStatus = (res, status) => {
   if (res.status !== status) throw new Error(`expected ${status}, got ${res.status}`)
 }
 
-for (const path of ['/', '/about', '/toolkit', '/contact', '/blog', '/projects/the-pulse']) {
+for (const path of ['/', '/about', '/toolkit', '/contact', '/blog', '/projects/rankit']) {
   await check(`GET ${path}`, async () => {
     const { res } = await get(base + path)
     expectStatus(res, 200)

@@ -296,6 +296,16 @@
 .project-card.featured {
   border-color: color-mix(in srgb, var(--gold) 35%, transparent);
 }
+/* Full-bleed screenshot; the card's overflow clips it to the outer radius. */
+.card-shot {
+  display: block;
+  width: calc(100% + 36px);
+  height: auto;
+  aspect-ratio: 16 / 10;
+  margin: -18px -18px 14px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border);
+}
 .project-card h4 {
   margin: 0 0 6px;
   font-size: 17px;
@@ -309,7 +319,7 @@
 .post-card h3 a:hover {
   color: var(--accent);
 }
-.project-card > p {
+.project-card > p:not(.card-links) {
   display: -webkit-box;
   margin: 0 0 12px;
   overflow: hidden;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { complete, runCommand } from './commands'
+import { projects } from '../data/projects'
 
 describe('terminal commands', () => {
   it('opens projects and planets by slug', () => {
@@ -20,13 +21,13 @@ describe('terminal commands', () => {
   })
 
   it('lists projects and is case-insensitive', () => {
-    expect(runCommand('LS projects').lines.length).toBeGreaterThan(5)
+    expect(runCommand('LS projects').lines).toHaveLength(projects.length)
     expect(runCommand('clear').clear).toBe(true)
   })
 
   it('tab-completes commands and slugs', () => {
     expect(complete('who')).toBe('whoami ')
     expect(complete('open ran')).toBe('open rankit')
-    expect(complete('open t')).toBe('open t')
+    expect(complete('open c')).toBe('open c')
   })
 })

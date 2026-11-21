@@ -19,7 +19,6 @@ visitor@sprucetrap:~$ whoami
 sprucetrap
 aspiring cybersecurity professional · full-stack developer
 visitor@sprucetrap:~$ ls projects
-★ the-pulse            The Pulse
 ★ rankit               RankIT
 …
 visitor@sprucetrap:~$ open ran⇥        # Tab completes to `open rankit`, Enter opens its page

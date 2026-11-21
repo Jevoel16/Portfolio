@@ -64,7 +64,7 @@ My personal portfolio and blog, built as an interactive 3D night sky: every skil
 ## Features
 
 - Scroll to fly the camera from the full sky to each section's planet or constellation.
-- Browse projects as stars grouped into skill constellations, each with its own page.
+- Browse projects as stars grouped into skill constellations, each with a screenshot, its own page and a live demo link where one exists.
 - Meet Spruce, a holographic guide who talks you through the Contact section.
 - Navigate by keyboard with a `Ctrl+K` command terminal (`whoami`, `ls projects`, `open <slug>`).
 - Read security write-ups and notes on a fast, prerendered blog.

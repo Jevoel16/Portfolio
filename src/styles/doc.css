@@ -343,3 +343,23 @@
 .post-list h3 a:hover {
   color: var(--accent, var(--gold));
 }
+
+.project-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 0;
+}
+.project-shot {
+  margin: 0 0 40px;
+}
+.project-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--glass);
+}

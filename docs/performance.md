@@ -2,6 +2,17 @@
 
 [← back to the README](../README.md)
 
+## Project screenshots (2026-11-21)
+
+Lighthouse 12, mobile preset, three runs each against `npm start` (Dark), after adding screenshots to the project cards and pages.
+
+| Page               | Performance | Accessibility | Best Practices | SEO | LCP          | CLS   | TBT           |
+| ------------------ | ----------- | ------------- | -------------- | --- | ------------ | ----- | ------------- |
+| `/`                | 86 to 96    | 100           | 96             | 100 | 2.4 to 2.5 s | 0.005 | 110 to 440 ms |
+| `/projects/rankit` | 97          | 100           | 96             | 100 | 2.4 s        | 0     | 0 to 40 ms    |
+
+The card thumbnails are lazy and below the fold, so the home page's LCP element is still the hero text; its spread is the same TBT noise described below. On project pages the screenshot is the LCP image, loaded with `fetchpriority="high"` and a 640/1280 `srcset`. All screenshot files together are about 260 KB.
+
 Lighthouse 12, mobile preset, run on 2026-11-17 against `npm start` (the production build on `vite preview`, without Vercel's compression or CDN), after adding the Light theme. Headless Chrome follows this PC's dark preference, so these runs are in Dark.
 
 | Page    | Performance | Accessibility | Best Practices | SEO | LCP   | CLS   | TBT    |

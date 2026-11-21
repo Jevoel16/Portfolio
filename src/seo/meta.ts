@@ -1,13 +1,14 @@
 import { postBySlug, posts } from '../content/posts'
 import { bodies, bodyById, type BodyId } from '../data/bodies'
 import { constellationById } from '../data/constellations'
-import { projectById, projects, techStack } from '../data/projects'
+import { projectById, projectImage, projects, techStack } from '../data/projects'
 import { GITHUB } from '../data/profile'
 
 // www is the primary domain in Vercel (the apex 308s to it), so every canonical URL must use it.
 export const SITE_URL = 'https://www.jevoelorbilla.dev'
 export const SITE_NAME = 'Sprucetrap'
 const OG_IMAGE = `${SITE_URL}/og-default.png`
+const OG_ALT = `${SITE_NAME} — constellations of projects in a night sky`
 const TAGLINE = 'Aspiring Cybersecurity Professional · Full-Stack Developer'
 
 export interface PageMeta {
@@ -19,6 +20,8 @@ export interface PageMeta {
   noindex?: boolean
   publishedTime?: string
   modifiedTime?: string
+  /** Link preview image; the night-sky card when unset. */
+  image?: { url: string; alt: string }
   jsonLd: Record<string, unknown>[]
 }
 
@@ -101,11 +104,13 @@ export function metaFor(pathname: string): PageMeta {
   const p = project ? projectById.get(project) : undefined
   if (p) {
     const constellation = constellationById.get(p.constellation)!
+    const image = p.image && { url: `${SITE_URL}${projectImage(p.id).og}`, alt: p.image.alt }
     return {
       title: `${p.name} — ${constellation.name} project · ${SITE_NAME}`,
       description: p.description,
       canonical: path,
       type: 'website',
+      image,
       jsonLd: [
         {
           '@context': 'https://schema.org',
@@ -115,6 +120,7 @@ export function metaFor(pathname: string): PageMeta {
           codeRepository: p.url,
           url: `${SITE_URL}${path}`,
           keywords: p.stack.join(', '),
+          ...(image && { image: image.url }),
           author: person,
         },
         breadcrumbs([
@@ -209,8 +215,12 @@ export function extraPaths(): string[] {
 
 const escape = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
+/** Link preview image for a page, with the site default as fallback. */
+export const previewImage = (meta: PageMeta) => meta.image ?? { url: OG_IMAGE, alt: OG_ALT }
+
 /** <head> tags as an HTML string, for the prerendered pages. */
 export function headHtml(meta: PageMeta): string {
+  const image = previewImage(meta)
   const url = `${SITE_URL}${meta.canonical === '/' ? '' : meta.canonical}`
   const tags = [
     `<title>${escape(meta.title)}</title>`,
@@ -222,16 +232,16 @@ export function headHtml(meta: PageMeta): string {
     `<meta property="og:title" content="${escape(meta.title)}" />`,
     `<meta property="og:description" content="${escape(meta.description)}" />`,
     `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:image" content="${OG_IMAGE}" />`,
+    `<meta property="og:image" content="${image.url}" />`,
     '<meta property="og:image:width" content="1200" />',
     '<meta property="og:image:height" content="630" />',
-    `<meta property="og:image:alt" content="${SITE_NAME} — constellations of projects in a night sky" />`,
+    `<meta property="og:image:alt" content="${escape(image.alt)}" />`,
     meta.publishedTime ? `<meta property="article:published_time" content="${meta.publishedTime}" />` : '',
     meta.modifiedTime ? `<meta property="article:modified_time" content="${meta.modifiedTime}" />` : '',
     '<meta name="twitter:card" content="summary_large_image" />',
     `<meta name="twitter:title" content="${escape(meta.title)}" />`,
     `<meta name="twitter:description" content="${escape(meta.description)}" />`,
-    `<meta name="twitter:image" content="${OG_IMAGE}" />`,
+    `<meta name="twitter:image" content="${image.url}" />`,
     // JSON-LD is data, not script; "<" is escaped so content can never close the tag.
     ...meta.jsonLd.map((data) => `<script type="application/ld+json">${JSON.stringify(data).replace(/</g, '\\u003c')}</script>`),
   ]

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router'
-import { SITE_URL, metaFor } from './meta'
+import { SITE_URL, metaFor, previewImage } from './meta'
 
 function setMeta(attr: 'name' | 'property', key: string, content: string) {
   let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${key}"]`)
@@ -24,6 +24,10 @@ export function RouteHead() {
     setMeta('property', 'og:description', meta.description)
     setMeta('property', 'og:url', url)
     setMeta('property', 'og:type', meta.type)
+    const image = previewImage(meta)
+    setMeta('property', 'og:image', image.url)
+    setMeta('property', 'og:image:alt', image.alt)
+    setMeta('name', 'twitter:image', image.url)
     let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')
     if (!canonical) {
       canonical = document.createElement('link')

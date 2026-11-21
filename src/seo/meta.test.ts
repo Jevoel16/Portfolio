@@ -28,4 +28,10 @@ describe('page meta', () => {
     expect(html).toContain('a &quot;b&quot; &lt;c&gt;')
     expect(html).not.toContain('</script></script>')
   })
+  it('uses a project screenshot as the link preview, and the sky card elsewhere', () => {
+    const project = headHtml(metaFor('/projects/rankit'))
+    expect(project).toContain('content="https://www.jevoelorbilla.dev/projects/rankit-og.jpg"')
+    expect(project).toContain('name="twitter:image" content="https://www.jevoelorbilla.dev/projects/rankit-og.jpg"')
+    expect(headHtml(metaFor('/blog'))).toContain('/og-default.png')
+  })
 })
